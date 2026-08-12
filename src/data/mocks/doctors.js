@@ -1,0 +1,32 @@
+export const doctorsMock = [
+  {
+    id: 'doc-1',
+    name: 'Dr. Aisha Khan',
+    specialty: 'Dermatologist',
+    experience: 8,
+    rating: 4.8,
+    reviewCount: 128,
+    fee: 700,
+    hospital: 'CareSphere Clinic',
+  },
+  {
+    id: 'doc-2',
+    name: 'Dr. Vivek Sharma',
+    specialty: 'General Physician',
+    experience: 10,
+    rating: 4.7,
+    reviewCount: 210,
+    fee: 500,
+    hospital: 'Sterling Hospital',
+  },
+  {
+    id: 'doc-3',
+    name: 'Dr. Neha Gupta',
+    specialty: 'Gynecologist',
+    experience: 9,
+    rating: 4.9,
+    reviewCount: 156,
+    fee: 800,
+    hospital: 'Global Health',
+  },
+]

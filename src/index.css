@@ -1,0 +1,185 @@
+@import "tailwindcss";
+
+@theme {
+  --color-teal: #0EA5A0;
+  --color-teal-dark: #0B857C;
+  --color-teal-light: #D8F4F1;
+  --color-navy: #071A2F;
+  --color-navy-light: #0F2A4A;
+  --color-bg-gray: #E8EEF4;
+  --color-border-gray: #D0D9E3;
+  --color-body-gray: #3D4A5C;
+  --color-amber: #F59E0B;
+  --color-amber-light: #FEF3C7;
+  --radius-card: 12px;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #E8EEF4;
+  color: var(--color-navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Full-height app shell that respects mobile browser chrome + notches */
+.app-viewport {
+  height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.safe-x {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+.page-pad {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+@media (min-width: 640px) {
+  .page-pad {
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-pad {
+    padding-left: max(2rem, env(safe-area-inset-left, 0px));
+    padding-right: max(2rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-pad {
+    padding-left: max(2.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(2.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* Horizontal scroll chips/tabs on small screens without page overflow */
+.scroll-x {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSoft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes loginRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-slide {
+  animation: fadeSlide 0.5s ease;
+}
+
+.animate-float-soft {
+  animation: floatSoft 3.2s ease-in-out infinite;
+}
+
+.animate-login-rise {
+  animation: loginRise 0.65s ease both;
+}
+
+.animate-login-rise-delay-1 {
+  animation: loginRise 0.65s ease 0.08s both;
+}
+
+.animate-login-rise-delay-2 {
+  animation: loginRise 0.65s ease 0.16s both;
+}
+
+.animate-login-rise-delay-3 {
+  animation: loginRise 0.65s ease 0.24s both;
+}
+
+.chat-panel {
+  font-family: var(--font-sans);
+  font-feature-settings: 'kern' 1, 'liga' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.chat-panel input {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.chat-message-text {
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  font-weight: 400;
+}
+
+.chat-time-label {
+  font-size: 11px;
+  line-height: 1.2;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.messages-screen {
+  font-family: var(--font-sans);
+}
