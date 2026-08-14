@@ -1,66 +1,67 @@
-import { Check, Clock3, MapPin, Video } from 'lucide-react'
-
-const iconStroke = 1.75
+import { CalendarDays, CalendarPlus, Check, MapPin, Phone, Video } from 'lucide-react'
+import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
 export default function UpcomingAppointmentPanel({
   appointment,
   visitSignals,
   onReschedule,
   onJoinDetails,
+  onBook,
 }) {
+  if (!appointment) {
+    return (
+      <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col items-start justify-center gap-3 h-full">
+        <span className="w-12 h-12 rounded-2xl bg-teal-light text-teal flex items-center justify-center">
+          <CalendarPlus className="w-6 h-6" strokeWidth={1.75} />
+        </span>
+        <h2 className="text-base font-semibold text-navy">No upcoming visit</h2>
+        <p className="text-sm text-body-gray max-w-md">
+          Book a doctor and your next appointment will show up here.
+        </p>
+        <button
+          type="button"
+          onClick={onBook}
+          className="min-h-11 px-4 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark"
+        >
+          Book appointment
+        </button>
+      </section>
+    )
+  }
+
+  const isVideo = String(appointment.visitType || '').toLowerCase().includes('video')
+  const prepItems = [...(appointment.prepItems || []), ...(visitSignals?.prepLabels || [])]
+
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 xl:p-6 flex flex-col gap-3.5 sm:gap-4 h-full">
-      <div className="shrink-0">
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 flex flex-col gap-3.5 h-full">
+      <div className="flex items-start justify-between gap-3 shrink-0">
         <h2 className="text-sm sm:text-base font-semibold text-navy">Upcoming appointment</h2>
+        <span
+          className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
+            appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+          }`}
+        >
+          {appointment.status}
+        </span>
       </div>
 
-      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden ring-2 ring-violet-200/80 shadow-sm shrink-0 bg-violet-100">
-          <img src={appointment.doctorPhoto} alt={appointment.doctorName} className="w-full h-full object-cover" />
+      <div className="flex items-center gap-3 shrink-0">
+        <div className="w-14 h-14 rounded-2xl overflow-hidden ring-2 ring-teal-light shadow-sm shrink-0 bg-teal-light">
+          <img
+            src={appointment.doctorPhoto}
+            alt={appointment.doctorName}
+            className="w-full h-full object-cover object-top"
+          />
         </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-base sm:text-lg font-bold text-navy leading-tight">{appointment.doctorName}</p>
-            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
-              {appointment.status}
-            </span>
-          </div>
-          <p className="text-sm text-body-gray mt-0.5">
+        <div className="min-w-0">
+          <p className="text-base sm:text-lg font-bold text-navy leading-tight truncate">{appointment.doctorName}</p>
+          <p className="text-sm text-body-gray truncate mt-0.5">
             {appointment.specialty} • {appointment.clinic}
           </p>
-          {visitSignals ? (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                  visitSignals.reminderOn
-                    ? 'bg-teal-light text-teal-dark'
-                    : 'bg-slate-100 text-slate-600'
-                }`}
-              >
-                {visitSignals.reminderOn
-                  ? `Reminder · ${visitSignals.reminderTiming}`
-                  : 'Visit reminders off'}
-              </span>
-              {visitSignals.videoUpdates ? (
-                <span className="rounded-full bg-[#E8F4FF] px-2 py-0.5 text-[11px] font-semibold text-[#1B6AA5]">
-                  Video updates on
-                </span>
-              ) : null}
-              <span
-                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                  visitSignals.shareRecords
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-slate-100 text-slate-600'
-                }`}
-              >
-                {visitSignals.shareRecords ? 'Records shared' : 'Records private'}
-              </span>
-            </div>
-          ) : null}
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 rounded-xl bg-bg-gray p-3.5 sm:p-4 shrink-0">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 rounded-xl bg-bg-gray p-3 shrink-0">
         {[
           { label: 'Date', value: appointment.dateLabel },
           { label: 'Time', value: appointment.timeLabel },
@@ -69,69 +70,88 @@ export default function UpcomingAppointmentPanel({
         ].map((item) => (
           <div key={item.label} className="min-w-0">
             <p className="text-[11px] font-medium text-body-gray">{item.label}</p>
-            <p className="text-sm font-semibold text-navy mt-1 truncate">{item.value}</p>
+            <p className="text-sm font-semibold text-navy mt-0.5 truncate">{item.value}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 flex-1 min-h-0">
-        <div className="rounded-2xl border border-border-gray bg-bg-gray overflow-hidden flex flex-col min-h-[200px]">
-          <div className="h-24 sm:h-28 shrink-0 overflow-hidden">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 min-h-0">
+        <div className="rounded-xl border border-border-gray bg-[#F7FBFA] overflow-hidden flex flex-col h-full min-h-0">
+          <div className="px-3.5 pt-3.5 pb-2.5 flex items-start gap-3 shrink-0">
+            <span className="w-8 h-8 rounded-lg bg-teal-light text-teal flex items-center justify-center shrink-0">
+              <MapPin className="w-4 h-4" strokeWidth={1.75} />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-body-gray">Clinic</p>
+              <p className="text-sm font-semibold text-navy mt-0.5 leading-snug">{appointment.address}</p>
+              <p className="text-sm font-semibold text-teal mt-1">{appointment.room}</p>
+              {appointment.landmark ? (
+                <p className="text-xs text-body-gray mt-1 leading-relaxed">{appointment.landmark}</p>
+              ) : null}
+            </div>
+          </div>
+          <div className="flex-1 min-h-[7.5rem] mx-3.5 mb-2.5 rounded-lg overflow-hidden bg-teal-light">
             <img
-              src={appointment.clinicImage || appointment.heroImage}
-              alt={`${appointment.clinic} building`}
+              src={appointment.clinicImage || appointment.heroImage || appointment.doctorPhoto}
+              alt={appointment.clinic}
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="p-4 sm:p-5 flex flex-col gap-2 flex-1">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-teal-light text-teal flex items-center justify-center shrink-0">
-                <MapPin className="w-4 h-4" strokeWidth={iconStroke} />
-              </div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-body-gray">Clinic location</p>
-            </div>
-            <p className="text-sm sm:text-base font-bold text-navy leading-snug">{appointment.address}</p>
-            <p className="text-sm font-semibold text-teal">{appointment.room}</p>
-            <p className="text-xs text-body-gray leading-relaxed">{appointment.landmark}</p>
-          </div>
+          {appointment.phone ? (
+            <p className="px-3.5 pb-3 flex items-center gap-2 text-sm font-medium text-navy shrink-0">
+              <Phone className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={1.75} />
+              {appointment.phone}
+            </p>
+          ) : null}
         </div>
 
-        <div className="rounded-2xl border border-amber/25 bg-amber-light/70 p-4 sm:p-5 flex flex-col gap-3 min-h-[200px]">
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-amber/20 text-amber flex items-center justify-center shrink-0">
-              <Clock3 className="w-4 h-4" strokeWidth={iconStroke} />
-            </div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-body-gray">Visit prep</p>
-          </div>
-          <p className="text-sm font-semibold text-navy leading-snug">{appointment.prepNote}</p>
-          <ul className="flex flex-col gap-2 mt-auto">
-            {[...appointment.prepItems, ...(visitSignals?.prepLabels || [])].map((item, index) => (
-              <li key={`${item}-${index}`} className="flex items-center gap-2 text-sm font-medium text-navy/85">
-                <span className="w-5 h-5 rounded-full bg-amber/25 text-amber flex items-center justify-center shrink-0">
-                  <Check className="w-3 h-3" strokeWidth={3} />
-                </span>
-                {item}
+        <div className="rounded-xl border border-amber/20 bg-amber-light/70 px-3.5 py-3.5 flex flex-col h-full min-h-0">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-body-gray shrink-0">Visit prep</p>
+          {appointment.prepNote ? (
+            <p className="text-sm font-medium text-navy mt-2 leading-snug">{appointment.prepNote}</p>
+          ) : null}
+          <ul className="mt-3 flex flex-col gap-2">
+            {prepItems.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm text-navy">
+                <Check className="w-3.5 h-3.5 text-amber shrink-0 mt-0.5" strokeWidth={2.5} />
+                <span>{item}</span>
               </li>
             ))}
           </ul>
+          {visitSignals ? (
+            <div className="mt-auto pt-3 flex flex-wrap gap-1.5">
+              <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-navy">
+                {visitSignals.reminderOn
+                  ? `Reminder · ${visitSignals.reminderTiming}`
+                  : 'Reminders off'}
+              </span>
+              <span className="rounded-full bg-white/80 px-2.5 py-1 text-[11px] font-semibold text-navy">
+                {visitSignals.shareRecords ? 'Records shared' : 'Records private'}
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 shrink-0">
+      <div className="flex flex-col sm:flex-row gap-2.5 shrink-0">
         <button
           type="button"
           onClick={onReschedule}
-          className="flex-1 min-h-11 rounded-xl border border-border-gray bg-bg-gray text-navy text-sm font-semibold cursor-pointer hover:bg-white transition-colors"
+          className="flex-1 min-h-11 rounded-xl border border-border-gray bg-white text-navy text-sm font-semibold cursor-pointer hover:bg-bg-gray"
         >
           Reschedule
         </button>
         <button
           type="button"
           onClick={onJoinDetails}
-          className="flex-[1.35] min-h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer shadow-sm hover:bg-teal-dark inline-flex items-center justify-center gap-2 transition-colors"
+          className="flex-[1.2] min-h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
         >
-          <Video className="w-4 h-4" strokeWidth={iconStroke} />
-          Join / details
+          {isVideo ? (
+            <Video className="w-4 h-4" strokeWidth={1.75} />
+          ) : (
+            <CalendarDays className="w-4 h-4" strokeWidth={1.75} />
+          )}
+          {isVideo ? 'Join video call' : 'View details'}
         </button>
       </div>
     </section>

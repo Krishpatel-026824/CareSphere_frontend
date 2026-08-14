@@ -12,11 +12,12 @@ export default function HomeDashboard({
   onActionClick,
   onRescheduleAppointment,
   onAppointmentDetails,
+  onBookAppointment,
   upcomingAppointment,
   visitSignals,
 }) {
   const homeData = generateHomeData()
-  const appointment = upcomingAppointment || homeData.upcomingAppointment
+  const appointment = upcomingAppointment
   const { sm, xl } = useBreakpoint()
   const now = new Date()
   const greeting = getTimeGreeting(now)
@@ -56,16 +57,21 @@ export default function HomeDashboard({
         />
 
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 lg:gap-5 min-w-0 xl:items-stretch">
-          <div className="xl:col-span-3 min-w-0">
+          <div className="xl:col-span-3 min-w-0 h-full">
             <UpcomingAppointmentPanel
-              key={`${appointment.id}-${appointment.doctorId}-${appointment.dateLabel}-${appointment.timeLabel}`}
+              key={
+                appointment
+                  ? `${appointment.id}-${appointment.status}-${appointment.dateLabel}-${appointment.timeLabel}`
+                  : 'empty'
+              }
               appointment={appointment}
               visitSignals={visitSignals}
               onReschedule={() => onRescheduleAppointment?.(appointment)}
               onJoinDetails={() => onAppointmentDetails?.(appointment)}
+              onBook={onBookAppointment}
             />
           </div>
-          <div className="xl:col-span-2 min-w-0">
+          <div className="xl:col-span-2 min-w-0 h-full">
             <InsightsPanel
               tips={homeData.healthTips}
               loopMs={homeData.healthTipLoopMs}

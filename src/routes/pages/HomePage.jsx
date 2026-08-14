@@ -21,7 +21,7 @@ export default function HomePage() {
       onBellClick={() => navigate(PATHS.notifications)}
       onActionClick={(key) => {
         const routes = {
-          bookAppointment: PATHS.doctors,
+          bookAppointment: PATHS.newAppointment,
           telemedicine: PATHS.telemedicine,
           pharmacy: PATHS.pharmacy,
           labTests: PATHS.labTests,
@@ -30,8 +30,9 @@ export default function HomePage() {
         if (routes[key]) navigate(routes[key])
       }}
       onRescheduleAppointment={(appointment) => {
-        navigate(PATHS.reschedule, { state: { appointment } })
+        navigate(PATHS.reschedule, { state: { appointment, returnTo: PATHS.home } })
       }}
+      onBookAppointment={() => navigate(PATHS.newAppointment)}
       onAppointmentDetails={(appointment) => {
         if (appointment?.id) navigate(appointmentDetailsPath(appointment.id))
       }}

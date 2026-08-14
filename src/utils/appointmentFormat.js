@@ -1,16 +1,63 @@
 import { appointmentsMock } from '../data/mocks/appointments'
 
-export function formatBookingDateLabel(slotDate = '') {
-  if (/\d{4}/.test(slotDate)) {
-    return slotDate.replace(/^[A-Za-z]+\s+/, '')
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const ACTIVE_UPCOMING = new Set(['Upcoming', 'Confirmed'])
+const LIST_RANK = { Confirmed: 0, Upcoming: 1, Completed: 2, Cancelled: 3 }
+
+function startOfDay(date) {
+  const next = new Date(date)
+  next.setHours(0, 0, 0, 0)
+  return next
+}
+
+function parseTimeParts(timeLabel = '') {
+  const match = timeLabel.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+  if (!match) return { hours: 0, minutes: 0 }
+  let hours = Number(match[1])
+  const minutes = Number(match[2])
+  const period = match[3].toUpperCase()
+  if (period === 'PM' && hours < 12) hours += 12
+  if (period === 'AM' && hours === 12) hours = 0
+  return { hours, minutes }
+}
+
+export function parseAppointmentDate(dateLabel = '', timeLabel = '', now = new Date()) {
+  const raw = String(dateLabel).trim()
+  if (!raw) return null
+
+  const withYear = /\d{4}/.test(raw) ? raw.replace(/^[A-Za-z]{3}\s+/, '') : `${raw} ${now.getFullYear()}`
+  const parsed = new Date(withYear)
+  if (Number.isNaN(parsed.getTime())) return null
+
+  if (!/\d{4}/.test(raw) && parsed < startOfDay(now)) {
+    parsed.setFullYear(parsed.getFullYear() + 1)
   }
 
-  const parts = slotDate.trim().split(/\s+/)
-  if (parts.length >= 3) {
-    return `${parts[1]} ${parts[2]} 2025`
-  }
+  const { hours, minutes } = parseTimeParts(timeLabel)
+  parsed.setHours(hours, minutes, 0, 0)
+  return parsed
+}
 
-  return slotDate
+export function formatDateLabel(date) {
+  return `${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}`
+}
+
+export function formatSlotDate(date) {
+  return `${WEEKDAYS[date.getDay()]} ${date.getDate()} ${MONTHS[date.getMonth()]}`
+}
+
+export function generateSlotDates(count = 5, startOffset = 1, now = new Date()) {
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(now)
+    date.setDate(now.getDate() + startOffset + index)
+    return formatSlotDate(date)
+  })
+}
+
+export function formatBookingDateLabel(slotDate = '', now = new Date()) {
+  const parsed = parseAppointmentDate(slotDate, '', now)
+  return parsed ? formatDateLabel(parsed) : slotDate
 }
 
 export function applyBookingToAppointment(appointment, booking) {
@@ -43,13 +90,43 @@ export function applyBookingToAppointment(appointment, booking) {
   }
 }
 
-export function getUpcomingAppointment(appointments = []) {
-  const active = (item) => item.status !== 'Completed' && item.status !== 'Cancelled'
+export function isActiveUpcoming(appointment) {
+  return ACTIVE_UPCOMING.has(appointment?.status)
+}
+
+export function getUpcomingAppointment(appointments = [], now = new Date()) {
+  const today = startOfDay(now).getTime()
+
   return (
-    appointments.find((item) => item.status === 'Confirmed') ||
-    appointments.find((item) => item.status === 'Upcoming') ||
-    appointments.find(active) ||
-    appointments[0] ||
-    null
+    appointments
+      .filter(isActiveUpcoming)
+      .map((item) => ({
+        item,
+        time: parseAppointmentDate(item.dateLabel, item.timeLabel, now)?.getTime() ?? Infinity,
+      }))
+      .filter(({ time }) => time >= today)
+      .sort((left, right) => left.time - right.time)[0]?.item || null
   )
+}
+
+export function sortAppointmentsForList(appointments = [], now = new Date()) {
+  return [...appointments].sort((left, right) => {
+    const rankLeft = LIST_RANK[left.status] ?? 9
+    const rankRight = LIST_RANK[right.status] ?? 9
+    if (rankLeft !== rankRight) return rankLeft - rankRight
+
+    const timeLeft = parseAppointmentDate(left.dateLabel, left.timeLabel, now)?.getTime() || 0
+    const timeRight = parseAppointmentDate(right.dateLabel, right.timeLabel, now)?.getTime() || 0
+    if (left.status === 'Completed' || left.status === 'Cancelled') return timeRight - timeLeft
+    return timeLeft - timeRight
+  })
+}
+
+export function countUpcomingAppointments(appointments = [], now = new Date()) {
+  const today = startOfDay(now).getTime()
+  return appointments.filter((item) => {
+    if (!isActiveUpcoming(item)) return false
+    const time = parseAppointmentDate(item.dateLabel, item.timeLabel, now)?.getTime()
+    return time == null || time >= today
+  }).length
 }

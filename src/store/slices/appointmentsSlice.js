@@ -22,10 +22,7 @@ const appointmentsSlice = createSlice({
       if (!target?.id) return
 
       const updated = resolveAppointmentImages(applyBookingToAppointment(target, booking))
-      const rest = state.items
-        .filter((item) => item.id !== updated.id)
-        .map((item) => (item.status === 'Confirmed' ? { ...item, status: 'Upcoming' } : item))
-      state.items = [updated, ...rest]
+      state.items = [updated, ...state.items.filter((item) => item.id !== updated.id)]
     },
     addBookedAppointment(state, action) {
       const appointment = generateAppointmentFromBooking(action.payload)

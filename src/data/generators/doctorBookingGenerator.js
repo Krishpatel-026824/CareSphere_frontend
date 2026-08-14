@@ -1,21 +1,26 @@
 import { extraDoctorAvatars } from '../mocks/doctorAvatars'
 import { doctorBookingMock, doctorCategoriesMock } from '../mocks/doctorBooking'
 import { extraDoctorsMock } from '../mocks/doctorsExtra'
+import { generateSlotDates } from '../../utils/appointmentFormat'
 
-const defaultSlots = {
-  dates: ['Mon 26 May', 'Tue 27 May', 'Wed 28 May'],
-  times: ['10:00 AM', '10:30 AM', '11:00 AM', '04:00 PM'],
-}
+const defaultTimes = ['10:00 AM', '10:30 AM', '11:00 AM', '04:00 PM']
 
 function withDoctorDefaults(doctor) {
-  return {
+  const merged = {
     languages: ['English', 'Spanish'],
     availableToday: true,
     videoConsult: true,
     patientsCount: '800+',
-    slots: defaultSlots,
     ...doctor,
     avatar: extraDoctorAvatars[doctor.id] || doctor.avatar,
+  }
+
+  return {
+    ...merged,
+    slots: {
+      dates: generateSlotDates(merged.slots?.dates?.length || 4, 1),
+      times: merged.slots?.times || defaultTimes,
+    },
   }
 }
 

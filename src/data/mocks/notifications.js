@@ -3,7 +3,7 @@ export const notificationsMock = [
     id: 'notif-1',
     type: 'appointment',
     title: 'Appointment Confirmed',
-    message: 'Your appointment with Dr. James Carter is confirmed for 24 May 2025 at 10:30 AM.',
+    message: 'Your appointment with Dr. James Carter is confirmed for 18 Aug 2026 at 10:30 AM.',
     timeLabel: '10:30 AM',
     unread: true,
   },

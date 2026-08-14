@@ -90,6 +90,6 @@ export function generateHomeVisitSignals(appointment, doctor, stored) {
     reminderTiming,
     videoUpdates: Boolean(toggles.videoUpdates),
     shareRecords: Boolean(toggles.shareRecords),
-    prepLabels: settings.extras.filter((item) => toggles[item.id]).map((item) => item.label),
+    prepLabels: (settings.extras || []).filter((item) => toggles[item.id]).map((item) => item.label),
   }
 }

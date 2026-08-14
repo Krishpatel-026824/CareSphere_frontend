@@ -9,12 +9,12 @@ export default function AppointmentConfirmation({ booking, onBackHome, actionLab
           <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-teal" />
         </div>
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-navy mb-2">
-          {booking.isReschedule ? 'Your appointment is rescheduled!' : 'Your appointment is confirmed!'}
+          {booking.isReschedule ? 'Your appointment is rescheduled!' : 'Your appointment is booked!'}
         </h1>
         <p className="text-sm text-body-gray mb-5">
           {booking.isReschedule
-            ? 'Your upcoming appointment on the home page has been updated.'
-            : 'Your new visit is saved with the same details as your other appointments.'}
+            ? 'This visit is confirmed. It will show as your upcoming appointment on Home.'
+            : 'This visit is saved as Upcoming. Confirm it from Appointments or Home when you are ready.'}
         </p>
 
         <div className="rounded-xl border border-border-gray bg-bg-gray p-4 text-left mb-5">

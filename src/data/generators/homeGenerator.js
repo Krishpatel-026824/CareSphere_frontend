@@ -1,3 +1,4 @@
+import { getUpcomingAppointment } from '../../utils/appointmentFormat'
 import { appointmentsMock } from '../mocks/appointments'
 import { doctorsMock } from '../mocks/doctors'
 import { quickActionsMock, userProfileMock } from '../mocks/home'
@@ -16,7 +17,7 @@ export function generateHomeData() {
     userProfile: userProfileMock,
     healthOverview: healthOverview.cards,
     healthOverviewVisibleCount: healthOverview.visibleCount,
-    upcomingAppointment: appointmentsMock[0],
+    upcomingAppointment: getUpcomingAppointment(appointmentsMock),
     medicineReminders: medicineReminders.medicines,
     medicineReminderStartIndex: medicineReminders.startIndex,
     quickActions: quickActionsMock,

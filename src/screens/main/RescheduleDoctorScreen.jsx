@@ -43,20 +43,13 @@ export default function RescheduleDoctorScreen({ doctors, appointment, onBack, o
 
         <RescheduleCurrentVisit appointment={appointment} />
 
-        <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-6 gap-3 sm:gap-4 flex-1 items-stretch">
-          {doctors.map((doctor, index) => (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+          {doctors.map((doctor) => (
             <RescheduleDoctorCard
               key={doctor.id}
               doctor={doctor}
               current={doctor.id === appointment?.doctorId}
               onSelect={onSelectDoctor}
-              className={
-                index === 3
-                  ? 'xl:col-span-2 xl:col-start-2'
-                  : index === 4
-                    ? 'sm:col-span-2 xl:col-span-2'
-                    : 'xl:col-span-2'
-              }
             />
           ))}
         </ul>

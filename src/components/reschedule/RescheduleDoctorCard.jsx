@@ -1,62 +1,60 @@
-import { CalendarDays, ChevronRight, Stethoscope } from 'lucide-react'
+import { CalendarDays } from 'lucide-react'
+import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 import DoctorRatingInline from '../doctor/DoctorRatingInline'
 
-export default function RescheduleDoctorCard({ doctor, current, onSelect, className = '' }) {
+export default function RescheduleDoctorCard({ doctor, current, onSelect }) {
+  const hasBooking = Boolean(doctor.dateLabel && doctor.timeLabel)
+  const slotLabel = hasBooking
+    ? `${doctor.dateLabel} • ${doctor.timeLabel}`
+    : [doctor.nextDate, doctor.nextTime].filter(Boolean).join(' • ') || 'Pick a slot'
+
   return (
-    <li className={`h-full min-h-0 ${className}`}>
+    <li>
       <button
         type="button"
         onClick={() => onSelect(doctor)}
-        className={`w-full h-full text-left rounded-2xl border bg-white p-5 sm:p-6 flex flex-col gap-4 cursor-pointer transition-all ${
+        className={`w-full text-left rounded-xl border p-3 flex flex-col gap-2.5 cursor-pointer transition-colors duration-150 ${
           current
-            ? 'border-teal shadow-[0_10px_28px_rgba(14,165,160,0.12)]'
-            : 'border-border-gray hover:border-teal/40 hover:shadow-[0_8px_24px_rgba(7,26,47,0.06)]'
+            ? 'border-teal bg-[#F7FBFA] shadow-[0_6px_16px_rgba(14,165,160,0.12)] hover:bg-[#F3FAF9]'
+            : 'border-border-gray bg-white hover:border-teal hover:bg-[#F7FBFA] hover:shadow-[0_4px_12px_rgba(14,165,160,0.10)]'
         }`}
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="w-[72px] h-[72px] rounded-2xl overflow-hidden shrink-0 ring-2 ring-violet-200/80 bg-violet-100">
-            <img src={doctor.photo} alt={doctor.name} className="w-full h-full object-cover" />
+        <div className="flex items-center gap-2.5">
+          <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-teal-light">
+            <img src={doctor.photo} alt="" className="w-full h-full object-cover object-top" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-navy truncate">{doctor.name}</p>
+            <p className="text-[12px] text-body-gray truncate">
+              {doctor.specialty} • {doctor.clinic}
+            </p>
           </div>
           {current ? (
-            <span className="text-[11px] font-semibold text-teal bg-teal-light px-2.5 py-1 rounded-full">
+            <span className="text-[10px] font-semibold text-teal bg-teal-light px-2 py-0.5 rounded-full shrink-0">
               This visit
             </span>
           ) : (
-            <span className="text-[11px] font-semibold text-body-gray bg-bg-gray px-2.5 py-1 rounded-full">
+            <span
+              className={`text-[10px] font-semibold px-2 py-0.5 rounded-full shrink-0 ${
+                appointmentStatusStyles[doctor.status] || 'text-body-gray bg-bg-gray'
+              }`}
+            >
               {doctor.status}
             </span>
           )}
         </div>
 
-        <div className="min-w-0">
-          <p className="text-lg font-bold text-navy truncate">{doctor.name}</p>
-          <p className="text-sm text-body-gray mt-1 truncate">
-            {doctor.specialty} • {doctor.clinic}
+        <DoctorRatingInline rating={doctor.rating} reviewCount={doctor.reviewCount} />
+
+        <div className="rounded-lg bg-bg-gray px-2.5 py-2 flex items-center justify-between gap-2">
+          <p className="inline-flex items-center gap-1.5 text-[11px] text-body-gray min-w-0">
+            <CalendarDays className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={1.75} />
+            <span className="truncate font-semibold text-navy">{slotLabel}</span>
           </p>
-          <DoctorRatingInline rating={doctor.rating} reviewCount={doctor.reviewCount} className="mt-2" />
+          <p className="text-[11px] text-body-gray shrink-0">{doctor.experience}+ yrs</p>
         </div>
 
-        <div className="rounded-xl bg-bg-gray p-3.5 flex flex-col gap-2.5">
-          <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-body-gray">
-            <CalendarDays className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
-            Booked slot
-          </p>
-          <p className="text-sm font-semibold text-navy">
-            {doctor.dateLabel} • {doctor.timeLabel}
-          </p>
-          <p className="inline-flex items-center gap-1.5 text-xs text-body-gray">
-            <Stethoscope className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
-            {doctor.experience}+ years • {doctor.visitType}
-          </p>
-        </div>
-
-        <div className="mt-auto flex items-center justify-between gap-3 pt-1">
-          <p className="text-base font-bold text-teal">₹{doctor.fee}</p>
-          <span className="inline-flex items-center gap-1 text-sm font-semibold text-navy">
-            Choose new slot
-            <ChevronRight className="w-4 h-4" strokeWidth={1.75} />
-          </span>
-        </div>
+        <p className="text-sm font-bold text-teal">₹{doctor.fee}</p>
       </button>
     </li>
   )

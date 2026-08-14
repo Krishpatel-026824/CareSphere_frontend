@@ -14,8 +14,8 @@ import {
   newAppointmentBookPath,
 } from '../paths'
 
-function goToReschedule(navigate, appointment) {
-  navigate(PATHS.reschedule, { state: { appointment } })
+function goToReschedule(navigate, appointment, returnTo) {
+  navigate(PATHS.reschedule, { state: { appointment, returnTo } })
 }
 
 function goToNewAppointment(navigate) {
@@ -30,7 +30,9 @@ export function AppointmentsPage() {
     <AppointmentsScreen
       appointments={appointments}
       onSelectAppointment={(appointment) => navigate(appointmentDetailsPath(appointment.id))}
-      onReschedule={(appointment) => goToReschedule(navigate, appointment)}
+      onReschedule={(appointment) =>
+        goToReschedule(navigate, appointment, appointmentDetailsPath(appointment.id))
+      }
       onNewAppointment={() => goToNewAppointment(navigate)}
     />
   )
@@ -50,7 +52,9 @@ export function AppointmentDetailsPage() {
       appointments={appointments}
       selectedId={id}
       onSelectAppointment={(appointment) => navigate(appointmentDetailsPath(appointment.id))}
-      onReschedule={(appointment) => goToReschedule(navigate, appointment)}
+      onReschedule={(appointment) =>
+        goToReschedule(navigate, appointment, appointmentDetailsPath(appointment.id))
+      }
       onNewAppointment={() => goToNewAppointment(navigate)}
     />
   )
@@ -108,20 +112,25 @@ export function RescheduleDoctorPage() {
   const location = useLocation()
   const { appointments, doctorFlowData, upcomingAppointment } = useAppStore()
   const appointment = location.state?.appointment || upcomingAppointment
-  const doctors = generateRescheduleDoctors(doctorFlowData.doctors, appointments)
+  const returnTo = location.state?.returnTo || PATHS.appointments
+  const doctors = generateRescheduleDoctors(
+    doctorFlowData.doctors,
+    appointments,
+    appointment?.doctorId,
+  )
 
   if (!appointment) {
-    return <Navigate to={PATHS.home} replace />
+    return <Navigate to={returnTo} replace />
   }
 
   return (
     <RescheduleDoctorScreen
       doctors={doctors}
       appointment={appointment}
-      onBack={() => navigate(PATHS.home)}
+      onBack={() => navigate(returnTo)}
       onSelectDoctor={(doctor) =>
         navigate(doctorBookingPath(doctor.id), {
-          state: { source: 'reschedule', appointment },
+          state: { source: 'reschedule', appointment, returnTo },
         })
       }
     />

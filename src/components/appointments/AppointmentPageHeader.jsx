@@ -1,6 +1,6 @@
 import { CalendarCheck, Plus } from 'lucide-react'
 
-export default function AppointmentPageHeader({ count = 0, onNewAppointment }) {
+export default function AppointmentPageHeader({ count = 0, upcomingCount = 0, onNewAppointment }) {
   return (
     <header className="shrink-0 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3 min-w-0">
@@ -11,7 +11,9 @@ export default function AppointmentPageHeader({ count = 0, onNewAppointment }) {
           <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-navy tracking-tight leading-none">
             Appointments
           </h1>
-          <p className="text-sm text-body-gray mt-1">{count} total appointments</p>
+          <p className="text-sm text-body-gray mt-1">
+            {upcomingCount} upcoming · {count} total
+          </p>
         </div>
       </div>
 
