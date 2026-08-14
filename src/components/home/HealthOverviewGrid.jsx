@@ -1,16 +1,10 @@
 import { useState } from 'react'
-import { useBreakpoint } from '../../hooks/useBreakpoint'
 import HealthOverviewCard from './HealthOverviewCard'
 
-const INITIAL_VISIBLE = 4
-
-export default function HealthOverviewGrid({ cards = [], gaugeSize = 100 }) {
+export default function HealthOverviewGrid({ cards = [], gaugeSize = 100, visibleCount = 4 }) {
   const [showAll, setShowAll] = useState(false)
-  const { xl } = useBreakpoint()
-
-  const visibleCards = showAll ? cards : cards.slice(0, INITIAL_VISIBLE)
-  const canExpand = cards.length > INITIAL_VISIBLE
-  const cardGaugeSize = showAll && xl ? Math.max(72, gaugeSize - 20) : gaugeSize
+  const visibleCards = showAll ? cards : cards.slice(0, visibleCount)
+  const canExpand = cards.length > visibleCount
 
   return (
     <section className="shrink-0">
@@ -30,13 +24,11 @@ export default function HealthOverviewGrid({ cards = [], gaugeSize = 100 }) {
 
       <div
         className={`grid gap-2.5 sm:gap-3 lg:gap-4 ${
-          showAll
-            ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7'
-            : 'grid-cols-2 lg:grid-cols-4'
+          showAll ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 'grid-cols-2 lg:grid-cols-4'
         }`}
       >
         {visibleCards.map((card) => (
-          <HealthOverviewCard key={card.id} card={card} gaugeSize={cardGaugeSize} />
+          <HealthOverviewCard key={card.id} card={card} gaugeSize={gaugeSize} />
         ))}
       </div>
     </section>

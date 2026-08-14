@@ -1,38 +1,36 @@
-import { useState } from 'react'
-import { CalendarDays, Check, Clock3, Pill } from 'lucide-react'
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, Pill } from 'lucide-react'
+import { usePager } from '../../hooks/usePager'
+import { useMedicineReminders } from '../../hooks/useMedicineReminders'
 
 const iconStroke = 1.75
 
-export default function MedicineReminderCard({ medicine: initialMedicine }) {
-  const [medicine, setMedicine] = useState(initialMedicine)
-  const [takenToday, setTakenToday] = useState(false)
+export default function MedicineReminderCard() {
+  const { medicines, takenById, startIndex, pendingCount, markAsTaken } = useMedicineReminders()
+  const { item: medicine, index, count, canPage, goNext, goPrev } = usePager(medicines, startIndex)
 
-  const refillPct = Math.round((medicine.remainingCount / medicine.remainingTotal) * 100)
-  const canMarkTaken = !takenToday && medicine.remainingCount > 0
+  if (!medicine) return null
 
-  function handleMarkAsTaken() {
-    if (!canMarkTaken) return
-
-    const nextCount = medicine.remainingCount - 1
-    setMedicine((prev) => ({
-      ...prev,
-      remainingCount: nextCount,
-      remaining: `${nextCount} left`,
-    }))
-    setTakenToday(true)
-  }
+  const remainingCount = medicine.remainingCount
+  const takenToday = Boolean(takenById[medicine.id])
+  const refillPct = Math.round((remainingCount / medicine.remainingTotal) * 100)
+  const canMarkTaken = !takenToday && remainingCount > 0
 
   return (
     <section className="bg-white rounded-[24px] shadow-[0_8px_30px_rgba(7,26,47,0.06)] p-5 sm:p-6 flex flex-col gap-4 shrink-0 w-full">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>
+        <div className="min-w-0">
+          <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>
+          <p className="text-[11px] text-body-gray mt-0.5">
+            {medicine.period} dose • {pendingCount} today
+          </p>
+        </div>
         <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white bg-navy px-3 py-1.5 rounded-full shrink-0">
           <Clock3 className="w-3.5 h-3.5" strokeWidth={2} />
           {medicine.timeLabel}
         </span>
       </div>
 
-      <div className="flex items-center gap-3.5">
+      <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease]">
         <div className="w-[52px] h-[52px] rounded-2xl bg-[#ECEBFF] flex items-center justify-center shrink-0">
           <Pill className="w-6 h-6 text-[#7C4DFF]" strokeWidth={iconStroke} />
         </div>
@@ -43,7 +41,7 @@ export default function MedicineReminderCard({ medicine: initialMedicine }) {
             <span className="mx-1.5 text-body-gray/50">•</span>
             {medicine.timing}
             <span className="mx-1.5 text-body-gray/50">•</span>
-            <span className="font-semibold text-[#7C4DFF]">{medicine.remaining}</span>
+            <span className="font-semibold text-[#7C4DFF]">{remainingCount} left</span>
           </p>
         </div>
       </div>
@@ -54,7 +52,7 @@ export default function MedicineReminderCard({ medicine: initialMedicine }) {
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs font-medium text-body-gray">Refill status</p>
           <p className="text-xs font-bold text-[#7C4DFF] tabular-nums">
-            {medicine.remainingCount}/{medicine.remainingTotal}
+            {remainingCount}/{medicine.remainingTotal}
           </p>
         </div>
         <div className="h-2 rounded-full bg-[#F0EFFF] overflow-hidden">
@@ -68,7 +66,7 @@ export default function MedicineReminderCard({ medicine: initialMedicine }) {
 
       <button
         type="button"
-        onClick={handleMarkAsTaken}
+        onClick={() => markAsTaken(medicine.id)}
         disabled={!canMarkTaken}
         className={`w-full min-h-[48px] rounded-2xl text-sm font-semibold inline-flex items-center justify-center gap-2.5 shadow-sm transition-colors ${
           canMarkTaken
@@ -85,6 +83,30 @@ export default function MedicineReminderCard({ medicine: initialMedicine }) {
         </span>
         {takenToday ? 'Taken today' : 'Mark as taken'}
       </button>
+
+      {canPage ? (
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={goPrev}
+            aria-label="Previous medicine"
+            className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+          >
+            <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+          </button>
+          <p className="text-[11px] font-semibold text-[#7C4DFF] tabular-nums">
+            {index + 1} / {count}
+          </p>
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next medicine"
+            className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+          >
+            <ChevronRight className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+      ) : null}
     </section>
   )
 }

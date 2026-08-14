@@ -1,46 +1,107 @@
-import { CalendarPlus, FlaskConical } from 'lucide-react'
-import QuickActionHeader from '../../components/home/QuickActionHeader'
-import { generateLabTestsData } from '../../data/generators/quickActionsGenerator'
+import { useEffect, useRef, useState } from 'react'
+import { ChevronDown, ChevronUp, FlaskConical } from 'lucide-react'
+import BackHomeButton from '../../components/BackHomeButton'
+import ServicePageHeading from '../../components/ServicePageHeading'
+import LabReportsList from '../../components/lab/LabReportsList'
+import LabTestCard from '../../components/lab/LabTestCard'
+import LabTestsBookingSummary from '../../components/lab/LabTestsBookingSummary'
+import LabTestsCheckoutSection from '../../components/lab/LabTestsCheckoutSection'
+import LabTestsFooter from '../../components/lab/LabTestsFooter'
+import { useLabTestsBooking } from '../../hooks/useLabTestsBooking'
 
-export default function LabTestsScreen({ onBack }) {
-  const { tests } = generateLabTestsData()
+export default function LabTestsScreen({ onBack, onReportsGenerated }) {
+  const checkoutRef = useRef(null)
+  const catalogRef = useRef(null)
+  const [activeFooterLink, setActiveFooterLink] = useState(null)
+  const [expandedReportId, setExpandedReportId] = useState(null)
+  const [showAllTests, setShowAllTests] = useState(false)
+  const booking = useLabTestsBooking({ onReportsGenerated })
+  const visibleTests = showAllTests ? booking.tests : booking.tests.slice(0, 5)
+  const extraCount = Math.max(0, booking.tests.length - 5)
+
+  useEffect(() => {
+    if (booking.reports.length) setExpandedReportId(booking.reports[0].id)
+  }, [booking.reports])
+
+  function handleCheckout() {
+    checkoutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  function handleAddMore() {
+    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
-      <div className="w-full max-w-3xl mx-auto page-pad py-4 sm:py-6 flex flex-col gap-4">
-        <QuickActionHeader
-          title="Lab tests"
-          subtitle="Book home sample collection or visit a partner lab"
-          onBack={onBack}
-        />
+    <div className="w-full min-h-full bg-[#F4F7F8]">
+      <div className="w-full page-pad py-5 sm:py-6 lg:py-7 flex flex-col gap-5">
+        <header>
+          <BackHomeButton onClick={onBack} />
+          <ServicePageHeading
+            icon={FlaskConical}
+            tone="bg-amber-100 text-amber-600"
+            title="Lab tests"
+            subtitle="Book home sample collection or visit a partner lab"
+          />
+        </header>
 
-        <div className="flex flex-col gap-3">
-          {tests.map((test) => (
-            <article
-              key={test.id}
-              className="bg-white border border-border-gray rounded-2xl p-4 shadow-sm flex items-start gap-3.5"
-            >
-              <span className="w-11 h-11 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center shrink-0">
-                <FlaskConical className="w-5 h-5" strokeWidth={1.75} />
-              </span>
-              <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-semibold text-navy">{test.name}</h2>
-                <p className="text-xs text-body-gray mt-1 leading-relaxed">{test.description}</p>
-                <div className="flex flex-wrap items-center gap-3 mt-2">
-                  <p className="text-sm font-bold text-navy">₹{test.price}</p>
-                  <p className="text-xs text-body-gray">Results in {test.turnaround}</p>
-                </div>
-              </div>
+        {booking.reports.length ? (
+          <LabReportsList
+            reports={booking.reports}
+            expandedId={expandedReportId}
+            onToggle={setExpandedReportId}
+          />
+        ) : null}
+
+        <div ref={catalogRef} className="flex flex-col gap-3.5">
+          <LabTestsBookingSummary
+            itemCount={booking.bill.itemCount}
+            subtotal={booking.bill.subtotal}
+            onCheckout={handleCheckout}
+          />
+
+          <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))]">
+              {visibleTests.map((test) => (
+                <LabTestCard
+                  key={test.id}
+                  test={test}
+                  booked={Boolean(booking.cart[test.id])}
+                  onBook={booking.bookTest}
+                  onRemove={booking.removeTest}
+                />
+              ))}
+            </div>
+
+            {extraCount > 0 ? (
               <button
                 type="button"
-                className="min-h-9 px-3.5 rounded-xl bg-teal text-white text-xs font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center gap-1.5 shrink-0"
+                onClick={() => setShowAllTests((open) => !open)}
+                className="w-full min-h-11 rounded-xl bg-[#EEF1F4] text-sm font-semibold text-navy inline-flex items-center justify-center gap-2 cursor-pointer hover:bg-border-gray"
               >
-                <CalendarPlus className="w-3.5 h-3.5" strokeWidth={1.75} />
-                Book
+                {showAllTests ? 'View less' : `View more (${extraCount} tests)`}
+                {showAllTests ? (
+                  <ChevronUp className="w-4 h-4" strokeWidth={1.75} />
+                ) : (
+                  <ChevronDown className="w-4 h-4" strokeWidth={1.75} />
+                )}
               </button>
-            </article>
-          ))}
+            ) : null}
         </div>
+
+        <div ref={checkoutRef}>
+          <LabTestsCheckoutSection
+            bill={booking.bill}
+            paymentMethod={booking.paymentMethod}
+            onPaymentChange={booking.setPaymentMethod}
+            paid={booking.paid}
+            onPay={booking.payBill}
+            onAddMore={handleAddMore}
+          />
+        </div>
+
+        <LabTestsFooter
+          activeLink={activeFooterLink}
+          onLinkClick={setActiveFooterLink}
+        />
       </div>
     </div>
   )

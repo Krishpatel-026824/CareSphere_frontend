@@ -1,9 +1,12 @@
 import { Search } from 'lucide-react'
 import DoctorRatingInline from '../../components/doctor/DoctorRatingInline'
-import { generateSearchData } from '../../data/generators/searchGenerator'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { clearRecentSearches, setQuery } from '../../store/slices/searchSlice'
 
 export default function SearchScreen() {
-  const searchData = generateSearchData()
+  const dispatch = useAppDispatch()
+  const searchData = useAppSelector((state) => state.search)
+  const query = searchData.query
 
   return (
     <div className="w-full min-h-full bg-bg-gray">
@@ -14,6 +17,8 @@ export default function SearchScreen() {
             <Search className="w-4 h-4 text-body-gray shrink-0" />
             <input
               type="text"
+              value={query}
+              onChange={(e) => dispatch(setQuery(e.target.value))}
               placeholder="Search doctors, specialties, hospitals..."
               className="w-full min-w-0 text-sm lg:text-base text-navy outline-none bg-transparent"
             />
@@ -23,7 +28,11 @@ export default function SearchScreen() {
         <section className="mb-5 sm:mb-6">
           <div className="flex items-center justify-between mb-3 gap-2">
             <h2 className="text-base sm:text-lg font-semibold text-navy">Recent Searches</h2>
-            <button type="button" className="text-sm text-teal font-medium cursor-pointer shrink-0">
+            <button
+              type="button"
+              onClick={() => dispatch(clearRecentSearches())}
+              className="text-sm text-teal font-medium cursor-pointer shrink-0"
+            >
               Clear All
             </button>
           </div>

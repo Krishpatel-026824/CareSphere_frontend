@@ -1,0 +1,30 @@
+import { configureStore } from '@reduxjs/toolkit'
+import appointmentsReducer from './slices/appointmentsSlice'
+import authReducer from './slices/authSlice'
+import doctorsReducer from './slices/doctorsSlice'
+import healthReducer from './slices/healthSlice'
+import labReducer from './slices/labSlice'
+import medicinesReducer from './slices/medicinesSlice'
+import messagesReducer from './slices/messagesSlice'
+import notificationsReducer from './slices/notificationsSlice'
+import pharmacyReducer from './slices/pharmacySlice'
+import profileReducer from './slices/profileSlice'
+import searchReducer from './slices/searchSlice'
+import telemedicineReducer from './slices/telemedicineSlice'
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    appointments: appointmentsReducer,
+    doctors: doctorsReducer,
+    health: healthReducer,
+    medicines: medicinesReducer,
+    messages: messagesReducer,
+    notifications: notificationsReducer,
+    pharmacy: pharmacyReducer,
+    profile: profileReducer,
+    lab: labReducer,
+    telemedicine: telemedicineReducer,
+    search: searchReducer,
+  },
+})

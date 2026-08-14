@@ -1,50 +1,64 @@
-import { Video } from 'lucide-react'
-import DoctorRatingInline from '../../components/doctor/DoctorRatingInline'
-import QuickActionHeader from '../../components/home/QuickActionHeader'
-import { getVideoConsultDoctors } from '../../data/generators/quickActionsGenerator'
+import { MapPin, Video } from 'lucide-react'
+import BackHomeButton from '../../components/BackHomeButton'
+import TelemedicineDoctorCard from '../../components/telemedicine/TelemedicineDoctorCard'
+import TelemedicineFilters from '../../components/telemedicine/TelemedicineFilters'
+import { useTelemedicine } from '../../hooks/useTelemedicine'
 
 export default function TelemedicineScreen({ doctors = [], onBack, onSelectDoctor }) {
-  const videoDoctors = getVideoConsultDoctors(doctors)
+  const {
+    filters,
+    items,
+    setSpecialty,
+    toggleClinic,
+    toggleLocation,
+    toggleHighRated,
+    toggleAvailable,
+  } = useTelemedicine(doctors)
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
-      <div className="w-full max-w-3xl mx-auto page-pad py-4 sm:py-6 flex flex-col gap-4">
-        <QuickActionHeader
-          title="Telemedicine"
-          subtitle="Doctors available for video consultation"
-          onBack={onBack}
-        />
+    <div className="w-full min-h-full bg-white">
+      <div className="w-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6">
+        <header className="flex flex-col gap-5">
+          <BackHomeButton onClick={onBack} />
 
-        <div className="flex flex-col gap-3">
-          {videoDoctors.length === 0 ? (
-            <div className="rounded-2xl border border-border-gray bg-white p-6 text-center shadow-sm">
-              <p className="text-sm font-semibold text-navy">No video doctors available</p>
+          <div className="flex items-center gap-3.5">
+            <div className="relative w-14 h-14 rounded-2xl bg-teal-light flex items-center justify-center shrink-0">
+              <span className="absolute inset-0 rounded-2xl bg-teal/10" aria-hidden="true" />
+              <Video className="relative w-7 h-7 text-teal" strokeWidth={1.75} />
             </div>
-          ) : (
-            videoDoctors.map((doctor) => (
-              <button
-                key={doctor.id}
-                type="button"
-                onClick={() => onSelectDoctor?.(doctor)}
-                className="w-full text-left bg-white border border-border-gray rounded-2xl p-4 shadow-sm flex items-center gap-3.5 cursor-pointer hover:border-teal/40 hover:shadow-md transition-all"
-              >
-                <div className="w-12 h-12 rounded-full bg-teal-light overflow-hidden shrink-0 ring-2 ring-teal/15">
-                  <img src={doctor.avatar} alt={doctor.name} className="w-full h-full object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-sm font-semibold text-navy truncate">{doctor.name}</h2>
-                  <p className="text-xs text-body-gray mt-0.5 truncate">
-                    {doctor.specialty} • {doctor.hospital}
-                  </p>
-                  <DoctorRatingInline rating={doctor.rating} reviewCount={doctor.reviewCount} className="mt-1 text-xs" />
-                </div>
-                <span className="inline-flex items-center gap-1.5 shrink-0 text-teal text-xs font-semibold bg-teal-light px-2.5 py-1.5 rounded-full">
-                  <Video className="w-3.5 h-3.5" strokeWidth={1.75} />
-                  Video
-                </span>
-              </button>
-            ))
-          )}
+            <div className="min-w-0">
+              <h1 className="text-[32px] sm:text-[36px] font-bold text-navy tracking-tight leading-none">
+                Telemedicine
+              </h1>
+              <p className="text-sm text-body-gray mt-2 inline-flex items-center gap-1.5">
+                <MapPin className="w-4 h-4 text-rose-500" strokeWidth={1.75} />
+                Ahmedabad
+              </p>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex flex-col lg:flex-row items-start gap-5 lg:gap-6">
+          <TelemedicineFilters
+            filters={filters}
+            onSpecialty={setSpecialty}
+            onClinic={toggleClinic}
+            onLocation={toggleLocation}
+            onHighRated={toggleHighRated}
+            onAvailable={toggleAvailable}
+          />
+
+          <div className="flex-1 min-w-0 w-full flex flex-col gap-4">
+            {items.length === 0 ? (
+              <div className="rounded-xl border border-border-gray bg-white p-8 text-center">
+                <p className="text-sm font-semibold text-navy">No video doctors match these filters</p>
+              </div>
+            ) : (
+              items.map((doctor) => (
+                <TelemedicineDoctorCard key={doctor.id} doctor={doctor} onSelect={onSelectDoctor} />
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

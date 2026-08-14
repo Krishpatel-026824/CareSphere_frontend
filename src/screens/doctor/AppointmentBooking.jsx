@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import Button from '../../components/Button'
 
-export default function AppointmentBooking({ doctor, onBack, onContinue }) {
+export default function AppointmentBooking({ doctor, onBack, onContinue, variant = 'default' }) {
   const [selectedDate, setSelectedDate] = useState(doctor.slots.dates[1] || doctor.slots.dates[0])
   const [selectedTime, setSelectedTime] = useState(doctor.slots.times[2] || doctor.slots.times[0])
   const appointmentId = useMemo(() => `CSAP${Date.now().toString().slice(-8)}`, [])
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
+    <div className={`w-full min-h-full ${variant === 'appointments' ? 'bg-[#E8F1F2]' : 'bg-bg-gray'}`}>
       <div className="w-full max-w-4xl mx-auto page-pad py-4 sm:py-6 lg:py-8">
         <button
           type="button"

@@ -30,6 +30,7 @@ export function filterDoctorsByQuickFilter(doctors, filterId) {
 }
 
 export const doctorFilterTitles = {
+  all: 'Doctors',
   available: 'Available Today',
   rated: 'Top Rated Doctors',
   near: 'Doctors Near You',
@@ -37,6 +38,7 @@ export const doctorFilterTitles = {
 }
 
 export const doctorFilterHints = {
+  all: 'Specialists available near you',
   available: 'Doctors with open slots today',
   rated: 'Highest rated doctors nearby',
   near: 'Closest doctors within 5 km',

@@ -1,28 +1,27 @@
 import { appointmentsMock } from '../mocks/appointments'
 import { doctorsMock } from '../mocks/doctors'
-import { healthOverviewCardsMock, quickActionsMock, userProfileMock } from '../mocks/home'
+import { quickActionsMock, userProfileMock } from '../mocks/home'
+import { generateHealthOverviewData } from './healthOverviewGenerator'
 import { notificationsMock } from '../mocks/notifications'
+import { generateHealthTipsData } from './healthTipsGenerator'
+import { generateMedicineRemindersData } from './medicineRemindersGenerator'
 
 export function generateHomeData() {
+  const healthTips = generateHealthTipsData()
+  const medicineReminders = generateMedicineRemindersData()
+  const healthOverview = generateHealthOverviewData()
+
   return {
     greetingName: 'Krish',
     userProfile: userProfileMock,
-    healthOverview: healthOverviewCardsMock,
+    healthOverview: healthOverview.cards,
+    healthOverviewVisibleCount: healthOverview.visibleCount,
     upcomingAppointment: appointmentsMock[0],
-    medicineReminder: {
-      id: 'med-1',
-      medicineName: 'Metformin 500mg',
-      dosage: '1 tablet',
-      timing: 'After dinner',
-      timeLabel: '08:00 PM',
-      remaining: '12 left',
-      remainingCount: 12,
-      remainingTotal: 30,
-      schedule: 'Daily • After dinner',
-    },
+    medicineReminders: medicineReminders.medicines,
+    medicineReminderStartIndex: medicineReminders.startIndex,
     quickActions: quickActionsMock,
-    healthTip: 'Drink at least 8 glasses of water daily to stay healthy and hydrated.',
-    healthTipSubtitle: 'Care with clarity — small habits build better health.',
+    healthTips: healthTips.tips,
+    healthTipLoopMs: healthTips.loopMs,
     recommendedDoctors: doctorsMock,
     notifications: notificationsMock,
   }

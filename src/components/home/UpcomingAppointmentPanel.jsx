@@ -4,21 +4,14 @@ const iconStroke = 1.75
 
 export default function UpcomingAppointmentPanel({
   appointment,
-  onViewAll,
+  visitSignals,
   onReschedule,
   onJoinDetails,
 }) {
   return (
     <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 xl:p-6 flex flex-col gap-3.5 sm:gap-4 h-full">
-      <div className="flex items-center justify-between shrink-0">
+      <div className="shrink-0">
         <h2 className="text-sm sm:text-base font-semibold text-navy">Upcoming appointment</h2>
-        <button
-          type="button"
-          onClick={onViewAll}
-          className="text-sm font-semibold text-teal cursor-pointer hover:opacity-70 transition-opacity"
-        >
-          View all →
-        </button>
       </div>
 
       <div className="flex items-center gap-3 sm:gap-4 shrink-0">
@@ -35,6 +28,35 @@ export default function UpcomingAppointmentPanel({
           <p className="text-sm text-body-gray mt-0.5">
             {appointment.specialty} • {appointment.clinic}
           </p>
+          {visitSignals ? (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              <span
+                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                  visitSignals.reminderOn
+                    ? 'bg-teal-light text-teal-dark'
+                    : 'bg-slate-100 text-slate-600'
+                }`}
+              >
+                {visitSignals.reminderOn
+                  ? `Reminder · ${visitSignals.reminderTiming}`
+                  : 'Visit reminders off'}
+              </span>
+              {visitSignals.videoUpdates ? (
+                <span className="rounded-full bg-[#E8F4FF] px-2 py-0.5 text-[11px] font-semibold text-[#1B6AA5]">
+                  Video updates on
+                </span>
+              ) : null}
+              <span
+                className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                  visitSignals.shareRecords
+                    ? 'bg-emerald-100 text-emerald-800'
+                    : 'bg-slate-100 text-slate-600'
+                }`}
+              >
+                {visitSignals.shareRecords ? 'Records shared' : 'Records private'}
+              </span>
+            </div>
+          ) : null}
         </div>
       </div>
 
@@ -56,8 +78,8 @@ export default function UpcomingAppointmentPanel({
         <div className="rounded-2xl border border-border-gray bg-bg-gray overflow-hidden flex flex-col min-h-[200px]">
           <div className="h-24 sm:h-28 shrink-0 overflow-hidden">
             <img
-              src={appointment.clinicImage}
-              alt="Clinic building"
+              src={appointment.clinicImage || appointment.heroImage}
+              alt={`${appointment.clinic} building`}
               className="w-full h-full object-cover"
             />
           </div>
@@ -83,8 +105,8 @@ export default function UpcomingAppointmentPanel({
           </div>
           <p className="text-sm font-semibold text-navy leading-snug">{appointment.prepNote}</p>
           <ul className="flex flex-col gap-2 mt-auto">
-            {appointment.prepItems.map((item) => (
-              <li key={item} className="flex items-center gap-2 text-sm font-medium text-navy/85">
+            {[...appointment.prepItems, ...(visitSignals?.prepLabels || [])].map((item, index) => (
+              <li key={`${item}-${index}`} className="flex items-center gap-2 text-sm font-medium text-navy/85">
                 <span className="w-5 h-5 rounded-full bg-amber/25 text-amber flex items-center justify-center shrink-0">
                   <Check className="w-3 h-3" strokeWidth={3} />
                 </span>

@@ -1,5 +1,7 @@
 import { ArrowLeft, CalendarDays, Globe, Stethoscope, Users } from 'lucide-react'
+import ExpertiseChips from '../../components/appointments/ExpertiseChips'
 import PatientReviewsPanel from '../../components/doctor/PatientReviewsPanel'
+import { generateExpertiseChips } from '../../data/generators/expertiseChipGenerator'
 
 export default function DoctorProfile({ doctor, onBack, onBook }) {
   return (
@@ -59,16 +61,7 @@ export default function DoctorProfile({ doctor, onBack, onBook }) {
           </section>
           <section className="bg-white border border-border-gray rounded-2xl p-4 sm:p-5 shadow-sm">
             <h2 className="text-base sm:text-lg font-semibold text-navy mb-2">Expertise</h2>
-            <div className="flex flex-wrap gap-2">
-              {doctor.expertise.map((item) => (
-                <span
-                  key={item}
-                  className="text-xs sm:text-sm px-3 py-1.5 rounded-full border border-border-gray bg-bg-gray text-navy"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
+            <ExpertiseChips chips={generateExpertiseChips(doctor.expertise)} />
           </section>
         </div>
 

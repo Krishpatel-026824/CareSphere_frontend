@@ -60,7 +60,7 @@ export default function AppointmentDetailsScreen({ appointment, onBack, onResche
           </div>
 
           <div className="rounded-2xl border border-border-gray overflow-hidden">
-            <img src={appointment.clinicImage} alt="Clinic" className="w-full h-32 sm:h-36 object-cover" />
+            <img src={appointment.clinicImage || appointment.heroImage} alt={`${appointment.clinic} building`} className="w-full h-32 sm:h-36 object-cover" />
             <div className="p-4 bg-bg-gray">
               <p className="text-sm font-bold text-navy">{appointment.address}</p>
               <p className="text-sm font-semibold text-teal mt-1">{appointment.room}</p>

@@ -10,10 +10,10 @@ import { formatTodayLabel, getTimeGreeting } from '../../utils/greeting'
 export default function HomeDashboard({
   onBellClick,
   onActionClick,
-  onViewAllAppointments,
   onRescheduleAppointment,
   onAppointmentDetails,
   upcomingAppointment,
+  visitSignals,
 }) {
   const homeData = generateHomeData()
   const appointment = upcomingAppointment || homeData.upcomingAppointment
@@ -49,22 +49,26 @@ export default function HomeDashboard({
           </button>
         </header>
 
-        <HealthOverviewGrid cards={homeData.healthOverview} gaugeSize={gaugeSize} />
+        <HealthOverviewGrid
+          cards={homeData.healthOverview}
+          gaugeSize={gaugeSize}
+          visibleCount={homeData.healthOverviewVisibleCount}
+        />
 
         <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 lg:gap-5 min-w-0 xl:items-stretch">
           <div className="xl:col-span-3 min-w-0">
             <UpcomingAppointmentPanel
+              key={`${appointment.id}-${appointment.doctorId}-${appointment.dateLabel}-${appointment.timeLabel}`}
               appointment={appointment}
-              onViewAll={onViewAllAppointments}
+              visitSignals={visitSignals}
               onReschedule={() => onRescheduleAppointment?.(appointment)}
               onJoinDetails={() => onAppointmentDetails?.(appointment)}
             />
           </div>
           <div className="xl:col-span-2 min-w-0">
             <InsightsPanel
-              medicine={homeData.medicineReminder}
-              tip={homeData.healthTip}
-              tipSubtitle={homeData.healthTipSubtitle}
+              tips={homeData.healthTips}
+              loopMs={homeData.healthTipLoopMs}
             />
           </div>
         </div>

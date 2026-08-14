@@ -1,49 +1,75 @@
 import { useState } from 'react'
-import { Pill, ShoppingBag } from 'lucide-react'
+import { Pill } from 'lucide-react'
+import PharmacyCartActions from './PharmacyCartActions'
 
-export default function PharmacyItemCard({ item, quantity = 0, onAdd }) {
+function splitSubtitle(subtitle = '') {
+  const parts = subtitle.split(/\s+[-•]\s+/)
+  return {
+    useCase: parts[0] || subtitle,
+    packSize: parts[1] || '',
+  }
+}
+
+export default function PharmacyItemCard({
+  item,
+  quantity = 0,
+  restockRequested = false,
+  onAdd,
+  onRemove,
+  onRequestRestock,
+  onRestock,
+}) {
   const [imageError, setImageError] = useState(false)
   const showImage = item.image && !imageError
+  const outOfStock = !item.inStock
+  const { useCase, packSize } = splitSubtitle(item.subtitle)
 
   return (
-    <article className="bg-white border border-border-gray rounded-2xl p-3.5 sm:p-4 shadow-sm flex items-center gap-3.5">
-      <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 ring-1 ring-border-gray bg-orange-50">
-        {showImage ? (
-          <img
-            src={item.image}
-            alt={item.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            onError={() => setImageError(true)}
-          />
-        ) : (
-          <span className="w-full h-full flex items-center justify-center text-orange-600">
-            <Pill className="w-6 h-6" strokeWidth={1.75} />
-          </span>
-        )}
-      </div>
+    <article
+      className={`rounded-2xl border p-3 sm:p-3.5 bg-white min-w-0 ${
+        outOfStock ? 'border-amber-200 bg-amber-50' : quantity > 0 ? 'border-teal/40' : 'border-border-gray'
+      }`}
+    >
+      <div className="flex items-start gap-2.5 sm:gap-3">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[10px] overflow-hidden shrink-0 border border-border-gray bg-[#F8F9FA]">
+          {showImage ? (
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-full h-full object-contain"
+              loading="lazy"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <span className="w-full h-full flex items-center justify-center text-orange-600">
+              <Pill className="w-6 h-6" strokeWidth={1.75} />
+            </span>
+          )}
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <h2 className="text-sm sm:text-[15px] font-semibold text-navy leading-snug">{item.name}</h2>
-        <p className="text-xs text-body-gray mt-0.5">{item.subtitle}</p>
-        <p className="text-sm font-bold text-navy mt-1.5">₹{item.price}</p>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <h2 className="text-sm sm:text-[15px] font-bold text-navy leading-snug break-words">
+              {item.name}
+            </h2>
+            <div className="shrink-0 pt-0.5">
+              <PharmacyCartActions
+                inStock={item.inStock}
+                quantity={quantity}
+                restockRequested={restockRequested}
+                restockEta={item.restockEta}
+                onAdd={() => onAdd?.(item.id)}
+                onRemove={() => onRemove?.(item.id)}
+                onRequestRestock={() => onRequestRestock?.(item.id)}
+                onRestock={() => onRestock?.(item.id)}
+              />
+            </div>
+          </div>
+          <p className="text-xs text-body-gray leading-snug mt-0.5 break-words">{useCase}</p>
+          {packSize ? <p className="text-xs text-body-gray leading-snug">- {packSize}</p> : null}
+          <p className="text-sm font-bold text-navy mt-1.5">₹{item.price}</p>
+        </div>
       </div>
-
-      <button
-        type="button"
-        disabled={!item.inStock}
-        onClick={() => onAdd?.(item.id)}
-        className={`min-h-10 px-3.5 sm:px-4 rounded-xl text-xs font-semibold inline-flex items-center gap-1.5 shrink-0 transition-colors ${
-          !item.inStock
-            ? 'bg-bg-gray text-body-gray cursor-not-allowed'
-            : quantity > 0
-              ? 'bg-teal-dark text-white cursor-pointer hover:bg-teal'
-              : 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
-        }`}
-      >
-        <ShoppingBag className="w-3.5 h-3.5" strokeWidth={1.75} />
-        {!item.inStock ? 'Out of stock' : quantity > 0 ? `Added (${quantity})` : 'Add'}
-      </button>
     </article>
   )
 }

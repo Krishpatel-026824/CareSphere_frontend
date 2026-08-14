@@ -16,26 +16,24 @@
   --font-display: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
 
-html, body, #root {
-  height: 100%;
-  width: 100%;
-  overflow-x: hidden;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: #E8EEF4;
-  color: var(--color-navy);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
-  -webkit-tap-highlight-color: transparent;
+  body {
+    font-family: var(--font-sans);
+    background-color: #E8EEF4;
+    color: var(--color-navy);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /* Full-height app shell that respects mobile browser chrome + notches */
@@ -174,12 +172,47 @@ body {
 
 .chat-time-label {
   font-size: 11px;
-  line-height: 1.2;
-  font-weight: 500;
+  line-height: 15px;
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
+  color: #667781;
 }
 
 .messages-screen {
   font-family: var(--font-sans);
+}
+
+.chat-wallpaper {
+  background-color: #E8E4DC;
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(91, 110, 98, 0.16) 1.15px, transparent 1.35px),
+    linear-gradient(180deg, #F3EFE8 0%, #E6E1D8 100%);
+  background-size: 28px 28px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-position: 0 0, 0 0;
+}
+
+.chat-meta {
+  float: right;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin: 4px 0 -1px 8px;
+  white-space: nowrap;
+  vertical-align: baseline;
+}
+
+.chat-meta-me .chat-time-label {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.health-photo-fade {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 38%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, #000 38%, #000 100%);
 }

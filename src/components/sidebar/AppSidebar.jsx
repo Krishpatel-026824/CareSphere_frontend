@@ -1,0 +1,69 @@
+import { Heart, MessageCircle } from 'lucide-react'
+import { mainNavTabs, profileNavTab } from '../../data/mocks/sidebarNav'
+import { useOpenCareSupport } from '../../hooks/useOpenCareSupport'
+import { useAppSelector } from '../../store/hooks'
+import { selectProfileDetails } from '../../store/slices/profileSlice'
+import SidebarFooterCard from './SidebarFooterCard'
+import SidebarNavItem from './SidebarNavItem'
+
+export default function AppSidebar({ activeTab, onTabChange, messagesBadge = 0 }) {
+  const openCareSupport = useOpenCareSupport()
+  const profile = useAppSelector(selectProfileDetails)
+  return (
+    <aside className="hidden lg:flex w-[252px] shrink-0 flex-col h-full bg-[#1E2124]">
+      <div className="p-4 shrink-0">
+        <div className="flex flex-col items-center text-center">
+          <div className="relative flex items-center justify-center">
+            <span className="absolute w-14 h-14 rounded-full bg-teal/20 blur-lg" aria-hidden="true" />
+            <Heart className="relative w-8 h-8 text-teal fill-teal" strokeWidth={1.5} />
+          </div>
+          <p className="mt-3 font-display text-[22px] font-bold text-white leading-none tracking-tight">
+            CareSphere
+          </p>
+        </div>
+      </div>
+
+      <nav className="p-3 flex flex-col gap-1 overflow-y-auto">
+        {mainNavTabs.map((tab) => (
+          <SidebarNavItem
+            key={tab.id}
+            tab={tab}
+            isActive={activeTab === tab.id}
+            badge={tab.id === 'messages' ? messagesBadge : 0}
+            onSelect={onTabChange}
+          />
+        ))}
+
+        <div className="my-3 border-t border-white/10" />
+
+        <SidebarNavItem
+          tab={profileNavTab}
+          isActive={activeTab === profileNavTab.id}
+          onSelect={onTabChange}
+        />
+      </nav>
+
+      <div className="shrink-0 mt-auto p-3 flex flex-col gap-3">
+        <SidebarFooterCard onClick={openCareSupport}>
+          <span className="w-8 h-8 rounded-full bg-[#2B2F33] flex items-center justify-center shrink-0">
+            <MessageCircle className="w-4 h-4 text-white" strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0 flex-1 py-0.5">
+            <p className="text-[14px] font-semibold text-white leading-tight">Need help?</p>
+            <p className="text-[12px] text-white/50 mt-1 truncate leading-tight">Talk to Care Support</p>
+          </div>
+        </SidebarFooterCard>
+
+        <SidebarFooterCard onClick={() => onTabChange('profile')}>
+          <div className="w-8 h-8 rounded-full bg-teal flex items-center justify-center text-[13px] font-bold text-white shrink-0">
+            {profile.initials}
+          </div>
+          <div className="min-w-0 flex-1 ">
+            <p className="text-[14px] font-semibold text-white truncate leading-tight">{profile.name}</p>
+            <p className="text-[12px] text-white/50 mt-1 truncate leading-tight">{profile.role}</p>
+          </div>
+        </SidebarFooterCard>
+      </div>
+    </aside>
+  )
+}

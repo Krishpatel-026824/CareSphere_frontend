@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Eye, EyeOff, Mail, Lock, User, Phone } from 'lucide-react'
+import { Lock, Mail, Phone, User } from 'lucide-react'
+import AuthBrandMark from '../../components/auth/AuthBrandMark'
+import AuthCardLayout from '../../components/auth/AuthCardLayout'
+import AuthInput from '../../components/auth/AuthInput'
 import Button from '../../components/Button'
-import AuthLayout from '../../components/AuthLayout'
 
 export default function SignUp({ onBack, onSignUp }) {
   const [form, setForm] = useState({ name: '', email: '', phone: '', password: '', confirmPassword: '' })
@@ -10,57 +12,108 @@ export default function SignUp({ onBack, onSignUp }) {
 
   const update = (key, val) => setForm({ ...form, [key]: val })
 
-  const fields = [
-    { key: 'name', label: 'Full Name', icon: User, type: 'text', placeholder: 'Enter your full name' },
-    { key: 'email', label: 'Email', icon: Mail, type: 'email', placeholder: 'Enter your email' },
-    { key: 'phone', label: 'Phone Number', icon: Phone, type: 'tel', placeholder: 'Enter your phone number' },
-    { key: 'password', label: 'Password', icon: Lock, type: 'password', placeholder: 'Create a password' },
-    { key: 'confirmPassword', label: 'Confirm Password', icon: Lock, type: 'password', placeholder: 'Confirm your password' },
-  ]
-
   return (
-    <AuthLayout
-      title="Create Account"
-      subtitle="Join CareSphere and take control of your health"
-      onBack={onBack}
-    >
-      <div className="space-y-4">
-        {fields.map(({ key, label, icon: Icon, type, placeholder }) => (
-          <div key={key}>
-            <label className="text-sm font-medium text-navy mb-1.5 block">{label}</label>
-            <div className="flex items-center border border-border-gray rounded-xl px-4 py-3 focus-within:border-teal transition-colors">
-              <Icon className="w-4 h-4 text-body-gray mr-3 shrink-0" />
-              <input
-                type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
-                placeholder={placeholder}
-                value={form[key]}
-                onChange={(e) => update(key, e.target.value)}
-                className="flex-1 outline-none text-sm text-navy placeholder:text-body-gray/50 bg-transparent"
-              />
-              {type === 'password' && key === 'password' && (
-                <button type="button" onClick={() => setShowPassword(!showPassword)} className="ml-2 cursor-pointer">
-                  {showPassword ? <EyeOff className="w-4 h-4 text-body-gray" /> : <Eye className="w-4 h-4 text-body-gray" />}
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
+    <AuthCardLayout compact>
+      <button
+        type="button"
+        onClick={onBack}
+        className="text-teal text-sm font-semibold cursor-pointer hover:opacity-80"
+      >
+        ← Back
+      </button>
 
-        <label className="flex items-start gap-2 mt-2 cursor-pointer">
-          <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} className="mt-1 accent-teal" />
-          <span className="text-xs text-body-gray">
-            I agree to the <span className="text-teal font-medium">Terms of Service</span> and <span className="text-teal font-medium">Privacy Policy</span>
+      <div className="mt-4">
+        <AuthBrandMark compact />
+      </div>
+
+      <header className="mt-5 mb-5 text-center">
+        <h1 className="font-display text-[26px] font-bold text-navy leading-tight tracking-tight">Create Account</h1>
+        <p className="mt-1.5 text-sm text-body-gray">Join CareSphere and take control of your health</p>
+      </header>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault()
+          if (agreed) onSignUp()
+        }}
+        className="flex flex-col gap-3"
+      >
+        <AuthInput
+          id="signup-name"
+          label="Full Name"
+          icon={User}
+          placeholder="Enter your full name"
+          value={form.name}
+          onChange={(e) => update('name', e.target.value)}
+          autoComplete="name"
+        />
+        <AuthInput
+          id="signup-email"
+          label="Email"
+          icon={Mail}
+          type="email"
+          placeholder="Enter your email"
+          value={form.email}
+          onChange={(e) => update('email', e.target.value)}
+          autoComplete="email"
+        />
+        <AuthInput
+          id="signup-phone"
+          label="Phone Number"
+          icon={Phone}
+          type="tel"
+          placeholder="Enter your phone number"
+          value={form.phone}
+          onChange={(e) => update('phone', e.target.value)}
+          autoComplete="tel"
+        />
+        <AuthInput
+          id="signup-password"
+          label="Password"
+          icon={Lock}
+          type="password"
+          placeholder="Create a password"
+          value={form.password}
+          onChange={(e) => update('password', e.target.value)}
+          autoComplete="new-password"
+          showPassword={showPassword}
+          onTogglePassword={() => setShowPassword((v) => !v)}
+        />
+        <AuthInput
+          id="signup-confirm"
+          label="Confirm Password"
+          icon={Lock}
+          type="password"
+          placeholder="Confirm your password"
+          value={form.confirmPassword}
+          onChange={(e) => update('confirmPassword', e.target.value)}
+          autoComplete="new-password"
+        />
+
+        <label className="flex items-start gap-2.5 mt-0.5 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-0.5 accent-teal w-4 h-4 cursor-pointer"
+          />
+          <span className="text-xs text-body-gray leading-relaxed">
+            I agree to the <span className="text-teal font-semibold">Terms of Service</span> and{' '}
+            <span className="text-teal font-semibold">Privacy Policy</span>
           </span>
         </label>
 
-        <div className="pt-2 space-y-3">
-          <Button onClick={onSignUp} disabled={!agreed}>Create Account</Button>
-          <p className="text-center text-sm text-body-gray">
-            Already have an account?{' '}
-            <button onClick={onBack} className="text-teal font-semibold cursor-pointer">Sign In</button>
-          </p>
-        </div>
-      </div>
-    </AuthLayout>
+        <Button type="submit" disabled={!agreed} className="min-h-[50px] text-[15px] mt-1">
+          Create Account
+        </Button>
+      </form>
+
+      <p className="mt-5 text-center text-sm text-body-gray">
+        Already have an account?{' '}
+        <button type="button" onClick={onBack} className="text-teal font-semibold cursor-pointer hover:opacity-80">
+          Sign In
+        </button>
+      </p>
+    </AuthCardLayout>
   )
 }

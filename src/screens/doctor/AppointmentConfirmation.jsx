@@ -1,7 +1,7 @@
 import { CheckCircle2 } from 'lucide-react'
 import Button from '../../components/Button'
 
-export default function AppointmentConfirmation({ booking, onBackHome }) {
+export default function AppointmentConfirmation({ booking, onBackHome, actionLabel = 'Back to Home' }) {
   return (
     <div className="w-full min-h-full page-pad py-4 sm:py-6 lg:py-8 xl:py-10 flex items-center justify-center">
       <div className="bg-white border border-border-gray rounded-2xl p-5 sm:p-8 shadow-sm w-full max-w-xl text-center">
@@ -14,7 +14,7 @@ export default function AppointmentConfirmation({ booking, onBackHome }) {
         <p className="text-sm text-body-gray mb-5">
           {booking.isReschedule
             ? 'Your upcoming appointment on the home page has been updated.'
-            : 'We have sent the details to your email and phone number.'}
+            : 'Your new visit is saved with the same details as your other appointments.'}
         </p>
 
         <div className="rounded-xl border border-border-gray bg-bg-gray p-4 text-left mb-5">
@@ -28,7 +28,7 @@ export default function AppointmentConfirmation({ booking, onBackHome }) {
           <p className="text-base font-semibold text-teal">{booking.appointmentId}</p>
         </div>
 
-        <Button onClick={onBackHome}>Back to Home</Button>
+        <Button onClick={onBackHome}>{actionLabel}</Button>
       </div>
     </div>
   )

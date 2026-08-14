@@ -1,3 +1,7 @@
+import { pharmacyImages } from './pharmacyImages'
+
+export const healthOverviewVisibleCount = 4
+
 export const healthOverviewCardsMock = [
   {
     id: 'heart-rate',
@@ -36,10 +40,10 @@ export const healthOverviewCardsMock = [
     id: 'steps',
     label: 'Steps',
     value: '6,245',
-    status: 'Steps',
+    status: 'On track',
     percent: 62,
     gaugeColor: '#F59E0B',
-    statusTone: 'bg-slate-100 text-slate-600',
+    statusTone: 'bg-amber-50 text-amber-700',
     sparkColor: '#F59E0B',
     sparkline: [20, 35, 42, 38, 50, 55, 48, 62],
   },
@@ -89,6 +93,6 @@ export const quickActionsMock = [
 export const userProfileMock = {
   name: 'Krish Patel',
   role: 'Care member',
-  avatar: 'https://i.pravatar.cc/128?img=68',
+  avatar: pharmacyImages.krishPatel,
   initials: 'KP',
 }

@@ -17,7 +17,7 @@ export default function DoctorSearchResults({ category, doctors, onBack, onSelec
             </button>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-navy truncate">Search Results</h1>
           </div>
-          <div className="rounded-xl border border-border-gray px-3 sm:px-4 py-3 bg-white flex items-center gap-2 mb-3 max-w-2xl">
+          <div className="rounded-xl border border-border-gray px-3 sm:px-4 py-3 bg-white flex items-center gap-2 max-w-2xl">
             <Search className="w-4 h-4 text-body-gray shrink-0" />
             <input
               value={`${category} in Ahmedabad`}
@@ -28,18 +28,14 @@ export default function DoctorSearchResults({ category, doctors, onBack, onSelec
               <SlidersHorizontal className="w-4 h-4 text-body-gray" />
             </button>
           </div>
-          <div className="scroll-x sm:flex-wrap">
-            {['Available Today', 'Top Rated', 'Near Me'].map((chip) => (
-              <span
-                key={chip}
-                className="text-sm px-3 sm:px-4 py-2 rounded-full border border-border-gray bg-white text-navy shrink-0"
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
         </header>
 
+        {doctors.length === 0 ? (
+          <div className="rounded-2xl border border-border-gray bg-white p-8 text-center">
+            <p className="text-base font-semibold text-navy">No {category} doctors found</p>
+            <p className="text-sm text-body-gray mt-1">Try another specialty from the categories list.</p>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
           {doctors.map((doctor) => (
             <article
@@ -77,6 +73,7 @@ export default function DoctorSearchResults({ category, doctors, onBack, onSelec
             </article>
           ))}
         </div>
+        )}
       </div>
     </div>
   )

@@ -10,49 +10,44 @@ import {
   Venus,
 } from 'lucide-react'
 
-const INITIAL_VISIBLE = 4
-
 const categoryMeta = {
-  'General Physician': { icon: Stethoscope, tone: 'bg-teal-light text-teal-dark' },
-  Cardiologist: { icon: HeartPulse, tone: 'bg-rose-100 text-rose-600' },
-  Dermatologist: { icon: Sparkles, tone: 'bg-violet-100 text-violet-600' },
-  Pediatrician: { icon: Baby, tone: 'bg-sky-100 text-sky-600' },
-  Gynecologist: { icon: Venus, tone: 'bg-pink-100 text-pink-600' },
-  Neurologist: { icon: Brain, tone: 'bg-indigo-100 text-indigo-600' },
-  Orthopedic: { icon: Bone, tone: 'bg-amber-100 text-amber-700' },
+  'General Physician': { icon: Stethoscope, card: 'bg-teal-light/50 border-teal/20', iconWrap: 'bg-white text-teal' },
+  Cardiologist: { icon: HeartPulse, card: 'bg-rose-50 border-rose-100', iconWrap: 'bg-white text-rose-500' },
+  Dermatologist: { icon: Sparkles, card: 'bg-violet-50 border-violet-100', iconWrap: 'bg-white text-violet-500' },
+  Pediatrician: { icon: Baby, card: 'bg-sky-50 border-sky-100', iconWrap: 'bg-white text-sky-600' },
+  Gynecologist: { icon: Venus, card: 'bg-pink-50 border-pink-100', iconWrap: 'bg-white text-pink-500' },
+  Neurologist: { icon: Brain, card: 'bg-indigo-50 border-indigo-100', iconWrap: 'bg-white text-indigo-500' },
+  Orthopedic: { icon: Bone, card: 'bg-amber-50 border-amber-100', iconWrap: 'bg-white text-amber-600' },
 }
 
 export default function DoctorCategoryGrid({ categories = [], onSelectCategory }) {
   const [showAll, setShowAll] = useState(false)
-
-  const visibleCategories = showAll ? categories : categories.slice(0, INITIAL_VISIBLE)
-  const canExpand = categories.length > INITIAL_VISIBLE
+  const visibleCategories = showAll ? categories : categories.slice(0, 4)
+  const canExpand = categories.length > 4
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-semibold text-navy">Categories</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-bold text-navy">Categories</h2>
         {canExpand ? (
           <button
             type="button"
             onClick={() => setShowAll((value) => !value)}
             aria-expanded={showAll}
-            className="text-sm text-teal font-semibold cursor-pointer hover:opacity-70 transition-opacity"
+            className="text-sm text-teal font-semibold cursor-pointer hover:underline"
           >
             {showAll ? 'Show less' : 'View all'}
           </button>
         ) : null}
       </div>
 
-      <div
-        className={`grid gap-3 ${
-          showAll
-            ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-7'
-            : 'grid-cols-2 sm:grid-cols-4'
-        }`}
-      >
+      <div className="grid grid-cols-2 sm:grid-cols-4 xl:grid-cols-7 gap-3">
         {visibleCategories.map((category) => {
-          const meta = categoryMeta[category] || { icon: UserRound, tone: 'bg-teal-light text-teal' }
+          const meta = categoryMeta[category] || {
+            icon: UserRound,
+            card: 'bg-teal-light/40 border-teal/20',
+            iconWrap: 'bg-white text-teal',
+          }
           const Icon = meta.icon
 
           return (
@@ -60,14 +55,12 @@ export default function DoctorCategoryGrid({ categories = [], onSelectCategory }
               key={category}
               type="button"
               onClick={() => onSelectCategory(category)}
-              className="rounded-2xl border border-border-gray bg-white px-2.5 sm:px-3 py-4 sm:py-5 cursor-pointer transition-all duration-200 hover:border-teal hover:bg-teal-light/40 hover:shadow-md hover:-translate-y-0.5 min-h-[112px] sm:min-h-[132px] flex flex-col items-center justify-center gap-2.5 sm:gap-3 text-center"
+              className={`group rounded-2xl border px-3 py-5 cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 min-h-[128px] flex flex-col items-center justify-center gap-3 text-center ${meta.card}`}
             >
-              <span className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center ${meta.tone}`}>
-                <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.6} />
+              <span className={`w-12 h-12 rounded-xl flex items-center justify-center ${meta.iconWrap}`}>
+                <Icon className="w-6 h-6" strokeWidth={1.6} />
               </span>
-              <span className="text-[12px] sm:text-[13px] font-semibold text-navy leading-snug px-0.5">
-                {category}
-              </span>
+              <span className="text-[13px] font-semibold text-navy leading-snug">{category}</span>
             </button>
           )
         })}
