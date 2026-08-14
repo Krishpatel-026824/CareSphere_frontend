@@ -24,7 +24,7 @@ export default function AppShell({
 
       <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
         <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain">
-          <div className="min-h-full">{children}</div>
+          <div className="min-h-full h-full flex flex-col">{children}</div>
         </main>
         <div className="lg:hidden shrink-0 mt-auto">
           <BottomNav

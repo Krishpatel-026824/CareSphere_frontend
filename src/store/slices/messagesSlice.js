@@ -4,6 +4,7 @@ import { generateMessagesData } from '../../data/generators/messagesGenerator'
 import { countPinnedChats } from '../../data/generators/messagePinGenerator'
 import { MAX_PINNED_CHATS } from '../../data/mocks/messagePins'
 import { conversationPreview } from '../../utils/messageStatus'
+import { loadAuthWorkspace } from '../../utils/authStorage'
 
 const EMPTY_CHAT_PREVIEW = 'No messages yet'
 const initial = generateMessagesData()
@@ -31,7 +32,7 @@ const messagesSlice = createSlice({
   initialState: {
     conversations: initialConversations,
     doctorConversations: initialDoctorConversations,
-    workspace: 'patient',
+    workspace: loadAuthWorkspace(),
     selectedId: null,
     draft: '',
     query: '',

@@ -1,19 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { clearAuthSession, loadAuthSession, saveAuthSession } from '../../utils/authStorage'
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    user: null,
-    isAuthenticated: false,
-  },
+  initialState: loadAuthSession(),
   reducers: {
     login(state, action) {
-      state.user = action.payload || { name: 'Krish', roleType: 'patient' }
+      const user = action.payload || { name: 'Krish', roleType: 'patient' }
+      state.user = user
       state.isAuthenticated = true
+      saveAuthSession(user)
     },
     logout(state) {
       state.user = null
       state.isAuthenticated = false
+      clearAuthSession()
     },
   },
 })

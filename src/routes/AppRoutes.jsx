@@ -10,7 +10,7 @@ import SplashScreen from '../screens/auth/SplashScreen'
 import MessagesScreen from '../screens/main/MessagesScreen'
 import NotificationsScreen from '../screens/main/NotificationsScreen'
 import SearchScreen from '../screens/main/SearchScreen'
-import { useAppDispatch } from '../store/hooks'
+import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { login } from '../store/slices/authSlice'
 import { setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
@@ -25,6 +25,8 @@ import {
   DoctorSearchResultsPage,
 } from './pages/DoctorPages'
 import {
+  DoctorClinicToolPage,
+  DoctorConsultPage,
   DoctorHomePage,
   DoctorMessagesPage,
   DoctorNotificationsPage,
@@ -41,10 +43,19 @@ import {
   PharmacyPage,
   TelemedicinePage,
 } from './pages/ServicePages'
-import { DOCTOR_PATHS, PATHS } from './paths'
+import { DOCTOR_PATHS, PATHS, homePathForRole } from './paths'
+
+function useSavedHomePath() {
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const roleType = useAppSelector((state) => state.auth.user?.roleType)
+  if (!isAuthenticated) return null
+  return homePathForRole(roleType)
+}
 
 function SplashRoute() {
   const navigate = useNavigate()
+  const savedHome = useSavedHomePath()
+  if (savedHome) return <Navigate to={savedHome} replace />
   return <SplashScreen onNext={() => navigate(PATHS.login)} />
 }
 
@@ -56,6 +67,8 @@ function OnboardingRoute() {
 function LoginRoute() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const savedHome = useSavedHomePath()
+  if (savedHome) return <Navigate to={savedHome} replace />
   return (
     <Login
       onLogin={(user) => {
@@ -64,7 +77,7 @@ function LoginRoute() {
         dispatch(login(session))
         dispatch(setWorkspace(workspace))
         dispatch(setNotificationWorkspace(workspace))
-        navigate(session.roleType === AUTH_ROLE_DOCTOR ? DOCTOR_PATHS.home : PATHS.home)
+        navigate(homePathForRole(session.roleType))
       }}
       onSignUp={() => navigate(PATHS.signup)}
       onForgotPassword={() => navigate(PATHS.forgotPassword)}
@@ -143,6 +156,8 @@ export default function AppRoutes() {
         <Route path={DOCTOR_PATHS.messages} element={<DoctorMessagesPage />} />
         <Route path={DOCTOR_PATHS.profile} element={<DoctorPortalProfilePage />} />
         <Route path={DOCTOR_PATHS.notifications} element={<DoctorNotificationsPage />} />
+        <Route path={DOCTOR_PATHS.consult} element={<DoctorConsultPage />} />
+        <Route path={DOCTOR_PATHS.clinicTool} element={<DoctorClinicToolPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to={PATHS.splash} replace />} />

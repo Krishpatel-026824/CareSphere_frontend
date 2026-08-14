@@ -1,5 +1,4 @@
-import { extraDoctorAvatars } from './doctorAvatars'
-import { pharmacyImages } from './pharmacyImages'
+import { patientImages } from './patientImages'
 
 export const krishPatientMock = {
   id: 'pat-krish',
@@ -9,7 +8,7 @@ export const krishPatientMock = {
   gender: 'Male',
   city: 'Ahmedabad',
   phone: '+91 98765 43210',
-  avatar: pharmacyImages.krishPatel,
+  avatar: patientImages.krishPatel,
 }
 
 export const doctorPatientsMock = [
@@ -22,7 +21,7 @@ export const doctorPatientsMock = [
     gender: 'Female',
     city: 'Ahmedabad',
     phone: '+91 98250 11420',
-    avatar: extraDoctorAvatars['doc-108'],
+    avatar: patientImages.ananyaShah,
   },
   {
     id: 'pat-rohan',
@@ -32,7 +31,7 @@ export const doctorPatientsMock = [
     gender: 'Male',
     city: 'Ahmedabad',
     phone: '+91 98980 22011',
-    avatar: extraDoctorAvatars['doc-110'],
+    avatar: patientImages.rohanMehta,
   },
   {
     id: 'pat-priya',
@@ -42,6 +41,6 @@ export const doctorPatientsMock = [
     gender: 'Female',
     city: 'Ahmedabad',
     phone: '+91 97654 33880',
-    avatar: extraDoctorAvatars['doc-111'],
+    avatar: patientImages.priyaNair,
   },
 ]

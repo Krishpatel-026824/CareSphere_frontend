@@ -2,10 +2,13 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import NotificationsScreen from '../../screens/main/NotificationsScreen'
 import MessagesScreen from '../../screens/main/MessagesScreen'
 import ProfileScreen from '../../screens/main/ProfileScreen'
+import DoctorClinicToolScreen from '../../screens/portal/DoctorClinicToolScreen'
+import DoctorConsultScreen from '../../screens/portal/DoctorConsultScreen'
 import DoctorHomeScreen from '../../screens/portal/DoctorHomeScreen'
 import DoctorPatientDetailScreen from '../../screens/portal/DoctorPatientDetailScreen'
 import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
+import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
 import { visitsForPatient } from '../../data/generators/doctorScheduleGenerator'
 import { useDoctorProfile } from '../../hooks/useDoctorProfile'
@@ -93,6 +96,39 @@ export function DoctorPatientPage() {
       actions={schedule}
       onBack={() => navigate(DOCTOR_PATHS.patients)}
       onMessage={() => navigate(DOCTOR_PATHS.messages)}
+    />
+  )
+}
+
+export function DoctorConsultPage() {
+  const navigate = useNavigate()
+  const schedule = useDoctorSchedule()
+
+  return (
+    <DoctorConsultScreen
+      visit={schedule.nextVisit}
+      onBack={() => navigate(DOCTOR_PATHS.home)}
+      onJoin={(visit) => navigate(doctorPortalVisitPath(visit.id))}
+    />
+  )
+}
+
+export function DoctorClinicToolPage() {
+  const navigate = useNavigate()
+  const { tool } = useParams()
+  const data = generateDoctorClinicTool(tool)
+
+  if (!data) {
+    return <Navigate to={DOCTOR_PATHS.home} replace />
+  }
+
+  return (
+    <DoctorClinicToolScreen
+      title={data.title}
+      subtitle={data.subtitle}
+      tasks={data.tasks}
+      onBack={() => navigate(DOCTOR_PATHS.home)}
+      onSelectTask={(task) => navigate(doctorPortalPatientPath(task.patientId))}
     />
   )
 }

@@ -1,5 +1,4 @@
-import { extraDoctorAvatars } from './doctorAvatars'
-import { pharmacyImages } from './pharmacyImages'
+import { patientImages } from './patientImages'
 
 export const doctorMessagesMock = [
   {
@@ -9,7 +8,7 @@ export const doctorMessagesMock = [
     specialty: 'Care member',
     clinic: 'Follow-up · Cardiology',
     phone: '+91 98765 43210',
-    avatar: pharmacyImages.krishPatel,
+    avatar: patientImages.krishPatel,
     lastMessage: 'Thank you doctor. Should I bring any reports?',
     timeLabel: '10:18 AM',
     unread: true,
@@ -38,7 +37,7 @@ export const doctorMessagesMock = [
     specialty: 'Care member',
     clinic: 'New consult · Chest discomfort',
     phone: '+91 98250 11420',
-    avatar: extraDoctorAvatars['doc-108'],
+    avatar: patientImages.ananyaShah,
     lastMessage: 'I will bring my previous prescriptions.',
     timeLabel: 'Yesterday',
     unread: false,
@@ -67,7 +66,7 @@ export const doctorMessagesMock = [
     specialty: 'Care member',
     clinic: 'Video follow-up',
     phone: '+91 98980 22011',
-    avatar: extraDoctorAvatars['doc-110'],
+    avatar: patientImages.rohanMehta,
     lastMessage: 'Lipid report is uploaded in records.',
     timeLabel: 'Mon',
     unread: false,

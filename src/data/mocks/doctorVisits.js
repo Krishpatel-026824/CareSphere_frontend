@@ -1,5 +1,4 @@
-import { extraDoctorAvatars } from './doctorAvatars'
-import { pharmacyImages } from './pharmacyImages'
+import { patientImages } from './patientImages'
 
 const clinic = {
   clinic: 'CareSphere Heart Center',
@@ -19,7 +18,7 @@ export const doctorExtraVisitsMock = [
     doctorId: 'doc-101',
     patientId: 'pat-ananya',
     patientName: 'Ananya Shah',
-    patientPhoto: extraDoctorAvatars['doc-108'],
+    patientPhoto: patientImages.ananyaShah,
     dateLabel: '16 Aug 2026',
     timeLabel: '11:00 AM',
     status: 'Upcoming',
@@ -33,7 +32,7 @@ export const doctorExtraVisitsMock = [
     doctorId: 'doc-101',
     patientId: 'pat-rohan',
     patientName: 'Rohan Mehta',
-    patientPhoto: extraDoctorAvatars['doc-110'],
+    patientPhoto: patientImages.rohanMehta,
     dateLabel: '20 Aug 2026',
     timeLabel: '09:00 AM',
     status: 'Confirmed',
@@ -48,7 +47,7 @@ export const doctorExtraVisitsMock = [
     doctorId: 'doc-101',
     patientId: 'pat-priya',
     patientName: 'Priya Nair',
-    patientPhoto: extraDoctorAvatars['doc-111'],
+    patientPhoto: patientImages.priyaNair,
     dateLabel: '10 Aug 2026',
     timeLabel: '03:00 PM',
     status: 'Completed',
@@ -61,5 +60,5 @@ export const doctorExtraVisitsMock = [
 export const doctorLinkedPatientMock = {
   id: 'pat-krish',
   name: 'Krish Patel',
-  avatar: pharmacyImages.krishPatel,
+  avatar: patientImages.krishPatel,
 }

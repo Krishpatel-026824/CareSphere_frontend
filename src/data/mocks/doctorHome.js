@@ -1,6 +1,6 @@
 export const doctorQuickActionsMock = [
-  { id: 'schedule', key: 'schedule', label: 'Schedule', tone: 'bg-violet-100 text-violet-600' },
-  { id: 'patients', key: 'patients', label: 'Patients', tone: 'bg-teal-light text-teal-dark' },
-  { id: 'messages', key: 'messages', label: 'Messages', tone: 'bg-sky-100 text-sky-600' },
-  { id: 'profile', key: 'profile', label: 'Clinic profile', tone: 'bg-amber-100 text-amber-600' },
+  { id: 'telemedicine', key: 'consult', label: 'Start consult', tone: 'bg-teal-light text-teal-dark' },
+  { id: 'pharmacy', key: 'prescribe', label: 'Write Rx', tone: 'bg-orange-100 text-orange-600' },
+  { id: 'lab', key: 'labs', label: 'Order labs', tone: 'bg-amber-100 text-amber-600' },
+  { id: 'records', key: 'notes', label: 'Add note', tone: 'bg-sky-100 text-sky-600' },
 ]

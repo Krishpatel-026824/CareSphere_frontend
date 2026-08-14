@@ -3,6 +3,7 @@ import {
   generateDoctorNotificationsData,
   generateNotificationsData,
 } from '../../data/generators/notificationsGenerator'
+import { loadAuthWorkspace } from '../../utils/authStorage'
 
 function listKey(state) {
   return state.workspace === 'doctor' ? 'doctorItems' : 'items'
@@ -13,7 +14,7 @@ const notificationsSlice = createSlice({
   initialState: {
     items: generateNotificationsData(),
     doctorItems: generateDoctorNotificationsData(),
-    workspace: 'patient',
+    workspace: loadAuthWorkspace(),
     activeFilter: 'all',
   },
   reducers: {

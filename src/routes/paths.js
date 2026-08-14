@@ -1,3 +1,5 @@
+import { AUTH_ROLE_DOCTOR } from '../data/mocks/authRoles'
+
 export const PATHS = {
   splash: '/',
   onboarding: '/onboarding',
@@ -43,6 +45,11 @@ export const DOCTOR_PATHS = {
   messages: '/doctor/messages',
   profile: '/doctor/profile',
   notifications: '/doctor/notifications',
+  consult: '/doctor/consult',
+  prescribe: '/doctor/tools/prescribe',
+  labs: '/doctor/tools/labs',
+  notes: '/doctor/tools/notes',
+  clinicTool: '/doctor/tools/:tool',
 }
 
 export const DOCTOR_TAB_PATHS = {
@@ -51,6 +58,10 @@ export const DOCTOR_TAB_PATHS = {
   patients: DOCTOR_PATHS.patients,
   messages: DOCTOR_PATHS.messages,
   profile: DOCTOR_PATHS.profile,
+}
+
+export function homePathForRole(roleType) {
+  return roleType === AUTH_ROLE_DOCTOR ? DOCTOR_PATHS.home : PATHS.home
 }
 
 export function appointmentDetailsPath(id) {
@@ -79,4 +90,8 @@ export function doctorPortalVisitPath(id) {
 
 export function doctorPortalPatientPath(patientId) {
   return `/doctor/patients/${patientId}`
+}
+
+export function doctorClinicToolPath(tool) {
+  return `/doctor/tools/${tool}`
 }
