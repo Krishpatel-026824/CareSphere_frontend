@@ -4,13 +4,15 @@ import {
   markAllAsRead,
   markAsRead,
   refreshNotifications,
+  selectActiveNotifications,
   setActiveFilter,
 } from '../store/slices/notificationsSlice'
 
 export function useNotifications() {
   const dispatch = useAppDispatch()
-  const notifications = useAppSelector((state) => state.notifications.items)
+  const notifications = useAppSelector(selectActiveNotifications)
   const activeFilter = useAppSelector((state) => state.notifications.activeFilter)
+  const isDoctor = useAppSelector((state) => state.notifications.workspace === 'doctor')
 
   const unreadCount = notifications.filter((item) => item.unread).length
   const viewedCount = notifications.filter((item) => !item.unread).length
@@ -25,6 +27,10 @@ export function useNotifications() {
     notifications,
     filtered,
     activeFilter,
+    isDoctor,
+    subtitle: isDoctor
+      ? 'Clinic bookings, patient messages, and visit alerts'
+      : 'All your updates and alerts in one place',
     setActiveFilter: (value) => dispatch(setActiveFilter(value)),
     unreadCount,
     viewedCount,

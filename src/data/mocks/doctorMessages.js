@@ -1,0 +1,92 @@
+import { extraDoctorAvatars } from './doctorAvatars'
+import { pharmacyImages } from './pharmacyImages'
+
+export const doctorMessagesMock = [
+  {
+    id: 'dmsg-krish',
+    doctorId: 'pat-krish',
+    doctorName: 'Krish Patel',
+    specialty: 'Care member',
+    clinic: 'Follow-up · Cardiology',
+    phone: '+91 98765 43210',
+    avatar: pharmacyImages.krishPatel,
+    lastMessage: 'Thank you doctor. Should I bring any reports?',
+    timeLabel: '10:18 AM',
+    unread: true,
+    unreadCount: 1,
+    online: true,
+    messages: [
+      {
+        id: 'dk-1',
+        from: 'me',
+        text: 'Hello Krish, your appointment is confirmed for 18 Aug at 10:30 AM.',
+        time: '10:12 AM',
+        read: true,
+      },
+      {
+        id: 'dk-2',
+        from: 'them',
+        text: 'Thank you doctor. Should I bring any reports?',
+        time: '10:18 AM',
+      },
+    ],
+  },
+  {
+    id: 'dmsg-ananya',
+    doctorId: 'pat-ananya',
+    doctorName: 'Ananya Shah',
+    specialty: 'Care member',
+    clinic: 'New consult · Chest discomfort',
+    phone: '+91 98250 11420',
+    avatar: extraDoctorAvatars['doc-108'],
+    lastMessage: 'I will bring my previous prescriptions.',
+    timeLabel: 'Yesterday',
+    unread: false,
+    unreadCount: 0,
+    online: false,
+    messages: [
+      {
+        id: 'da-1',
+        from: 'me',
+        text: 'Hi Ananya, please arrive 15 minutes early for your first visit.',
+        time: 'Yesterday',
+        read: true,
+      },
+      {
+        id: 'da-2',
+        from: 'them',
+        text: 'I will bring my previous prescriptions.',
+        time: 'Yesterday',
+      },
+    ],
+  },
+  {
+    id: 'dmsg-rohan',
+    doctorId: 'pat-rohan',
+    doctorName: 'Rohan Mehta',
+    specialty: 'Care member',
+    clinic: 'Video follow-up',
+    phone: '+91 98980 22011',
+    avatar: extraDoctorAvatars['doc-110'],
+    lastMessage: 'Lipid report is uploaded in records.',
+    timeLabel: 'Mon',
+    unread: false,
+    unreadCount: 0,
+    online: true,
+    messages: [
+      {
+        id: 'dr-1',
+        from: 'them',
+        text: 'Lipid report is uploaded in records.',
+        time: 'Mon',
+      },
+      {
+        id: 'dr-2',
+        from: 'me',
+        text: 'Thank you. We will review it on the video consult.',
+        time: 'Mon',
+        read: true,
+      },
+    ],
+  },
+]

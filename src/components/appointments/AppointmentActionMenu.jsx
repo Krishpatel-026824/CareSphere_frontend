@@ -22,7 +22,7 @@ export default function AppointmentActionMenu({ open, x, y, options = [], onSele
               option.danger ? 'text-rose-600' : 'text-navy'
             }`}
           >
-            {option.id === 'confirm' ? (
+            {option.id === 'confirm' || option.id === 'accept' || option.id === 'complete' ? (
               <CircleCheck className="w-4 h-4 shrink-0" strokeWidth={1.75} />
             ) : (
               <CalendarX2 className="w-4 h-4 shrink-0" strokeWidth={1.75} />

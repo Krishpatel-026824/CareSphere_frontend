@@ -13,6 +13,7 @@ import {
   markOutgoingRead,
   openConversation as openConversationAction,
   pinConversation as pinConversationAction,
+  selectActiveConversations,
   sendOutgoing as sendOutgoingAction,
   setDraft as setDraftAction,
   setIsTyping,
@@ -27,7 +28,6 @@ import { formatChatTimestamp } from '../utils/chatTime'
 export function useMessages() {
   const dispatch = useAppDispatch()
   const {
-    conversations,
     selectedId,
     draft,
     query,
@@ -37,6 +37,7 @@ export function useMessages() {
     showChatInfo,
     pinNotice,
   } = useAppSelector((state) => state.messages)
+  const conversations = useAppSelector(selectActiveConversations)
 
   const replyTimer = useRef(null)
   const readTimer = useRef(null)

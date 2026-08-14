@@ -4,6 +4,7 @@ import NotificationGrid from '../../components/notifications/NotificationGrid'
 import NotificationHeader from '../../components/notifications/NotificationHeader'
 import NotificationStatRow from '../../components/notifications/NotificationStatRow'
 import { useNotifications } from '../../hooks/useNotifications'
+import { DOCTOR_PATHS, PATHS } from '../../routes/paths'
 
 export default function NotificationsScreen() {
   const {
@@ -13,6 +14,8 @@ export default function NotificationsScreen() {
     setActiveFilter,
     unreadCount,
     viewedCount,
+    isDoctor,
+    subtitle,
     markAsRead,
     markAllAsRead,
     handleRefresh,
@@ -21,7 +24,12 @@ export default function NotificationsScreen() {
   return (
     <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full max-w-[1400px] mx-auto page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-5 sm:gap-6">
-        <NotificationHeader unreadCount={unreadCount} onMarkAllRead={markAllAsRead} />
+        <NotificationHeader
+          unreadCount={unreadCount}
+          onMarkAllRead={markAllAsRead}
+          subtitle={subtitle}
+          homePath={isDoctor ? DOCTOR_PATHS.home : PATHS.home}
+        />
 
         <NotificationStatRow
           unreadCount={unreadCount}

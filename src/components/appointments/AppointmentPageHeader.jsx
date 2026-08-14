@@ -1,6 +1,13 @@
 import { CalendarCheck, Plus } from 'lucide-react'
 
-export default function AppointmentPageHeader({ count = 0, upcomingCount = 0, onNewAppointment }) {
+export default function AppointmentPageHeader({
+  count = 0,
+  upcomingCount = 0,
+  onNewAppointment,
+  title = 'Appointments',
+  subtitle,
+  newLabel = 'New appointment',
+}) {
   return (
     <header className="shrink-0 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3 min-w-0">
@@ -9,23 +16,25 @@ export default function AppointmentPageHeader({ count = 0, upcomingCount = 0, on
         </div>
         <div className="min-w-0">
           <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-navy tracking-tight leading-none">
-            Appointments
+            {title}
           </h1>
           <p className="text-sm text-body-gray mt-1">
-            {upcomingCount} upcoming · {count} total
+            {subtitle || `${upcomingCount} upcoming · ${count} total`}
           </p>
         </div>
       </div>
 
+      {onNewAppointment ? (
       <button
         type="button"
         onClick={onNewAppointment}
         className="inline-flex items-center justify-center gap-1.5 min-h-10 sm:min-h-11 px-3.5 sm:px-5 rounded-full bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark shrink-0"
       >
         <Plus className="w-4 h-4" strokeWidth={2} />
-        <span className="hidden sm:inline">New appointment</span>
+        <span className="hidden sm:inline">{newLabel}</span>
         <span className="sm:hidden">New</span>
       </button>
+      ) : null}
     </header>
   )
 }

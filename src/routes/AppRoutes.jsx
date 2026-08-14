@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import DoctorLayout from '../layouts/DoctorLayout'
 import ForgotPassword from '../screens/auth/ForgotPassword'
 import Login from '../screens/auth/Login'
 import Onboarding from '../screens/auth/Onboarding'
@@ -11,6 +12,10 @@ import NotificationsScreen from '../screens/main/NotificationsScreen'
 import SearchScreen from '../screens/main/SearchScreen'
 import { useAppDispatch } from '../store/hooks'
 import { login } from '../store/slices/authSlice'
+import { setWorkspace } from '../store/slices/messagesSlice'
+import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
+import { generateAuthSession } from '../data/generators/authSessionGenerator'
+import { AUTH_ROLE_DOCTOR } from '../data/mocks/authRoles'
 import { AppointmentDetailsPage, AppointmentsPage, NewAppointmentBookPage, NewAppointmentPage, RescheduleDoctorPage } from './pages/AppointmentsPages'
 import {
   BookingConfirmationPage,
@@ -19,6 +24,15 @@ import {
   DoctorProfilePage,
   DoctorSearchResultsPage,
 } from './pages/DoctorPages'
+import {
+  DoctorHomePage,
+  DoctorMessagesPage,
+  DoctorNotificationsPage,
+  DoctorPatientPage,
+  DoctorPatientsPage,
+  DoctorProfilePage as DoctorPortalProfilePage,
+  DoctorSchedulePage,
+} from './pages/DoctorPortalPages'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
 import {
@@ -27,7 +41,7 @@ import {
   PharmacyPage,
   TelemedicinePage,
 } from './pages/ServicePages'
-import { PATHS } from './paths'
+import { DOCTOR_PATHS, PATHS } from './paths'
 
 function SplashRoute() {
   const navigate = useNavigate()
@@ -45,8 +59,12 @@ function LoginRoute() {
   return (
     <Login
       onLogin={(user) => {
-        dispatch(login(user || { name: 'Krish' }))
-        navigate(PATHS.home)
+        const session = user || generateAuthSession()
+        const workspace = session.roleType === AUTH_ROLE_DOCTOR ? 'doctor' : 'patient'
+        dispatch(login(session))
+        dispatch(setWorkspace(workspace))
+        dispatch(setNotificationWorkspace(workspace))
+        navigate(session.roleType === AUTH_ROLE_DOCTOR ? DOCTOR_PATHS.home : PATHS.home)
       }}
       onSignUp={() => navigate(PATHS.signup)}
       onForgotPassword={() => navigate(PATHS.forgotPassword)}
@@ -114,6 +132,17 @@ export default function AppRoutes() {
         <Route path={PATHS.doctorBooking} element={<DoctorBookingPage />} />
         <Route path={PATHS.bookingConfirmation} element={<BookingConfirmationPage />} />
         <Route path={PATHS.profile} element={<ProfilePage />} />
+      </Route>
+
+      <Route element={<DoctorLayout />}>
+        <Route path={DOCTOR_PATHS.home} element={<DoctorHomePage />} />
+        <Route path={DOCTOR_PATHS.schedule} element={<DoctorSchedulePage />} />
+        <Route path={DOCTOR_PATHS.visit} element={<DoctorSchedulePage />} />
+        <Route path={DOCTOR_PATHS.patients} element={<DoctorPatientsPage />} />
+        <Route path={DOCTOR_PATHS.patient} element={<DoctorPatientPage />} />
+        <Route path={DOCTOR_PATHS.messages} element={<DoctorMessagesPage />} />
+        <Route path={DOCTOR_PATHS.profile} element={<DoctorPortalProfilePage />} />
+        <Route path={DOCTOR_PATHS.notifications} element={<DoctorNotificationsPage />} />
       </Route>
 
       <Route path="*" element={<Navigate to={PATHS.splash} replace />} />

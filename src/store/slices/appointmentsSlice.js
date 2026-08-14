@@ -44,6 +44,14 @@ const appointmentsSlice = createSlice({
           : item,
       )
     },
+    completeAppointment(state, action) {
+      const id = action.payload
+      state.items = state.items.map((item) =>
+        item.id === id && (item.status === 'Upcoming' || item.status === 'Confirmed')
+          ? { ...item, status: 'Completed' }
+          : item,
+      )
+    },
     updateAppointmentPrefs(state, action) {
       const { appointmentId, next } = action.payload
       if (!appointmentId) return
@@ -57,6 +65,7 @@ export const {
   addBookedAppointment,
   confirmAppointment,
   cancelAppointment,
+  completeAppointment,
   updateAppointmentPrefs,
 } = appointmentsSlice.actions
 

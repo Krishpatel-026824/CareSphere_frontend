@@ -1,4 +1,4 @@
-import { CalendarDays, FileText, FlaskConical, Pill, Video } from 'lucide-react'
+import { CalendarDays, CircleUserRound, FileText, FlaskConical, MessageCircleMore, Pill, Users, Video } from 'lucide-react'
 
 const icons = {
   book: CalendarDays,
@@ -6,13 +6,19 @@ const icons = {
   pharmacy: Pill,
   lab: FlaskConical,
   records: FileText,
+  schedule: CalendarDays,
+  patients: Users,
+  messages: MessageCircleMore,
+  profile: CircleUserRound,
 }
 
 export default function QuickActionsRow({ actions, onActionClick }) {
   return (
     <section className="shrink-0 flex flex-col">
       <h2 className="text-sm sm:text-base font-semibold text-navy mb-4">Quick actions</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className={`grid gap-3 sm:gap-4 ${
+        actions.length <= 4 ? 'grid-cols-2 lg:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5'
+      }`}>
         {actions.map((action) => {
           const Icon = icons[action.id]
           return (

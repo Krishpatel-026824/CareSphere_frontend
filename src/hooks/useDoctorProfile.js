@@ -1,19 +1,16 @@
 import { useState } from 'react'
-import { generateProfileData, withLiveProfileStats } from '../data/generators/profileGenerator'
-import { useAppDispatch, useAppSelector } from '../store/hooks'
+import { generateDoctorPortalProfileData, withUpdatedDoctorDetails } from '../data/generators/doctorPortalProfileGenerator'
+import { useAppDispatch } from '../store/hooks'
 import { logout } from '../store/slices/authSlice'
-import { selectPendingReminders } from '../store/slices/medicinesSlice'
 import { setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
-import { saveProfile, togglePref } from '../store/slices/profileSlice'
 
-const profileMeta = generateProfileData()
+const profileMeta = generateDoctorPortalProfileData()
 
-export function useProfile() {
+export function useDoctorProfile() {
   const dispatch = useAppDispatch()
-  const details = useAppSelector((state) => state.profile.details)
-  const prefs = useAppSelector((state) => state.profile.prefs)
-  const pendingReminders = useAppSelector(selectPendingReminders)
+  const [details, setDetails] = useState(profileMeta.details)
+  const [prefs, setPrefs] = useState(profileMeta.prefs)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(details)
 
@@ -28,7 +25,7 @@ export function useProfile() {
   }
 
   function saveEdit() {
-    dispatch(saveProfile(draft))
+    setDetails(withUpdatedDoctorDetails(details, draft))
     setIsEditing(false)
   }
 
@@ -36,10 +33,20 @@ export function useProfile() {
     setDraft((current) => ({ ...current, [key]: value }))
   }
 
+  function togglePref(id) {
+    setPrefs((current) => current.map((item) => (item.id === id ? { ...item, on: !item.on } : item)))
+  }
+
+  function logoutUser() {
+    dispatch(setWorkspace('patient'))
+    dispatch(setNotificationWorkspace('patient'))
+    dispatch(logout())
+  }
+
   return {
     details,
     prefs,
-    stats: withLiveProfileStats(profileMeta.stats, { reminders: pendingReminders }),
+    stats: profileMeta.stats,
     fields: profileMeta.fields,
     infoRows: profileMeta.infoRows,
     menu: profileMeta.menu,
@@ -50,11 +57,7 @@ export function useProfile() {
     cancelEdit,
     saveEdit,
     updateDraft,
-    togglePref: (id) => dispatch(togglePref(id)),
-    logoutUser: () => {
-      dispatch(setWorkspace('patient'))
-      dispatch(setNotificationWorkspace('patient'))
-      dispatch(logout())
-    },
+    togglePref,
+    logoutUser,
   }
 }

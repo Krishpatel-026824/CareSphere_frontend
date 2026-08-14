@@ -1,10 +1,10 @@
 import { Bell, CheckCheck } from 'lucide-react'
 import BackHomeButton from '../BackHomeButton'
 
-export default function NotificationHeader({ unreadCount, onMarkAllRead }) {
+export default function NotificationHeader({ unreadCount, onMarkAllRead, subtitle, homePath }) {
   return (
     <header className="flex flex-col gap-3">
-      <BackHomeButton />
+      <BackHomeButton to={homePath} />
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div className="flex items-start gap-3 min-w-0">
           <Bell className="w-7 h-7 sm:w-8 sm:h-8 text-navy mt-0.5 shrink-0" strokeWidth={1.75} />
@@ -12,7 +12,7 @@ export default function NotificationHeader({ unreadCount, onMarkAllRead }) {
             <h1 className="text-[26px] sm:text-[30px] lg:text-[32px] font-bold text-navy tracking-tight leading-none">
               Notifications
             </h1>
-            <p className="text-sm text-body-gray mt-2">All your updates and alerts in one place</p>
+            <p className="text-sm text-body-gray mt-2">{subtitle}</p>
           </div>
         </div>
         <button

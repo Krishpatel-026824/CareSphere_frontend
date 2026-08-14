@@ -1,10 +1,11 @@
 import { bottomNavTabs } from '../data/mocks/sidebarNav'
 
-export default function BottomNav({ activeTab, onChange, messagesBadge = 0 }) {
+export default function BottomNav({ activeTab, onChange, messagesBadge = 0, tabs }) {
+  const items = tabs || bottomNavTabs
   return (
     <nav className="w-full border-t border-border-gray bg-white/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(11,31,58,0.04)] pb-[env(safe-area-inset-bottom,0px)]">
-      <ul className="h-16 grid grid-cols-5">
-        {bottomNavTabs.map((tab) => {
+      <ul className={`h-16 grid`} style={{ gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))` }}>
+        {items.map((tab) => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
           const showBadge = tab.id === 'messages' && messagesBadge > 0

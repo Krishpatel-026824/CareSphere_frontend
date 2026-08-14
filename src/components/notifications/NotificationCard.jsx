@@ -1,12 +1,17 @@
 import {
   Bell,
   CalendarCheck2,
+  CalendarPlus,
+  CalendarX2,
+  Clock,
+  FileText,
   FlaskConical,
   MessageSquare,
   Pill,
   ShieldAlert,
   Tag,
   UserRound,
+  Video,
 } from 'lucide-react'
 
 const typeStyles = {
@@ -16,6 +21,12 @@ const typeStyles = {
   message: { icon: MessageSquare, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
   offer: { icon: Tag, bg: 'bg-rose-50', iconColor: 'text-rose-600' },
   security: { icon: ShieldAlert, bg: 'bg-cyan-50', iconColor: 'text-cyan-600' },
+  booking: { icon: CalendarPlus, bg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
+  cancellation: { icon: CalendarX2, bg: 'bg-rose-50', iconColor: 'text-rose-600' },
+  report: { icon: FileText, bg: 'bg-violet-50', iconColor: 'text-violet-600' },
+  video: { icon: Video, bg: 'bg-sky-50', iconColor: 'text-sky-600' },
+  reminder: { icon: Bell, bg: 'bg-amber-50', iconColor: 'text-amber-600' },
+  slot: { icon: Clock, bg: 'bg-cyan-50', iconColor: 'text-cyan-600' },
 }
 
 export default function NotificationCard({ item, onRead }) {

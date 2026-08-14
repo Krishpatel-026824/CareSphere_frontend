@@ -1,6 +1,6 @@
 import { Heart } from 'lucide-react'
 
-export default function AuthBrandMark({ compact = false }) {
+export default function AuthBrandMark({ compact = false, caption = 'Health Dashboard' }) {
   return (
     <div className="flex flex-col items-center">
       <div
@@ -11,7 +11,9 @@ export default function AuthBrandMark({ compact = false }) {
         <Heart className={compact ? 'w-5 h-5 text-white' : 'w-[22px] h-[22px] text-white'} strokeWidth={1.6} />
       </div>
       <p className="font-display mt-3.5 text-[22px] font-bold text-navy tracking-tight">CareSphere</p>
-      <p className="mt-1.5 text-[10px] tracking-[0.22em] uppercase text-teal font-semibold">Health Dashboard</p>
+      <p className="mt-1.5 text-[10px] tracking-[0.22em] uppercase text-teal font-semibold">
+        {caption}
+      </p>
     </div>
   )
 }

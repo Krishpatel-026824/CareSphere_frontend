@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { generateDoctorMessagesData } from '../../data/generators/doctorMessagesGenerator'
 import { generateMessagesData } from '../../data/generators/messagesGenerator'
 import { countPinnedChats } from '../../data/generators/messagePinGenerator'
 import { MAX_PINNED_CHATS } from '../../data/mocks/messagePins'
@@ -6,15 +7,31 @@ import { conversationPreview } from '../../utils/messageStatus'
 
 const EMPTY_CHAT_PREVIEW = 'No messages yet'
 const initial = generateMessagesData()
+const doctorInitial = generateDoctorMessagesData()
 const initialConversations = initial.conversations.map((item) => ({
   ...item,
   messages: item.messages.map((message) => ({ ...message })),
 }))
+const initialDoctorConversations = doctorInitial.conversations.map((item) => ({
+  ...item,
+  messages: item.messages.map((message) => ({ ...message })),
+}))
+
+function listKey(state) {
+  return state.workspace === 'doctor' ? 'doctorConversations' : 'conversations'
+}
+
+function mapList(state, mapper) {
+  const key = listKey(state)
+  state[key] = state[key].map(mapper)
+}
 
 const messagesSlice = createSlice({
   name: 'messages',
   initialState: {
     conversations: initialConversations,
+    doctorConversations: initialDoctorConversations,
+    workspace: 'patient',
     selectedId: null,
     draft: '',
     query: '',
@@ -25,6 +42,17 @@ const messagesSlice = createSlice({
     pinNotice: false,
   },
   reducers: {
+    setWorkspace(state, action) {
+      state.workspace = action.payload === 'doctor' ? 'doctor' : 'patient'
+      state.selectedId = null
+      state.draft = ''
+      state.query = ''
+      state.listFilter = 'all'
+      state.isTyping = false
+      state.showDeleteConfirm = false
+      state.showChatInfo = false
+      state.pinNotice = false
+    },
     setSelectedId(state, action) {
       state.selectedId = action.payload
     },
@@ -52,9 +80,7 @@ const messagesSlice = createSlice({
       state.draft = ''
       state.isTyping = false
       state.showChatInfo = false
-      state.conversations = state.conversations.map((item) =>
-        item.id === id ? { ...item, unread: false, unreadCount: 0 } : item,
-      )
+      mapList(state, (item) => (item.id === id ? { ...item, unread: false, unreadCount: 0 } : item))
     },
     closeConversation(state) {
       state.selectedId = null
@@ -63,14 +89,15 @@ const messagesSlice = createSlice({
       state.showChatInfo = false
     },
     autoSelectFirst(state) {
-      if (!state.selectedId && state.conversations.length > 0) {
-        state.selectedId = state.conversations[0].id
+      const list = state[listKey(state)]
+      if (!state.selectedId && list.length > 0) {
+        state.selectedId = list[0].id
       }
     },
     confirmDeleteChat(state) {
       if (!state.selectedId) return
       const chatId = state.selectedId
-      state.conversations = state.conversations.map((item) =>
+      mapList(state, (item) =>
         item.id === chatId
           ? {
               ...item,
@@ -88,7 +115,7 @@ const messagesSlice = createSlice({
     },
     sendOutgoing(state, action) {
       const { chatId, message, previewText, status } = action.payload
-      state.conversations = state.conversations.map((item) => {
+      mapList(state, (item) => {
         if (item.id !== chatId) return item
         return {
           ...item,
@@ -111,7 +138,7 @@ const messagesSlice = createSlice({
     },
     markOutgoingRead(state, action) {
       const { chatId, readAt } = action.payload
-      state.conversations = state.conversations.map((item) => {
+      mapList(state, (item) => {
         if (item.id !== chatId) return item
         return {
           ...item,
@@ -125,7 +152,7 @@ const messagesSlice = createSlice({
     },
     addReply(state, action) {
       const { chatId, reply } = action.payload
-      state.conversations = state.conversations.map((item) => {
+      mapList(state, (item) => {
         if (item.id !== chatId) return item
         return {
           ...item,
@@ -140,7 +167,7 @@ const messagesSlice = createSlice({
       const messageId = action.payload
       const chatId = state.selectedId
       if (!chatId) return
-      state.conversations = state.conversations.map((item) => {
+      mapList(state, (item) => {
         if (item.id !== chatId) return item
         const messages = item.messages.map((msg) =>
           msg.id === messageId ? { ...msg, removed: true } : msg,
@@ -152,7 +179,7 @@ const messagesSlice = createSlice({
       const messageId = action.payload
       const chatId = state.selectedId
       if (!chatId) return
-      state.conversations = state.conversations.map((item) => {
+      mapList(state, (item) => {
         if (item.id !== chatId) return item
         const messages = item.messages.map((msg) =>
           msg.id === messageId && msg.from === 'me'
@@ -164,25 +191,23 @@ const messagesSlice = createSlice({
     },
     pinConversation(state, action) {
       const id = action.payload
-      const target = state.conversations.find((item) => item.id === id)
+      const list = state[listKey(state)]
+      const target = list.find((item) => item.id === id)
       if (!target || target.pinnedAt) return
-      if (countPinnedChats(state.conversations) >= MAX_PINNED_CHATS) {
+      if (countPinnedChats(list) >= MAX_PINNED_CHATS) {
         state.pinNotice = true
         return
       }
       state.pinNotice = false
-      state.conversations = state.conversations.map((item) =>
-        item.id === id ? { ...item, pinnedAt: Date.now() } : item,
-      )
+      mapList(state, (item) => (item.id === id ? { ...item, pinnedAt: Date.now() } : item))
     },
     unpinConversation(state, action) {
       const id = action.payload
-      const target = state.conversations.find((item) => item.id === id)
+      const list = state[listKey(state)]
+      const target = list.find((item) => item.id === id)
       if (!target || target.pinLocked) return
       state.pinNotice = false
-      state.conversations = state.conversations.map((item) =>
-        item.id === id ? { ...item, pinnedAt: null } : item,
-      )
+      mapList(state, (item) => (item.id === id ? { ...item, pinnedAt: null } : item))
     },
     clearPinNotice(state) {
       state.pinNotice = false
@@ -191,6 +216,7 @@ const messagesSlice = createSlice({
 })
 
 export const {
+  setWorkspace,
   setSelectedId,
   setDraft,
   setQuery,
@@ -216,8 +242,14 @@ export function selectMessagesState(state) {
   return state.messages
 }
 
+export function selectActiveConversations(state) {
+  return state.messages.workspace === 'doctor'
+    ? state.messages.doctorConversations
+    : state.messages.conversations
+}
+
 export function selectMessagesBadge(state) {
-  return state.messages.conversations.filter((item) => item.unread).length
+  return selectActiveConversations(state).filter((item) => item.unread).length
 }
 
 export default messagesSlice.reducer

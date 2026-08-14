@@ -34,6 +34,25 @@ export const TAB_PATHS = {
   profile: PATHS.profile,
 }
 
+export const DOCTOR_PATHS = {
+  home: '/doctor/home',
+  schedule: '/doctor/schedule',
+  visit: '/doctor/schedule/:id',
+  patients: '/doctor/patients',
+  patient: '/doctor/patients/:patientId',
+  messages: '/doctor/messages',
+  profile: '/doctor/profile',
+  notifications: '/doctor/notifications',
+}
+
+export const DOCTOR_TAB_PATHS = {
+  home: DOCTOR_PATHS.home,
+  schedule: DOCTOR_PATHS.schedule,
+  patients: DOCTOR_PATHS.patients,
+  messages: DOCTOR_PATHS.messages,
+  profile: DOCTOR_PATHS.profile,
+}
+
 export function appointmentDetailsPath(id) {
   return `/appointments/${id}`
 }
@@ -52,4 +71,12 @@ export function doctorBookingPath(doctorId) {
 
 export function newAppointmentBookPath(doctorId) {
   return `/appointments/new/${doctorId}`
+}
+
+export function doctorPortalVisitPath(id) {
+  return `/doctor/schedule/${id}`
+}
+
+export function doctorPortalPatientPath(patientId) {
+  return `/doctor/patients/${patientId}`
 }

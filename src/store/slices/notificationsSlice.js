@@ -1,31 +1,59 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { generateNotificationsData } from '../../data/generators/notificationsGenerator'
+import {
+  generateDoctorNotificationsData,
+  generateNotificationsData,
+} from '../../data/generators/notificationsGenerator'
+
+function listKey(state) {
+  return state.workspace === 'doctor' ? 'doctorItems' : 'items'
+}
 
 const notificationsSlice = createSlice({
   name: 'notifications',
   initialState: {
     items: generateNotificationsData(),
+    doctorItems: generateDoctorNotificationsData(),
+    workspace: 'patient',
     activeFilter: 'all',
   },
   reducers: {
+    setNotificationWorkspace(state, action) {
+      state.workspace = action.payload === 'doctor' ? 'doctor' : 'patient'
+      state.activeFilter = 'all'
+    },
     setActiveFilter(state, action) {
       state.activeFilter = action.payload
     },
     markAsRead(state, action) {
       const id = action.payload
-      state.items = state.items.map((item) => (item.id === id ? { ...item, unread: false } : item))
+      const key = listKey(state)
+      state[key] = state[key].map((item) => (item.id === id ? { ...item, unread: false } : item))
     },
     markAllAsRead(state) {
-      state.items = state.items.map((item) => ({ ...item, unread: false }))
+      const key = listKey(state)
+      state[key] = state[key].map((item) => ({ ...item, unread: false }))
     },
     refreshNotifications(state) {
-      state.items = generateNotificationsData()
+      const key = listKey(state)
+      state[key] =
+        key === 'doctorItems' ? generateDoctorNotificationsData() : generateNotificationsData()
       state.activeFilter = 'all'
     },
   },
 })
 
-export const { setActiveFilter, markAsRead, markAllAsRead, refreshNotifications } =
-  notificationsSlice.actions
+export const {
+  setNotificationWorkspace,
+  setActiveFilter,
+  markAsRead,
+  markAllAsRead,
+  refreshNotifications,
+} = notificationsSlice.actions
+
+export function selectActiveNotifications(state) {
+  return state.notifications.workspace === 'doctor'
+    ? state.notifications.doctorItems
+    : state.notifications.items
+}
 
 export default notificationsSlice.reducer
