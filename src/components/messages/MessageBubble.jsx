@@ -4,11 +4,11 @@ import { formatFileSize } from '../../utils/fileSize'
 import { getOutgoingStatus } from '../../utils/messageStatus'
 import MessageTicks from './MessageTicks'
 
-function MessageMeta({ time, showTicks, status, isMe }) {
+function MessageMeta({ time, showTicks, status }) {
   return (
-    <span className={`chat-meta ${isMe ? 'chat-meta-me' : ''}`}>
+    <span className="chat-meta">
       <span className="chat-time-label">{normalizeChatTimeLabel(time)}</span>
-      {showTicks ? <MessageTicks status={status} /> : null}
+      {showTicks ? <MessageTicks status={status} variant="light" /> : null}
     </span>
   )
 }
@@ -36,16 +36,14 @@ export default function MessageBubble({ message, selected = false, onSelect }) {
           event.preventDefault()
           onSelect?.(message, event)
         }}
-        className={`max-w-[min(100%,42rem)] text-left rounded-2xl px-2.5 pt-1.5 pb-1 break-words shadow-sm cursor-pointer ${
-          isMe
-            ? 'bg-teal text-white rounded-br-sm'
-            : 'bg-white text-navy rounded-bl-sm border border-black/5'
-        } ${selected ? 'ring-2 ring-navy/40' : ''}`}
+        className={`wa-bubble cursor-pointer ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'} ${
+          selected ? 'wa-bubble-selected' : ''
+        }`}
       >
         {deleted ? (
-          <p className={`chat-message-text italic after:clear-both after:table after:content-[''] ${isMe ? 'text-white/90' : 'text-body-gray'}`}>
+          <p className="chat-message-text italic text-[#667781] after:clear-both after:table after:content-['']">
             This message was deleted
-            <MessageMeta time={message.time} showTicks={isMe} status={status} isMe={isMe} />
+            <MessageMeta time={message.time} showTicks={isMe} status={status} />
           </p>
         ) : null}
         {!deleted && isImage ? (
@@ -53,7 +51,7 @@ export default function MessageBubble({ message, selected = false, onSelect }) {
             <img
               src={attachment.url}
               alt={attachment.name || 'Attachment'}
-              className="max-h-52 w-full max-w-[18rem] rounded-xl object-cover"
+              className="max-h-52 w-full max-w-[18rem] rounded-[6px] object-cover"
             />
           </a>
         ) : null}
@@ -63,23 +61,19 @@ export default function MessageBubble({ message, selected = false, onSelect }) {
             download={attachment.name}
             className="flex items-center gap-2.5 min-w-[12rem] mb-1"
           >
-            <span className="w-10 h-10 rounded-xl bg-white/80 text-teal flex items-center justify-center shrink-0">
+            <span className="w-10 h-10 rounded-xl bg-white/80 text-[#00A884] flex items-center justify-center shrink-0">
               <FileText className="w-5 h-5" strokeWidth={1.75} />
             </span>
             <span className="min-w-0">
-              <span className={`block text-sm font-semibold truncate ${isMe ? 'text-white' : 'text-navy'}`}>
-                {attachment.name}
-              </span>
-              <span className={`block text-[11px] mt-0.5 ${isMe ? 'text-white/75' : 'text-body-gray'}`}>
-                {formatFileSize(attachment.size)}
-              </span>
+              <span className="block text-sm font-semibold truncate text-[#111b21]">{attachment.name}</span>
+              <span className="block text-[11px] mt-0.5 text-[#667781]">{formatFileSize(attachment.size)}</span>
             </span>
           </a>
         ) : null}
         {!deleted ? (
-          <p className={`chat-message-text after:clear-both after:table after:content-[''] ${isMe ? 'text-white' : 'text-navy'}`}>
+          <p className="chat-message-text after:clear-both after:table after:content-['']">
             {message.text}
-            <MessageMeta time={message.time} showTicks={isMe} status={status} isMe={isMe} />
+            <MessageMeta time={message.time} showTicks={isMe} status={status} />
           </p>
         ) : null}
       </div>

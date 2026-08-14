@@ -1,5 +1,9 @@
-function fileName(title) {
-  return `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.txt`
+function fileName(title, ext = 'txt') {
+  const slug = `${title || 'caresphere-record'}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+  return `${slug}.${ext}`
 }
 
 function recordText(record) {
@@ -18,8 +22,7 @@ function recordText(record) {
     .join('\n')
 }
 
-function saveTextFile(name, text) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' })
+function saveBlob(blob, name) {
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
@@ -28,6 +31,69 @@ function saveTextFile(name, text) {
   link.click()
   link.remove()
   URL.revokeObjectURL(url)
+}
+
+function saveTextFile(name, text) {
+  saveBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), name)
+}
+
+export async function downloadReportImage(url, title) {
+  if (!url) return
+
+  try {
+    const response = await fetch(url)
+    if (!response.ok) throw new Error('image fetch failed')
+    const blob = await response.blob()
+    const subtype = blob.type.split('/')[1] || 'jpg'
+    const ext = subtype === 'jpeg' ? 'jpg' : subtype
+    saveBlob(blob, fileName(title, ext))
+  } catch {
+    const link = document.createElement('a')
+    link.href = url
+    link.download = fileName(title, 'jpg')
+    link.rel = 'noreferrer'
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+  }
+}
+
+export function downloadHealthReport(record) {
+  if (!record) return
+
+  const findings = (record.findings?.length
+    ? record.findings
+    : (record.parameters || []).map((row) => ({
+        label: row.label || row.name,
+        value: row.value,
+        unit: row.unit,
+        status: row.status,
+      }))
+  )
+    .map((row) => `- ${row.label}: ${row.value} ${row.unit || ''} (${row.status || ''})`.trim())
+    .join('\n')
+
+  const text = [
+    'CareSphere health report',
+    record.title,
+    `Report ID: ${record.reportId || ''}`,
+    `Date: ${record.dateLabel || record.date || ''} ${record.timeLabel || ''}`.trim(),
+    `Doctor: ${record.doctorName || ''}`,
+    `Facility: ${record.hospital || ''}`,
+    '',
+    'Findings',
+    findings || 'No findings listed.',
+    '',
+    'Interpretation',
+    record.interpretation || '—',
+    '',
+    'Recommendations',
+    ...(record.recommendations || []),
+    '',
+    `Verified by: ${record.verifiedBy || ''}`,
+  ].join('\n')
+
+  saveTextFile(fileName(record.title, 'txt'), text)
 }
 
 export function downloadRecordFile(record) {

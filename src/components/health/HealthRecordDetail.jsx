@@ -1,4 +1,5 @@
-import { Download } from 'lucide-react'
+import { Download, ImageDown } from 'lucide-react'
+import { downloadHealthReport, downloadReportImage } from '../../utils/downloadRecord'
 
 function statusTone(status) {
   if (status === 'High' || status === 'Low') return 'text-rose-600 bg-rose-50'
@@ -28,8 +29,16 @@ export default function HealthRecordDetail({ record }) {
 
       {record.preview ? (
         <div className="border-b border-border-gray bg-bg-gray/20">
-          <div className="h-48 sm:h-64 lg:h-72 overflow-hidden">
+          <div className="relative h-48 sm:h-64 lg:h-72 overflow-hidden">
             <img src={record.preview} alt={record.title} className="w-full h-full object-cover" />
+            <button
+              type="button"
+              onClick={() => downloadReportImage(record.preview, record.title)}
+              className="absolute bottom-3 right-3 min-h-9 px-3 rounded-lg bg-white/95 text-navy text-xs font-semibold cursor-pointer hover:bg-white inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <ImageDown className="w-3.5 h-3.5" strokeWidth={1.75} />
+              Download image
+            </button>
           </div>
         </div>
       ) : null}
@@ -143,7 +152,7 @@ export default function HealthRecordDetail({ record }) {
         <section className="rounded-xl border border-border-gray p-3.5">
           <p className="text-xs font-semibold text-navy mb-2">Recommendations</p>
           <ul className="flex flex-col gap-2">
-            {record.recommendations.map((item) => (
+            {(record.recommendations || []).map((item) => (
               <li key={item} className="text-sm text-body-gray flex items-start gap-2">
                 <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-teal shrink-0" />
                 {item}
@@ -156,13 +165,26 @@ export default function HealthRecordDetail({ record }) {
           <p className="text-xs text-body-gray">
             Verified by: <span className="font-medium text-navy">{record.verifiedBy}</span>
           </p>
-          <button
-            type="button"
-            className="min-h-10 px-4 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
-          >
-            <Download className="w-4 h-4" strokeWidth={1.75} />
-            Download PDF
-          </button>
+          <div className="flex flex-wrap items-center gap-2">
+            {record.preview ? (
+              <button
+                type="button"
+                onClick={() => downloadReportImage(record.preview, record.title)}
+                className="min-h-10 px-4 rounded-xl border border-border-gray bg-white text-navy text-sm font-semibold cursor-pointer hover:bg-bg-gray inline-flex items-center justify-center gap-2"
+              >
+                <ImageDown className="w-4 h-4" strokeWidth={1.75} />
+                Download image
+              </button>
+            ) : null}
+            <button
+              type="button"
+              onClick={() => downloadHealthReport(record)}
+              className="min-h-10 px-4 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
+            >
+              <Download className="w-4 h-4" strokeWidth={1.75} />
+              Download report
+            </button>
+          </div>
         </div>
       </div>
     </article>

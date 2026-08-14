@@ -6,7 +6,7 @@ export default function ClinicMapPreview({ appointment }) {
 
   return (
     <div className="flex-1 min-h-0 flex flex-col">
-      <div className="relative w-full flex-1 min-h-[132px] rounded-md overflow-hidden border border-[#D7DEE7] bg-[#EEF2F6]">
+      <div className="relative w-full flex-1 min-h-[148px] rounded-xl overflow-hidden border border-[#E4EBF2] bg-[#EEF2F6]">
         <iframe
           title={`Map for ${appointment.fullAddress}`}
           src={embedUrl}

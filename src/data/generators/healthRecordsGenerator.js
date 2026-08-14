@@ -4,6 +4,8 @@ import {
   healthRecordsMock,
   healthRecordsSummaryMetaMock,
 } from '../mocks/healthRecords'
+import { healthRecordsExtraMock } from '../mocks/healthRecordsExtra'
+import { buildHealthRecordReport, getHealthRecordImage } from './healthRecordReportGenerator'
 
 function parseRecordDate(dateLabel = '') {
   const parsed = Date.parse(dateLabel)
@@ -11,12 +13,32 @@ function parseRecordDate(dateLabel = '') {
 }
 
 export function generateHealthRecordsData() {
-  return {
-    records: healthRecordsMock.map((record) => ({
+  const records = [...healthRecordsMock, ...healthRecordsExtraMock]
+    .map((record) => ({
       ...record,
+      preview: record.preview || getHealthRecordImage(record),
       detail: healthRecordDetailsMock[record.id] || null,
-    })),
-  }
+    }))
+    .sort((a, b) => {
+      const left = parseRecordDate(a.dateLabel)?.getTime() || 0
+      const right = parseRecordDate(b.dateLabel)?.getTime() || 0
+      return right - left
+    })
+
+  return { records }
+}
+
+export function filterHealthRecords(records = [], query = '') {
+  const needle = query.trim().toLowerCase()
+  if (!needle) return records
+
+  return records.filter((record) =>
+    [record.title, record.doctorName, record.specialty, record.type, record.dateLabel]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+      .includes(needle),
+  )
 }
 
 export function getHealthRecordDetail(record) {
@@ -30,13 +52,9 @@ export function getHealthRecordDetail(record) {
     return { kind: 'lab', data: record.report }
   }
 
-  const detail = record.detail || healthRecordDetailsMock[record.id]
-  if (detail) {
-    return { kind: 'record', data: detail }
-  }
-
-  if (record.findings) {
-    return { kind: 'record', data: record }
+  const data = buildHealthRecordReport(record)
+  if (data?.findings) {
+    return { kind: 'record', data }
   }
 
   return { kind: 'basic', data: record }

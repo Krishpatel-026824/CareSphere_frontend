@@ -18,7 +18,7 @@ export default function MessageInfoSheet({ message, onClose }) {
         className="w-full max-w-sm rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col max-h-[min(36rem,calc(100dvh-2rem))]"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="px-3 py-3 bg-teal flex items-center gap-3 shrink-0">
+        <div className="px-3 py-3 bg-[#008069] flex items-center gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
@@ -33,12 +33,14 @@ export default function MessageInfoSheet({ message, onClose }) {
         </div>
 
         <div className="chat-wallpaper px-4 py-5 min-h-[7.5rem] flex items-end justify-end">
-          <div className="max-w-[85%] rounded-2xl rounded-br-sm bg-teal text-white px-3 py-2 text-sm leading-relaxed shadow-sm">
-            {preview}
-            <span className="chat-meta chat-meta-me">
-              <span className="chat-time-label">{receipts.sent || message.time}</span>
-              <MessageTicks status={receipts.status} />
-            </span>
+          <div className="wa-bubble wa-bubble-out">
+            <p className="chat-message-text after:clear-both after:table after:content-['']">
+              {preview}
+              <span className="chat-meta">
+                <span className="chat-time-label">{receipts.sent || message.time}</span>
+                <MessageTicks status={receipts.status} variant="light" />
+              </span>
+            </p>
           </div>
         </div>
 

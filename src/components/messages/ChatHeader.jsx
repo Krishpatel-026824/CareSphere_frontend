@@ -1,89 +1,128 @@
-import { ArrowLeft, Headphones, Info, Phone, Trash2 } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronLeft, Headphones, MoreVertical, Phone, Trash2, UserRound, Video } from 'lucide-react'
 
 export default function ChatHeader({ conversation, isTyping, onBack, onDeleteChat, onInfo }) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const statusLabel = isTyping ? 'typing...' : conversation.online ? 'online' : 'offline'
+
   return (
-    <div className="px-4 sm:px-5 py-3 border-b border-black/5 bg-white flex items-center gap-3 shrink-0">
+    <header className="h-[58px] pl-1 pr-1.5 flex items-center gap-0.5 shrink-0 bg-[#008069] text-white">
       {onBack ? (
         <button
           type="button"
           onClick={onBack}
-          className="lg:hidden w-9 h-9 rounded-full border border-border-gray bg-white flex items-center justify-center cursor-pointer shrink-0"
+          className="lg:hidden w-10 h-10 flex items-center justify-center cursor-pointer shrink-0 rounded-full hover:bg-white/10"
           aria-label="Back to conversations"
         >
-          <ArrowLeft className="w-4 h-4 text-navy" strokeWidth={1.75} />
+          <ChevronLeft className="w-6 h-6" strokeWidth={2.2} />
         </button>
       ) : null}
 
-      <div className="relative shrink-0">
-        <div className="w-11 h-11 rounded-full bg-teal-light overflow-hidden flex items-center justify-center text-teal">
+      <button
+        type="button"
+        onClick={onInfo}
+        className="flex items-center gap-2.5 min-w-0 flex-1 text-left cursor-pointer rounded-lg py-1 pr-2 hover:bg-white/5"
+        aria-label={`${conversation.doctorName} info`}
+      >
+        <div className="w-10 h-10 rounded-full bg-white/15 overflow-hidden flex items-center justify-center shrink-0">
           {conversation.avatar ? (
             <img
               src={conversation.avatar}
-              alt={conversation.doctorName}
-              className="w-full h-full object-cover object-[center_18%]"
+              alt=""
+              className="w-full h-full object-cover object-top"
             />
           ) : (
-            <Headphones className="w-5 h-5" strokeWidth={1.75} />
+            <Headphones className="w-5 h-5 text-white" strokeWidth={1.75} />
           )}
         </div>
-        {conversation.online ? (
-          <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white" />
-        ) : null}
-      </div>
+        <div className="min-w-0">
+          <p className="text-[16px] font-medium leading-tight truncate">{conversation.doctorName}</p>
+          <p
+            className={`text-[12.5px] leading-tight truncate mt-px ${
+              isTyping ? 'italic text-[#B6F7C8]' : conversation.online ? 'text-[#B6F7C8]' : 'text-white/75'
+            }`}
+          >
+            {statusLabel}
+          </p>
+        </div>
+      </button>
 
-      <div className="min-w-0 flex-1">
-        <p className="text-[15px] font-semibold text-navy truncate">{conversation.doctorName}</p>
-        <p className="text-xs text-body-gray truncate mt-0.5">
-          {conversation.specialty}
-          {conversation.clinic ? ` • ${conversation.clinic}` : ''}
-        </p>
-        <p
-          className={`text-[11px] mt-0.5 inline-flex items-center gap-1.5 ${
-            isTyping || conversation.online ? 'text-teal font-medium' : 'text-body-gray'
-          }`}
+      <div className="flex items-center shrink-0">
+        <button
+          type="button"
+          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer"
+          aria-label="Video call"
         >
-          {conversation.online || isTyping ? (
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          ) : null}
-          {isTyping ? 'Typing...' : conversation.online ? 'Online' : 'Offline'}
-        </p>
-      </div>
-
-      <div className="flex items-center gap-2 shrink-0">
+          <Video className="w-[22px] h-[22px]" strokeWidth={1.7} />
+        </button>
         {conversation.phone ? (
           <a
             href={`tel:${conversation.phone}`}
-            className="w-9 h-9 rounded-full border border-border-gray flex items-center justify-center text-navy hover:bg-bg-gray"
-            aria-label="Call"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10"
+            aria-label="Voice call"
           >
-            <Phone className="w-4 h-4" strokeWidth={1.75} />
+            <Phone className="w-[20px] h-[20px]" strokeWidth={1.7} />
           </a>
         ) : (
           <button
             type="button"
-            className="w-9 h-9 rounded-full border border-border-gray flex items-center justify-center text-navy"
-            aria-label="Call"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer"
+            aria-label="Voice call"
           >
-            <Phone className="w-4 h-4" strokeWidth={1.75} />
+            <Phone className="w-[20px] h-[20px]" strokeWidth={1.7} />
           </button>
         )}
-        <button
-          type="button"
-          onClick={onInfo}
-          className="w-9 h-9 rounded-full border border-border-gray flex items-center justify-center text-navy hover:bg-bg-gray cursor-pointer"
-          aria-label="Chat info"
-        >
-          <Info className="w-4 h-4" strokeWidth={1.75} />
-        </button>
-        <button
-          type="button"
-          onClick={onDeleteChat}
-          className="inline-flex items-center gap-1.5 min-h-9 px-3 rounded-xl border border-red-300 bg-white text-red-500 text-[12px] font-semibold cursor-pointer hover:bg-red-50"
-        >
-          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} />
-          <span className="hidden sm:inline">Delete chat</span>
-        </button>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer"
+            aria-label="More options"
+            aria-expanded={menuOpen}
+          >
+            <MoreVertical className="w-[22px] h-[22px]" strokeWidth={1.7} />
+          </button>
+          {menuOpen ? (
+            <>
+              <button
+                type="button"
+                className="fixed inset-0 z-30 cursor-default"
+                aria-label="Close menu"
+                onClick={() => setMenuOpen(false)}
+              />
+              <div
+                role="menu"
+                className="absolute right-0 top-full mt-1 z-40 w-48 rounded-md bg-white shadow-[0_2px_10px_rgba(11,20,26,0.26)] py-1 overflow-hidden"
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    onInfo?.()
+                  }}
+                  className="w-full px-4 py-2.5 flex items-center gap-3 text-left text-[14.5px] text-[#3B4A54] hover:bg-[#F5F6F6] cursor-pointer"
+                >
+                  <UserRound className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+                  Contact info
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    onDeleteChat?.()
+                  }}
+                  className="w-full px-4 py-2.5 flex items-center gap-3 text-left text-[14.5px] text-[#EA0038] hover:bg-[#F5F6F6] cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4 shrink-0" strokeWidth={1.75} />
+                  Delete chat
+                </button>
+              </div>
+            </>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </header>
   )
 }

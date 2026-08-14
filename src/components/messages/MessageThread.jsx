@@ -69,7 +69,7 @@ export default function MessageThread({
   }
 
   return (
-    <div className="chat-panel h-full min-h-0 flex-1 rounded-2xl border border-border-gray bg-white shadow-sm flex flex-col overflow-hidden">
+    <div className="chat-panel h-full min-h-0 flex-1 rounded-2xl border border-border-gray bg-[#e5ddd5] shadow-sm flex flex-col overflow-hidden">
       <ChatHeader
         conversation={conversation}
         isTyping={isTyping}
@@ -80,17 +80,15 @@ export default function MessageThread({
 
       <div ref={boardRef} className="relative flex-1 min-h-0 flex flex-col">
         <div className="chat-wallpaper absolute inset-0 pointer-events-none" />
-        <div className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-5 py-4 flex flex-col gap-3 overscroll-y-contain">
+        <div className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-5 py-3 flex flex-col gap-1 overscroll-y-contain">
           {conversation.messages.filter((message) => !message.removed).length === 0 && !isTyping ? (
             <div className="flex-1 flex items-center justify-center px-4">
-              <p className="text-sm text-body-gray text-center">No messages yet. Send a message to start.</p>
+              <p className="text-sm text-[#667781] text-center">No messages yet. Send a message to start.</p>
             </div>
           ) : (
             <>
-              <div className="flex justify-center">
-                <span className="rounded-full bg-white/90 border border-border-gray px-3 py-1 text-[11px] font-medium text-body-gray shadow-sm">
-                  Today
-                </span>
+              <div className="flex justify-center py-2">
+                <span className="wa-date-chip">Today</span>
               </div>
               {conversation.messages
                 .filter((message) => !message.removed)
@@ -104,8 +102,10 @@ export default function MessageThread({
                 ))}
               {isTyping ? (
                 <div className="flex justify-start">
-                  <div className="rounded-2xl rounded-bl-md bg-white border border-black/5 shadow-sm px-4 py-2.5 text-body-gray chat-message-text">
-                    Typing...
+                  <div className="wa-bubble wa-bubble-in wa-typing" aria-label="Typing">
+                    <span />
+                    <span />
+                    <span />
                   </div>
                 </div>
               ) : null}

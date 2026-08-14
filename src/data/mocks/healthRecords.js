@@ -130,7 +130,7 @@ export const healthRecordsSummaryMetaMock = [
 
 export const healthRecordsFooterMock = {
   title: 'Your data is safe with us',
-  body: 'Your reports are securely stored in CareSphere. Tap View anytime to open full details.',
+  body: 'Your reports are securely stored in CareSphere. Tap a record to open it. Press and hold to manage it.',
 }
 
 export const healthRecordRowActionsMock = {

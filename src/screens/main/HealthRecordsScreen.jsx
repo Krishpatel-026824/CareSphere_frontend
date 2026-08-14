@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { ArrowLeft, FileHeart, Recycle } from 'lucide-react'
+import { ArrowLeft, FileHeart, Trash2 } from 'lucide-react'
 import ServicePageHeading from '../../components/ServicePageHeading'
-import HealthRecordCard from '../../components/health/HealthRecordCard'
 import HealthRecordConfirm from '../../components/health/HealthRecordConfirm'
 import HealthRecordDetail from '../../components/health/HealthRecordDetail'
 import HealthRecordsExtras from '../../components/health/HealthRecordsExtras'
+import HealthRecordsList from '../../components/health/HealthRecordsList'
 import LabReportDetail from '../../components/lab/LabReportDetail'
 import {
   getHealthRecordConfirm,
@@ -17,7 +17,6 @@ export default function HealthRecordsScreen({ onBack }) {
   const [selectedRecord, setSelectedRecord] = useState(null)
   const [showBin, setShowBin] = useState(false)
   const [pending, setPending] = useState(null)
-  const [menuId, setMenuId] = useState(null)
   const list = showBin ? bin : records
 
   function confirmPending() {
@@ -75,8 +74,8 @@ export default function HealthRecordsScreen({ onBack }) {
       <div className="w-full page-pad py-6 sm:py-8 flex flex-col gap-6 min-h-full">
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <ServicePageHeading
-            icon={FileHeart}
-            tone="bg-teal-light text-teal"
+            icon={showBin ? Trash2 : FileHeart}
+            tone={showBin ? 'bg-rose-50 text-rose-600' : 'bg-teal-light text-teal'}
             title={showBin ? 'Recycle Bin' : 'Health Records'}
             subtitle={
               showBin
@@ -87,54 +86,44 @@ export default function HealthRecordsScreen({ onBack }) {
           />
           <button
             type="button"
-            onClick={() => {
-              setShowBin((open) => !open)
-              setMenuId(null)
-            }}
-            className={`self-start sm:self-auto min-h-11 px-4 rounded-xl text-sm font-semibold cursor-pointer inline-flex items-center gap-2 shrink-0 ${
+            onClick={() => setShowBin((open) => !open)}
+            className={`self-start sm:self-auto min-h-11 pl-1.5 pr-4 rounded-full text-sm font-semibold cursor-pointer inline-flex items-center gap-2.5 shrink-0 transition-colors ${
               showBin
-                ? 'bg-teal text-white hover:bg-teal-dark'
-                : 'border border-border-gray bg-white text-navy hover:bg-bg-gray'
+                ? 'bg-teal text-white hover:bg-teal-dark shadow-[0_6px_16px_rgba(14,165,160,0.28)]'
+                : 'bg-white text-navy shadow-[0_1px_2px_rgba(11,20,26,0.08)] hover:bg-[#F7FBFA] hover:shadow-[0_4px_14px_rgba(11,20,26,0.10)]'
             }`}
           >
-            {showBin ? <ArrowLeft className="w-4 h-4" strokeWidth={1.75} /> : <Recycle className="w-4 h-4" strokeWidth={1.75} />}
+            <span
+              className={`relative w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                showBin ? 'bg-white/20 text-white' : 'bg-teal-light text-teal'
+              }`}
+            >
+              {showBin ? (
+                <ArrowLeft className="w-4 h-4" strokeWidth={2} />
+              ) : (
+                <Trash2 className="w-4 h-4" strokeWidth={1.85} />
+              )}
+              {!showBin && binCount > 0 ? (
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 rounded-full bg-[#EA0038] text-white text-[10px] font-bold inline-flex items-center justify-center ring-2 ring-white">
+                  {binCount}
+                </span>
+              ) : null}
+            </span>
             {showBin ? 'Back to records' : 'Recycle Bin'}
-            {!showBin && binCount > 0 ? (
-              <span className="min-w-5 h-5 px-1 rounded-full bg-red-500 text-white text-[11px] font-bold inline-flex items-center justify-center">
-                {binCount}
-              </span>
-            ) : null}
           </button>
         </header>
 
-        <section className="rounded-2xl border border-border-gray bg-white overflow-hidden shadow-sm">
-          {list.length === 0 ? (
-            <p className="px-5 py-10 text-sm text-body-gray text-center">
-              {showBin ? 'Recycle Bin is empty.' : 'No health records yet.'}
-            </p>
-          ) : (
-            list.map((record, index) => (
-              <div key={record.id} className={index ? 'border-t border-border-gray' : ''}>
-                <HealthRecordCard
-                  record={record}
-                  variant={showBin ? 'bin' : 'list'}
-                  menuOpen={menuId === record.id}
-                  onOpenMenu={(item) => setMenuId((id) => (id === item.id ? null : item.id))}
-                  onView={(item) => {
-                    setMenuId(null)
-                    setSelectedRecord(item)
-                  }}
-                  onAction={(actionId, item) => {
-                    setMenuId(null)
-                    if (actionId === 'restore') restoreFromBin(item.id)
-                    if (actionId === 'remove') setPending({ type: 'remove', record: item })
-                    if (actionId === 'destroy') setPending({ type: 'destroy', record: item })
-                  }}
-                />
-              </div>
-            ))
-          )}
-        </section>
+        <HealthRecordsList
+          records={list}
+          variant={showBin ? 'bin' : 'list'}
+          emptyText={showBin ? 'Recycle Bin is empty.' : 'No health records yet.'}
+          onSelect={setSelectedRecord}
+          onAction={(actionId, item) => {
+            if (actionId === 'restore') restoreFromBin(item.id)
+            if (actionId === 'remove') setPending({ type: 'remove', record: item })
+            if (actionId === 'destroy') setPending({ type: 'destroy', record: item })
+          }}
+        />
 
         {showBin ? null : <HealthRecordsExtras records={records} />}
       </div>

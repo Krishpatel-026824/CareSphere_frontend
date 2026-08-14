@@ -101,12 +101,6 @@ export function useMessages() {
     dispatch(closeConversationAction())
   }
 
-  function startNewMessage() {
-    const target = selectedId || conversations[0]?.id
-    if (target) openConversation(target)
-    requestAnimationFrame(() => composerRef.current?.focus())
-  }
-
   function confirmDeleteChat() {
     clearChatTimers()
     dispatch(confirmDeleteChatAction())
@@ -210,7 +204,6 @@ export function useMessages() {
     openConversation,
     autoSelectFirst,
     closeConversation,
-    startNewMessage,
     confirmDeleteChat,
     togglePin,
     sendMessage,

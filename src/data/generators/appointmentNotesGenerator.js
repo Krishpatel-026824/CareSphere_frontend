@@ -11,7 +11,7 @@ export function generateAppointmentNotes(appointment) {
 
   return {
     title: 'Notes',
-    subtitle: `Private notes for your visit with ${appointment.doctorName}.`,
+    subtitle: `Notes for your visit with ${appointment.doctorName}.`,
     photo: appointment.doctorPhoto,
     doctorName: appointment.doctorName,
     specialty: appointment.specialty,

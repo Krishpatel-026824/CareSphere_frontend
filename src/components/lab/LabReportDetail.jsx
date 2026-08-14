@@ -1,3 +1,6 @@
+import { Download, ImageDown } from 'lucide-react'
+import { downloadHealthReport, downloadReportImage } from '../../utils/downloadRecord'
+
 function statusTone(status) {
   if (status === 'High' || status === 'Low') return 'text-rose-600 bg-rose-50'
   return 'text-emerald-700 bg-emerald-50'
@@ -23,12 +26,20 @@ export default function LabReportDetail({ report }) {
 
       <div className="p-4 sm:p-5 flex flex-col gap-5">
         {report.preview ? (
-          <div className="rounded-xl overflow-hidden border border-border-gray h-40 sm:h-48 bg-bg-gray">
+          <div className="relative rounded-xl overflow-hidden border border-border-gray h-40 sm:h-48 bg-bg-gray">
             <img
               src={report.preview}
               alt={`${report.testName} lab photo`}
               className="w-full h-full object-cover"
             />
+            <button
+              type="button"
+              onClick={() => downloadReportImage(report.preview, report.testName)}
+              className="absolute bottom-3 right-3 min-h-9 px-3 rounded-lg bg-white/95 text-navy text-xs font-semibold cursor-pointer hover:bg-white inline-flex items-center gap-1.5 shadow-sm"
+            >
+              <ImageDown className="w-3.5 h-3.5" strokeWidth={1.75} />
+              Download image
+            </button>
           </div>
         ) : null}
 
@@ -106,6 +117,38 @@ export default function LabReportDetail({ report }) {
             <p className="text-xs font-semibold text-navy mb-2">Verified by</p>
             <p className="text-sm text-body-gray">{report.doctorName}</p>
             <p className="text-xs text-body-gray mt-2">{report.lab.address}</p>
+            <div className="flex flex-wrap gap-2 mt-3">
+              {report.preview ? (
+                <button
+                  type="button"
+                  onClick={() => downloadReportImage(report.preview, report.testName)}
+                  className="min-h-9 px-3 rounded-lg border border-border-gray bg-white text-navy text-xs font-semibold cursor-pointer hover:bg-bg-gray inline-flex items-center gap-1.5"
+                >
+                  <ImageDown className="w-3.5 h-3.5" strokeWidth={1.75} />
+                  Download image
+                </button>
+              ) : null}
+              <button
+                type="button"
+                onClick={() =>
+                  downloadHealthReport({
+                    title: report.testName,
+                    reportId: report.id,
+                    dateLabel: report.sample?.reportDate,
+                    timeLabel: report.sample?.reportTime,
+                    doctorName: report.doctorName,
+                    hospital: report.lab?.name,
+                    interpretation: report.interpretation,
+                    parameters: report.parameters,
+                    verifiedBy: report.doctorName,
+                  })
+                }
+                className="min-h-9 px-3 rounded-lg bg-teal text-white text-xs font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center gap-1.5"
+              >
+                <Download className="w-3.5 h-3.5" strokeWidth={1.75} />
+                Download report
+              </button>
+            </div>
           </div>
         </section>
       </div>

@@ -28,7 +28,6 @@ export default function MessagesScreen() {
     openConversation,
     autoSelectFirst,
     closeConversation,
-    startNewMessage,
     confirmDeleteChat,
     togglePin,
     pinNotice,
@@ -58,7 +57,7 @@ export default function MessagesScreen() {
           isDesktop ? 'py-3 gap-0' : showChatPanel ? 'py-0 gap-0' : 'py-4 gap-4'
         }`}
       >
-        {!isDesktop && showListPanel ? <MessagesHeader onNewMessage={startNewMessage} /> : null}
+        {!isDesktop && showListPanel ? <MessagesHeader /> : null}
 
         <div
           className={`grid min-h-0 flex-1 ${
@@ -69,7 +68,7 @@ export default function MessagesScreen() {
         >
           {showListPanel ? (
             <div className="min-w-0 min-h-0 h-full flex flex-col gap-3">
-              {isDesktop ? <MessagesHeader onNewMessage={startNewMessage} /> : null}
+              {isDesktop ? <MessagesHeader /> : null}
               <div className="min-h-0 flex-1">
                 <ConversationList
                   items={filtered}
