@@ -8,7 +8,7 @@ import AppointmentOverview from './AppointmentOverview'
 import AppointmentRecordsTab from './AppointmentRecordsTab'
 import AppointmentSettingsTab from './AppointmentSettingsTab'
 
-export default function AppointmentDetailPanel({ appointment, onReschedule, onCancel }) {
+export default function AppointmentDetailPanel({ appointment, onReschedule, onCancel, onConfirm }) {
   const { findDoctorById } = useAppStore()
   const [activeTab, setActiveTab] = useState('overview')
   const [notes, setNotes] = useState('')
@@ -34,6 +34,7 @@ export default function AppointmentDetailPanel({ appointment, onReschedule, onCa
             onNotesChange={setNotes}
             onReschedule={onReschedule}
             onCancel={onCancel}
+            onConfirm={onConfirm}
           />
         ) : null}
         {activeTab === 'doctor' ? <AppointmentDoctorTab appointment={appointment} doctor={doctor} /> : null}

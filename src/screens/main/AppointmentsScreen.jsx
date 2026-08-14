@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
+import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
 import AppointmentDetailPanel from '../../components/appointments/AppointmentDetailPanel'
 import AppointmentListCard from '../../components/appointments/AppointmentListCard'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
+import { useAppointmentActions } from '../../hooks/useAppointmentActions'
 import { resolveAppointmentImages } from '../../data/mocks/appointmentImages'
 import { PATHS } from '../../routes/paths'
 
@@ -14,6 +17,7 @@ export default function AppointmentsScreen({
   onNewAppointment,
 }) {
   const navigate = useNavigate()
+  const actions = useAppointmentActions()
   const defaultId = appointments.find((item) => item.status === 'Upcoming')?.id || appointments[0]?.id
   const [selectedAppointmentId, setSelectedAppointmentId] = useState(selectedId || defaultId)
 
@@ -52,6 +56,7 @@ export default function AppointmentsScreen({
                 appointment={resolveAppointmentImages(appointment)}
                 selected={selectedAppointment?.id === appointment.id}
                 onSelect={handleSelect}
+                onOpenMenu={actions.openMenu}
               />
             ))}
           </div>
@@ -59,10 +64,26 @@ export default function AppointmentsScreen({
           <AppointmentDetailPanel
             appointment={selectedAppointment}
             onReschedule={handleReschedule}
-            onCancel={() => {}}
+            onCancel={(appointment) => actions.requestAction('cancel', appointment)}
+            onConfirm={(appointment) => actions.requestAction('confirm', appointment)}
           />
         </div>
       </div>
+
+      <AppointmentActionMenu
+        open={Boolean(actions.menu)}
+        x={actions.menu?.x}
+        y={actions.menu?.y}
+        options={actions.menu?.options}
+        onSelect={(id) => actions.requestAction(id, actions.menu.appointment)}
+        onClose={actions.closeMenu}
+      />
+      <AppointmentActionDialog
+        open={Boolean(actions.dialog)}
+        copy={actions.dialog?.copy}
+        onClose={actions.closeDialog}
+        onConfirm={actions.submitDialog}
+      />
     </div>
   )
 }

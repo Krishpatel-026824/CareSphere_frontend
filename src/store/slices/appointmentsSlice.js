@@ -33,6 +33,20 @@ const appointmentsSlice = createSlice({
       if (state.items.some((item) => item.id === appointment.id)) return
       state.items = [resolveAppointmentImages(appointment), ...state.items]
     },
+    confirmAppointment(state, action) {
+      const id = action.payload
+      state.items = state.items.map((item) =>
+        item.id === id && item.status === 'Upcoming' ? { ...item, status: 'Confirmed' } : item,
+      )
+    },
+    cancelAppointment(state, action) {
+      const id = action.payload
+      state.items = state.items.map((item) =>
+        item.id === id && (item.status === 'Upcoming' || item.status === 'Confirmed')
+          ? { ...item, status: 'Cancelled' }
+          : item,
+      )
+    },
     updateAppointmentPrefs(state, action) {
       const { appointmentId, next } = action.payload
       if (!appointmentId) return
@@ -41,7 +55,13 @@ const appointmentsSlice = createSlice({
   },
 })
 
-export const { persistReschedule, addBookedAppointment, updateAppointmentPrefs } = appointmentsSlice.actions
+export const {
+  persistReschedule,
+  addBookedAppointment,
+  confirmAppointment,
+  cancelAppointment,
+  updateAppointmentPrefs,
+} = appointmentsSlice.actions
 
 export function selectAppointments(state) {
   return state.appointments.items

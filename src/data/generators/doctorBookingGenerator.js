@@ -9,7 +9,7 @@ const defaultSlots = {
 
 function withDoctorDefaults(doctor) {
   return {
-    languages: ['English', 'Hindi', 'Gujarati'],
+    languages: ['English', 'Spanish'],
     availableToday: true,
     videoConsult: true,
     patientsCount: '800+',

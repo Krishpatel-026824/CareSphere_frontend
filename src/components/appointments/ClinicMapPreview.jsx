@@ -5,8 +5,8 @@ export default function ClinicMapPreview({ appointment }) {
   if (!embedUrl) return null
 
   return (
-    <div className="flex h-full min-h-[160px] sm:min-h-[180px] flex-col gap-1.5">
-      <div className="relative w-full flex-1 min-h-[140px] rounded-xl overflow-hidden border border-border-gray bg-[#EEF2F6]">
+    <div className="flex-1 min-h-0 flex flex-col">
+      <div className="relative w-full flex-1 min-h-[132px] rounded-md overflow-hidden border border-[#D7DEE7] bg-[#EEF2F6]">
         <iframe
           title={`Map for ${appointment.fullAddress}`}
           src={embedUrl}
@@ -19,7 +19,7 @@ export default function ClinicMapPreview({ appointment }) {
         href={getClinicMapsUrl(appointment)}
         target="_blank"
         rel="noreferrer"
-        className="self-end text-[11px] font-semibold text-teal hover:underline"
+        className="self-end text-[11px] font-semibold text-teal hover:underline mt-2"
       >
         Open in Maps
       </a>

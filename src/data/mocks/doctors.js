@@ -1,7 +1,7 @@
 export const doctorsMock = [
   {
     id: 'doc-1',
-    name: 'Dr. Aisha Khan',
+    name: 'Dr. Maya Thompson',
     specialty: 'Dermatologist',
     experience: 8,
     rating: 4.8,
@@ -11,7 +11,7 @@ export const doctorsMock = [
   },
   {
     id: 'doc-2',
-    name: 'Dr. Vivek Sharma',
+    name: 'Dr. Nathan Clark',
     specialty: 'General Physician',
     experience: 10,
     rating: 4.7,
@@ -21,7 +21,7 @@ export const doctorsMock = [
   },
   {
     id: 'doc-3',
-    name: 'Dr. Neha Gupta',
+    name: 'Dr. Grace Mitchell',
     specialty: 'Gynecologist',
     experience: 9,
     rating: 4.9,

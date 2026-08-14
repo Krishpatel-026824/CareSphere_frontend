@@ -44,10 +44,11 @@ export function applyBookingToAppointment(appointment, booking) {
 }
 
 export function getUpcomingAppointment(appointments = []) {
+  const active = (item) => item.status !== 'Completed' && item.status !== 'Cancelled'
   return (
     appointments.find((item) => item.status === 'Confirmed') ||
     appointments.find((item) => item.status === 'Upcoming') ||
-    appointments.find((item) => item.status !== 'Completed') ||
+    appointments.find(active) ||
     appointments[0] ||
     null
   )

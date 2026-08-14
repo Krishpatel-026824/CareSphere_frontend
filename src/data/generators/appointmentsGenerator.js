@@ -32,7 +32,7 @@ export function generateAppointmentFromBooking(booking) {
     specialty: doctor.specialty,
     dateLabel: formatBookingDateLabel(booking.selectedDate),
     timeLabel: booking.selectedTime,
-    status: 'Confirmed',
+    status: 'Upcoming',
     clinic: source.clinic || doctor.hospital,
     clinicDetail: source.clinicDetail || source.clinic || doctor.hospital,
     location: source.location || 'Ahmedabad',

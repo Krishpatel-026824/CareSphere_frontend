@@ -10,7 +10,7 @@ export const labFacilityMock = {
   name: 'CareSphere Diagnostics',
   accreditation: 'NABL Accredited · ISO 15189',
   address: 'SG Highway, Ahmedabad – 380015',
-  pathologist: 'Dr. Ananya Patel, MD (Pathology)',
+  pathologist: 'Dr. Helen Brooks, MD (Pathology)',
 }
 
 export const labReportTemplatesMock = {

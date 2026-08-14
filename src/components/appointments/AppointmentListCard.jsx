@@ -1,16 +1,38 @@
+import { useRef } from 'react'
 import { CalendarDays, ChevronRight, Clock } from 'lucide-react'
+import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
-const statusStyles = {
-  Confirmed: 'bg-emerald-100 text-emerald-800',
-  Upcoming: 'bg-sky-100 text-sky-800',
-  Completed: 'bg-slate-100 text-slate-600',
-}
+export default function AppointmentListCard({ appointment, selected, onSelect, onOpenMenu }) {
+  const holdTimer = useRef(null)
+  const didHold = useRef(false)
 
-export default function AppointmentListCard({ appointment, selected, onSelect }) {
+  function startHold(event) {
+    didHold.current = false
+    const point = { clientX: event.clientX, clientY: event.clientY }
+    holdTimer.current = setTimeout(() => {
+      didHold.current = true
+      onOpenMenu?.(appointment, point)
+    }, 450)
+  }
+
+  function endHold() {
+    clearTimeout(holdTimer.current)
+  }
+
   return (
     <button
       type="button"
-      onClick={() => onSelect?.(appointment)}
+      onClick={() => {
+        if (!didHold.current) onSelect?.(appointment)
+      }}
+      onContextMenu={(event) => {
+        event.preventDefault()
+        onOpenMenu?.(appointment, event)
+      }}
+      onPointerDown={startHold}
+      onPointerUp={endHold}
+      onPointerLeave={endHold}
+      onPointerCancel={endHold}
       className={`relative w-full text-left rounded-xl border p-2.5 pl-3.5 flex items-center gap-2.5 cursor-pointer transition-all overflow-hidden ${
         selected
           ? 'bg-teal-light border-teal/25 shadow-sm'
@@ -30,7 +52,7 @@ export default function AppointmentListCard({ appointment, selected, onSelect })
           <h2 className="text-[13px] font-bold text-navy truncate">{appointment.doctorName}</h2>
           <span
             className={`text-[9px] font-semibold px-1.5 py-px rounded-full shrink-0 ${
-              statusStyles[appointment.status] || statusStyles.Upcoming
+              appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
             }`}
           >
             {appointment.status}

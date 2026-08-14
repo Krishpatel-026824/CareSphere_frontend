@@ -4,7 +4,7 @@ export const healthRecordsMock = [
   {
     id: 'rec-1',
     title: 'ECG Report',
-    doctorName: 'Dr. Rohan Mehta',
+    doctorName: 'Dr. James Carter',
     specialty: 'Cardiology',
     dateLabel: '12 May 2025',
     timeLabel: '10:30 AM',
@@ -16,7 +16,7 @@ export const healthRecordsMock = [
   {
     id: 'rec-2',
     title: 'Skin Allergy Panel',
-    doctorName: 'Dr. Kavya Shah',
+    doctorName: 'Dr. Sophia Bennett',
     specialty: 'Dermatology',
     dateLabel: '28 Apr 2025',
     timeLabel: '11:15 AM',
@@ -28,7 +28,7 @@ export const healthRecordsMock = [
   {
     id: 'rec-3',
     title: 'Annual Health Checkup',
-    doctorName: 'Dr. Meera Desai',
+    doctorName: 'Dr. Olivia Hart',
     specialty: 'General',
     dateLabel: '15 Mar 2025',
     timeLabel: '09:20 AM',

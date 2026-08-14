@@ -1,7 +1,12 @@
 import { ArrowLeft, Search, SlidersHorizontal } from 'lucide-react'
+import DoctorFilterMenu from '../../components/doctor/DoctorFilterMenu'
 import DoctorRatingInline from '../../components/doctor/DoctorRatingInline'
+import { useDoctorSearchFilter } from '../../hooks/useDoctorSearchFilter'
 
 export default function DoctorSearchResults({ category, doctors, onBack, onSelectDoctor }) {
+  const { listFilter, setListFilter, filterOpen, setFilterOpen, filtered, filterActive } =
+    useDoctorSearchFilter(doctors)
+
   return (
     <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full max-w-[1400px] mx-auto page-pad py-4 sm:py-6 lg:py-8">
@@ -17,27 +22,50 @@ export default function DoctorSearchResults({ category, doctors, onBack, onSelec
             </button>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-navy truncate">Search Results</h1>
           </div>
-          <div className="rounded-xl border border-border-gray px-3 sm:px-4 py-3 bg-white flex items-center gap-2 max-w-2xl">
+          <div className="relative rounded-xl border border-border-gray px-3 sm:px-4 py-3 bg-white flex items-center gap-2 max-w-2xl">
             <Search className="w-4 h-4 text-body-gray shrink-0" />
             <input
               value={`${category} in Ahmedabad`}
               readOnly
               className="w-full min-w-0 text-sm lg:text-base text-navy outline-none bg-transparent"
             />
-            <button type="button" aria-label="Filters" className="shrink-0">
-              <SlidersHorizontal className="w-4 h-4 text-body-gray" />
+            <button
+              type="button"
+              aria-label="Filters"
+              aria-expanded={filterOpen}
+              onClick={() => setFilterOpen((open) => !open)}
+              className={`relative w-8 h-8 rounded-lg flex items-center justify-center shrink-0 cursor-pointer ${
+                filterActive || filterOpen ? 'bg-teal-light text-teal' : 'text-body-gray hover:bg-bg-gray'
+              }`}
+            >
+              <SlidersHorizontal className="w-4 h-4" strokeWidth={1.75} />
+              {filterActive ? (
+                <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-teal" />
+              ) : null}
             </button>
+            <DoctorFilterMenu
+              open={filterOpen}
+              listFilter={listFilter}
+              onSelect={setListFilter}
+              onClose={() => setFilterOpen(false)}
+            />
           </div>
         </header>
 
-        {doctors.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="rounded-2xl border border-border-gray bg-white p-8 text-center">
-            <p className="text-base font-semibold text-navy">No {category} doctors found</p>
-            <p className="text-sm text-body-gray mt-1">Try another specialty from the categories list.</p>
+            <p className="text-base font-semibold text-navy">
+              {filterActive ? 'No doctors match this filter' : `No ${category} doctors found`}
+            </p>
+            <p className="text-sm text-body-gray mt-1">
+              {filterActive
+                ? 'Try another filter or show all doctors.'
+                : 'Try another specialty from the categories list.'}
+            </p>
           </div>
         ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-          {doctors.map((doctor) => (
+          {filtered.map((doctor) => (
             <article
               key={doctor.id}
               className="bg-white border border-border-gray rounded-2xl p-4 sm:p-5 shadow-sm flex items-center gap-3 sm:gap-4"

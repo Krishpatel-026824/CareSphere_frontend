@@ -10,7 +10,7 @@ export const messagesMock = [
   {
     id: 'msg-1',
     doctorId: 'doc-101',
-    doctorName: 'Dr. Rohan Mehta',
+    doctorName: 'Dr. James Carter',
     specialty: 'Cardiologist',
     clinic: 'CareSphere Heart Center',
     phone: '(901) 425-9878',
@@ -80,7 +80,7 @@ export const messagesMock = [
   {
     id: 'msg-3',
     doctorId: 'doc-104',
-    doctorName: 'Dr. Kavya Shah',
+    doctorName: 'Dr. Sophia Bennett',
     specialty: 'Dermatologist',
     clinic: 'SkinCare Clinic',
     phone: '(901) 425-9878',
@@ -103,7 +103,7 @@ export const messagesMock = [
   {
     id: 'msg-4',
     doctorId: 'doc-106',
-    doctorName: 'Dr. Meera Desai',
+    doctorName: 'Dr. Olivia Hart',
     specialty: 'General Physician',
     clinic: 'City Care Clinic',
     phone: '(901) 555-4422',
@@ -122,7 +122,7 @@ export const messagesMock = [
   {
     id: 'msg-5',
     doctorId: 'doc-102',
-    doctorName: 'Dr. Amit Patel',
+    doctorName: 'Dr. Daniel Brooks',
     specialty: 'Cardiologist',
     clinic: 'Heart Care Clinic',
     phone: '(901) 425-3310',
@@ -146,7 +146,7 @@ export const messagesMock = [
   {
     id: 'msg-6',
     doctorId: 'doc-105',
-    doctorName: 'Dr. Jay Trivedi',
+    doctorName: 'Dr. Michael Reed',
     specialty: 'Pediatrician',
     clinic: 'Child Care Clinic',
     phone: '(901) 555-2201',

@@ -4,7 +4,7 @@ export const appointmentsMock = [
   {
     id: 'apt-1',
     doctorId: 'doc-101',
-    doctorName: 'Dr. Rohan Mehta',
+    doctorName: 'Dr. James Carter',
     specialty: 'Cardiologist',
     dateLabel: '24 May 2025',
     timeLabel: '10:30 AM',
@@ -30,7 +30,7 @@ export const appointmentsMock = [
   {
     id: 'apt-2',
     doctorId: 'doc-104',
-    doctorName: 'Dr. Kavya Shah',
+    doctorName: 'Dr. Sophia Bennett',
     specialty: 'Dermatologist',
     dateLabel: '02 Jun 2025',
     timeLabel: '04:00 PM',
@@ -57,7 +57,7 @@ export const appointmentsMock = [
   {
     id: 'apt-3',
     doctorId: 'doc-106',
-    doctorName: 'Dr. Meera Desai',
+    doctorName: 'Dr. Olivia Hart',
     specialty: 'General Physician',
     dateLabel: '12 May 2025',
     timeLabel: '05:30 PM',
@@ -83,7 +83,7 @@ export const appointmentsMock = [
   {
     id: 'apt-4',
     doctorId: 'doc-102',
-    doctorName: 'Dr. Amit Patel',
+    doctorName: 'Dr. Daniel Brooks',
     specialty: 'Cardiologist',
     dateLabel: '18 Jun 2025',
     timeLabel: '02:30 PM',
@@ -110,7 +110,7 @@ export const appointmentsMock = [
   {
     id: 'apt-5',
     doctorId: 'doc-105',
-    doctorName: 'Dr. Jay Trivedi',
+    doctorName: 'Dr. Michael Reed',
     specialty: 'Pediatrician',
     dateLabel: '08 Jun 2025',
     timeLabel: '09:30 AM',
