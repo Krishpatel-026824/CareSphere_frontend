@@ -1,6 +1,6 @@
 export function WaitingIllustration() {
   return (
-    <svg viewBox="0 0 88 88" className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]" aria-hidden="true">
+    <svg viewBox="0 0 88 88" className="w-12 h-12" aria-hidden="true">
       <rect x="18" y="16" width="48" height="58" rx="8" fill="#FFF7ED" stroke="#FDBA74" strokeWidth="2" />
       <rect x="24" y="22" width="36" height="8" rx="4" fill="#FED7AA" />
       <circle cx="42" cy="44" r="10" fill="#FFEDD5" stroke="#FB923C" strokeWidth="2" />
@@ -16,7 +16,7 @@ export function WaitingIllustration() {
 
 export function UpcomingIllustration() {
   return (
-    <svg viewBox="0 0 88 88" className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]" aria-hidden="true">
+    <svg viewBox="0 0 88 88" className="w-12 h-12" aria-hidden="true">
       <rect x="16" y="20" width="54" height="50" rx="10" fill="#ECFDF5" stroke="#5EEAD4" strokeWidth="2" />
       <rect x="16" y="20" width="54" height="14" rx="10" fill="#14B8A6" />
       <rect x="16" y="28" width="54" height="8" fill="#14B8A6" />
@@ -35,7 +35,7 @@ export function UpcomingIllustration() {
 
 export function CompletedIllustration() {
   return (
-    <svg viewBox="0 0 88 88" className="w-[72px] h-[72px] sm:w-[80px] sm:h-[80px]" aria-hidden="true">
+    <svg viewBox="0 0 88 88" className="w-12 h-12" aria-hidden="true">
       <path d="M22 58c6-10 14-16 22-16" fill="none" stroke="#86EFAC" strokeWidth="6" strokeLinecap="round" />
       <path d="M58 62c8-8 14-10 20-8" fill="none" stroke="#BBF7D0" strokeWidth="5" strokeLinecap="round" />
       <rect x="18" y="14" width="48" height="58" rx="8" fill="#F0FDF4" stroke="#86EFAC" strokeWidth="2" />

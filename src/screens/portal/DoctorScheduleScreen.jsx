@@ -57,7 +57,7 @@ export default function DoctorScheduleScreen({
           </div>
 
           {selected ? (
-            <div className="flex-1 min-w-0 lg:min-h-0 lg:overflow-y-auto">
+            <div className="flex-1 min-w-0 min-h-0 h-full">
               <DoctorVisitPanel
                 visit={selected}
                 canAccept={actions.canAccept(selected)}

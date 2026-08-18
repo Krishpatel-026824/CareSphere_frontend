@@ -1,4 +1,5 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
 import NotificationsScreen from '../../screens/main/NotificationsScreen'
 import MessagesScreen from '../../screens/main/MessagesScreen'
 import ProfileScreen from '../../screens/main/ProfileScreen'
@@ -9,6 +10,7 @@ import DoctorPatientDetailScreen from '../../screens/portal/DoctorPatientDetailS
 import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
 import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
+import { doctorHomeStatFilters, filterDoctorHomeQueue } from '../../data/generators/doctorHomeGenerator'
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
 import { visitsForPatient } from '../../data/generators/doctorScheduleGenerator'
 import { useDoctorProfile } from '../../hooks/useDoctorProfile'
@@ -30,18 +32,36 @@ const doctorMenuRoutes = {
 export function DoctorHomePage() {
   const navigate = useNavigate()
   const schedule = useDoctorSchedule()
+  const [selectedId, setSelectedId] = useState(null)
+  const [homeStat, setHomeStat] = useState(null)
+  const selectedVisit = schedule.visits.find((visit) => visit.id === selectedId) || null
 
   return (
     <DoctorHomeScreen
       visits={schedule.visits}
       nextVisit={schedule.nextVisit}
+      selectedVisit={selectedVisit}
+      homeStat={homeStat}
       onBellClick={() => navigate(DOCTOR_PATHS.notifications)}
-      onOpenVisit={(visit) => navigate(doctorPortalVisitPath(visit.id))}
+      onOpenVisit={(visit) => setSelectedId(visit.id)}
+      onSelectVisit={(visit) => setSelectedId(visit.id)}
+      onClearVisit={() => setSelectedId(null)}
+      onClearStat={() => {
+        setHomeStat(null)
+        setSelectedId(null)
+      }}
       onAcceptVisit={(visit) => schedule.requestAction('accept', visit)}
       onActionClick={(key) => {
         const path = DOCTOR_PATHS[key]
         if (path) navigate(path)
       }}
+      onStatClick={(id) => {
+        const match = filterDoctorHomeQueue(schedule.visits, doctorHomeStatFilters[id])[0]
+        setHomeStat(id)
+        setSelectedId(match?.id || null)
+      }}
+      onMessage={() => navigate(DOCTOR_PATHS.messages)}
+      actions={schedule}
       dialog={schedule.dialog}
       onCloseDialog={schedule.closeDialog}
       onSubmitDialog={schedule.submitDialog}
@@ -108,7 +128,7 @@ export function DoctorConsultPage() {
     <DoctorConsultScreen
       visit={schedule.nextVisit}
       onBack={() => navigate(DOCTOR_PATHS.home)}
-      onJoin={(visit) => navigate(doctorPortalVisitPath(visit.id))}
+      onJoin={() => navigate(DOCTOR_PATHS.home)}
     />
   )
 }
@@ -124,8 +144,17 @@ export function DoctorClinicToolPage() {
 
   return (
     <DoctorClinicToolScreen
+      key={tool}
       title={data.title}
       subtitle={data.subtitle}
+      listTitle={data.listTitle}
+      actionLabel={data.actionLabel}
+      instructionsLabel={data.instructionsLabel}
+      planLabel={data.planLabel}
+      viewReportLabel={data.viewReportLabel}
+      backToOrderLabel={data.backToOrderLabel}
+      empty={data.empty}
+      stats={data.stats}
       tasks={data.tasks}
       onBack={() => navigate(DOCTOR_PATHS.home)}
       onSelectTask={(task) => navigate(doctorPortalPatientPath(task.patientId))}

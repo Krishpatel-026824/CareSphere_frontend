@@ -32,6 +32,7 @@ export function mapAppointmentToDoctorVisit(appointment, patient = doctorLinkedP
       patientId: patient.id,
       patientName: patient.name,
       patientPhoto: patient.avatar,
+      visitReason: patient.visitReason,
     },
     patient,
   )

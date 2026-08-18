@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, MapPin, Phone } from 'lucide-react'
+import { ArrowLeft, CalendarDays, Clock, MapPin, Phone } from 'lucide-react'
 import Button from '../Button'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
@@ -11,12 +11,30 @@ export default function DoctorVisitPanel({
   onDecline,
   onComplete,
   onMessage,
+  onBack,
 }) {
   if (!visit) return null
 
+  const details = [
+    { icon: CalendarDays, label: 'Date', value: visit.dateLabel },
+    { icon: Clock, label: 'Time', value: visit.timeLabel },
+    { icon: MapPin, label: 'Room', value: `${visit.room} · ${visit.location}` },
+    { icon: Phone, label: 'Phone', value: visit.phone },
+  ]
+
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 flex flex-col gap-4 h-full">
-      <div className="flex items-start gap-3">
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 flex flex-col gap-4 h-full min-h-0">
+      {onBack ? (
+        <button
+          type="button"
+          onClick={onBack}
+          className="w-fit inline-flex items-center gap-2 min-h-9 px-3 rounded-xl border border-border-gray bg-white text-sm font-semibold text-navy cursor-pointer hover:border-teal hover:text-teal shrink-0"
+        >
+          <ArrowLeft className="w-4 h-4" strokeWidth={1.75} />
+          Back
+        </button>
+      ) : null}
+      <div className="flex items-start gap-3 shrink-0">
         <div className="w-14 h-14 rounded-2xl overflow-hidden bg-teal-light shrink-0">
           <img src={visit.patientPhoto} alt="" className="w-full h-full object-cover object-top" />
         </div>
@@ -37,47 +55,40 @@ export default function DoctorVisitPanel({
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 rounded-xl bg-bg-gray p-3">
-        <p className="text-sm text-navy inline-flex items-center gap-2">
-          <CalendarDays className="w-4 h-4 text-teal" />
-          {visit.dateLabel}
-        </p>
-        <p className="text-sm text-navy inline-flex items-center gap-2">
-          <Clock className="w-4 h-4 text-teal" />
-          {visit.timeLabel}
-        </p>
-        <p className="text-sm text-navy inline-flex items-center gap-2 col-span-2">
-          <MapPin className="w-4 h-4 text-teal" />
-          {visit.room} · {visit.location}
-        </p>
-        <p className="text-sm text-navy inline-flex items-center gap-2 col-span-2">
-          <Phone className="w-4 h-4 text-teal" />
-          {visit.phone}
-        </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 shrink-0">
+        {details.map((item) => {
+          const Icon = item.icon
+          return (
+            <div key={item.label} className="rounded-xl bg-[#F4F7FA] p-3 flex items-start gap-2.5 min-w-0">
+              <Icon className="w-4 h-4 text-teal shrink-0 mt-0.5" strokeWidth={1.75} />
+              <div className="min-w-0">
+                <p className="text-[11px] text-body-gray">{item.label}</p>
+                <p className="text-sm font-bold text-navy leading-snug">{item.value}</p>
+              </div>
+            </div>
+          )
+        })}
       </div>
 
-      <div>
-        <h3 className="text-sm font-semibold text-navy">Visit note</h3>
-        <p className="text-sm text-body-gray mt-1 leading-relaxed">{visit.prepNote}</p>
+      <div className="flex-1 min-h-0 rounded-xl bg-[#F4F7FA] p-4 flex flex-col gap-3 overflow-y-auto">
+        <div>
+          <h3 className="text-sm font-semibold text-navy">Visit note</h3>
+          <p className="text-sm text-body-gray mt-1 leading-relaxed">{visit.prepNote}</p>
+        </div>
+        {visit.prepItems?.length ? (
+          <ul className="flex flex-wrap gap-2">
+            {visit.prepItems.map((item) => (
+              <li key={item} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-white text-teal">
+                {item}
+              </li>
+            ))}
+          </ul>
+        ) : null}
       </div>
 
-      {visit.prepItems?.length ? (
-        <ul className="flex flex-wrap gap-2">
-          {visit.prepItems.map((item) => (
-            <li key={item} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-light text-teal">
-              {item}
-            </li>
-          ))}
-        </ul>
-      ) : null}
-
-      <div className="mt-auto flex flex-col gap-2">
-        {canAccept ? (
-          <Button onClick={() => onAccept?.(visit)}>Accept visit</Button>
-        ) : null}
-        {canComplete ? (
-          <Button onClick={() => onComplete?.(visit)}>Mark completed</Button>
-        ) : null}
+      <div className="shrink-0 flex flex-col gap-2">
+        {canAccept ? <Button onClick={() => onAccept?.(visit)}>Accept visit</Button> : null}
+        {canComplete ? <Button onClick={() => onComplete?.(visit)}>Mark completed</Button> : null}
         <Button variant="secondary" onClick={() => onMessage?.(visit)}>
           Message patient
         </Button>
