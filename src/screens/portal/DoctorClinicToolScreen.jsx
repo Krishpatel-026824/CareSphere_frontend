@@ -25,6 +25,8 @@ export default function DoctorClinicToolScreen({
   const [showReport, setShowReport] = useState(false)
   const visible = filterId === 'all' ? tasks : tasks.filter((task) => task.badge === filterId)
   const selected = visible.find((task) => task.id === selectedId) || visible[0] || null
+  const activeStat = stats.find((item) => item.id === filterId)
+  const activeListTitle = filterId === 'all' ? listTitle : `${activeStat?.label || filterId}`
 
   useEffect(() => {
     setShowReport(false)
@@ -36,7 +38,7 @@ export default function DoctorClinicToolScreen({
         <QuickActionHeader title={title} subtitle={subtitle} onBack={onBack} />
 
         {stats.length ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 shrink-0">
+          <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 shrink-0">
             {stats.map((item) => (
               <DoctorClinicStatCard
                 key={item.id}
@@ -56,7 +58,7 @@ export default function DoctorClinicToolScreen({
           <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-4">
             <section className="xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-[24px] border border-border-gray shadow-[0_8px_24px_rgba(15,23,42,0.06)] p-4 flex flex-col min-h-0">
               <div className="flex items-center justify-between gap-2 shrink-0 mb-3">
-                <h2 className="text-lg font-bold text-navy">{listTitle}</h2>
+                <h2 className="text-lg font-bold text-navy">{activeListTitle}</h2>
                 <span className="text-sm text-body-gray">{visible.length}</span>
               </div>
               <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2 max-h-[240px] xl:max-h-none">

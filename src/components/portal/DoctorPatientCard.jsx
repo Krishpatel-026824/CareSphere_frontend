@@ -7,7 +7,7 @@ export default function DoctorPatientCard({ patient, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect?.(patient)}
-      className="w-full text-left rounded-2xl border border-border-gray bg-white p-3.5 flex items-center gap-3 cursor-pointer hover:border-teal/30 hover:shadow-sm"
+      className="w-full h-full min-h-[88px] min-w-0 text-left rounded-2xl border border-border-gray bg-white p-3.5 flex items-center gap-3 cursor-pointer hover:border-teal/30 hover:shadow-sm"
     >
       <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-teal-light">
         <img src={patient.avatar} alt="" className="w-full h-full object-cover object-top" />

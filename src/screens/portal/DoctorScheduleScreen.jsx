@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
 import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
-import AppointmentListCard from '../../components/appointments/AppointmentListCard'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
+import DoctorScheduleListCard from '../../components/portal/DoctorScheduleListCard'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
 import { countUpcomingAppointments, sortAppointmentsForList } from '../../utils/appointmentFormat'
 
@@ -29,35 +29,41 @@ export default function DoctorScheduleScreen({
   }
 
   return (
-    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#E8F1F2] flex flex-col overflow-x-hidden lg:overflow-hidden">
-      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
+    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#F3F4F6] flex flex-col overflow-x-hidden lg:overflow-hidden">
+      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
         <AppointmentPageHeader
           title="Schedule"
-          count={visits.length}
-          upcomingCount={countUpcomingAppointments(visits)}
+          subtitle={`${countUpcomingAppointments(visits)} upcoming`}
         />
 
-        <div className="flex-1 min-h-0 flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4">
-          <div className="w-full lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col gap-2 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-            {list.length === 0 ? (
-              <p className="rounded-xl border border-border-gray bg-white p-4 text-sm text-body-gray">
-                No visits in your clinic queue yet.
-              </p>
-            ) : (
-              list.map((visit) => (
-                <AppointmentListCard
-                  key={visit.id}
-                  appointment={visit}
-                  selected={selected?.id === visit.id}
-                  onSelect={handleSelect}
-                  onOpenMenu={actions.openMenu}
-                />
-              ))
-            )}
-          </div>
+        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-start gap-3">
+          <section className="w-full xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-3 flex flex-col min-h-0 h-[300px] sm:h-[360px] xl:h-[min(640px,calc(100dvh-10rem))]">
+            <div className="px-1 pb-2 shrink-0">
+              <h2 className="text-sm font-bold text-navy">Visits</h2>
+            </div>
+            <div className="scroll-y flex-1 min-h-0 pr-2">
+              {list.length === 0 ? (
+                <p className="rounded-xl border border-border-gray bg-[#F3F4F6] p-4 text-sm text-body-gray">
+                  No visits in your clinic queue yet.
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  {list.map((visit) => (
+                    <DoctorScheduleListCard
+                      key={visit.id}
+                      visit={visit}
+                      selected={selected?.id === visit.id}
+                      onSelect={handleSelect}
+                      onOpenMenu={actions.openMenu}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </section>
 
           {selected ? (
-            <div className="flex-1 min-w-0 min-h-0 h-full">
+            <div className="flex-1 min-w-0 w-full xl:overflow-y-auto scroll-y">
               <DoctorVisitPanel
                 visit={selected}
                 canAccept={actions.canAccept(selected)}

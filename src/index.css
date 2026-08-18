@@ -93,6 +93,50 @@
   display: none;
 }
 
+.scroll-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: #888888 #f0f0f0;
+}
+
+.scroll-y::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scroll-y::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 999px;
+  margin-block: 4px;
+}
+
+.scroll-y::-webkit-scrollbar-thumb {
+  background: #888888;
+  border-radius: 999px;
+  border: 2px solid #f0f0f0;
+}
+
+.scroll-y::-webkit-scrollbar-thumb:hover {
+  background: #666666;
+}
+
+.scroll-y::-webkit-scrollbar-button:single-button {
+  display: block;
+  height: 12px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.scroll-y::-webkit-scrollbar-button:single-button:vertical:decrement {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23666666' d='M4 2L1 6h6z'/%3E%3C/svg%3E");
+}
+
+.scroll-y::-webkit-scrollbar-button:single-button:vertical:increment {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Cpath fill='%23666666' d='M1 2h6L4 6z'/%3E%3C/svg%3E");
+}
+
 @keyframes fadeSlide {
   from {
     opacity: 0;

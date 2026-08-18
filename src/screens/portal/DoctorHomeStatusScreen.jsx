@@ -27,7 +27,7 @@ export default function DoctorHomeStatusScreen({
             <p className="text-sm text-body-gray">{page.empty}</p>
           </section>
         ) : (
-          <div className="flex-1 min-h-0 flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4">
+          <div className="flex-1 min-h-0 flex flex-col lg:flex-row items-start gap-3 sm:gap-4">
             <div className="w-full lg:w-[280px] xl:w-[320px] shrink-0 flex flex-col gap-2 max-h-[240px] overflow-y-auto lg:max-h-none lg:min-h-0 lg:overflow-y-auto">
               {page.visits.map((visit) => (
                 <AppointmentListCard
@@ -39,7 +39,7 @@ export default function DoctorHomeStatusScreen({
               ))}
             </div>
             {selected ? (
-              <div className="flex-1 min-w-0 min-h-0 h-full">
+              <div className="flex-1 min-w-0">
                 <DoctorVisitPanel
                   visit={selected}
                   canAccept={actions.canAccept(selected)}

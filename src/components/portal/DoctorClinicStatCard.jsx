@@ -1,6 +1,5 @@
 import {
   AlertTriangle,
-  ChevronRight,
   ClipboardList,
   FilePenLine,
   FilePlus2,
@@ -15,73 +14,83 @@ import {
 const look = {
   all: {
     icon: ClipboardList,
-    stripe: 'bg-teal',
     iconWrap: 'bg-teal-light text-teal',
     value: 'text-teal',
-    footer: 'bg-[#E8F7F6] text-navy',
+    accent: 'from-teal-50 to-cyan-50',
+    ring: 'ring-teal/25',
+    border: 'border-teal/40',
   },
   Refill: {
     icon: RefreshCw,
-    stripe: 'bg-sky-500',
     iconWrap: 'bg-sky-100 text-sky-700',
     value: 'text-sky-700',
-    footer: 'bg-sky-50 text-sky-800',
+    accent: 'from-sky-50 to-indigo-50',
+    ring: 'ring-sky-300/35',
+    border: 'border-sky-300/55',
   },
   Update: {
     icon: Pencil,
-    stripe: 'bg-emerald-500',
     iconWrap: 'bg-emerald-100 text-emerald-700',
     value: 'text-emerald-700',
-    footer: 'bg-emerald-50 text-emerald-800',
+    accent: 'from-emerald-50 to-lime-50',
+    ring: 'ring-emerald-300/35',
+    border: 'border-emerald-300/55',
   },
   New: {
     icon: Plus,
-    stripe: 'bg-teal',
     iconWrap: 'bg-teal-light text-teal',
     value: 'text-teal',
-    footer: 'bg-[#E8F7F6] text-navy',
+    accent: 'from-violet-50 to-fuchsia-50',
+    ring: 'ring-violet-300/35',
+    border: 'border-violet-300/55',
   },
   Order: {
     icon: FlaskConical,
-    stripe: 'bg-amber-500',
     iconWrap: 'bg-amber-100 text-amber-700',
     value: 'text-amber-700',
-    footer: 'bg-amber-50 text-amber-800',
+    accent: 'from-amber-50 to-orange-50',
+    ring: 'ring-amber-300/35',
+    border: 'border-amber-300/55',
   },
   Urgent: {
     icon: AlertTriangle,
-    stripe: 'bg-rose-500',
     iconWrap: 'bg-rose-100 text-rose-700',
     value: 'text-rose-700',
-    footer: 'bg-rose-50 text-rose-800',
+    accent: 'from-rose-50 to-red-50',
+    ring: 'ring-rose-300/35',
+    border: 'border-rose-300/55',
   },
   Review: {
     icon: Search,
-    stripe: 'bg-violet-500',
     iconWrap: 'bg-violet-100 text-violet-700',
     value: 'text-violet-700',
-    footer: 'bg-violet-50 text-violet-800',
+    accent: 'from-violet-50 to-indigo-50',
+    ring: 'ring-violet-300/35',
+    border: 'border-violet-300/55',
   },
   Due: {
     icon: FilePenLine,
-    stripe: 'bg-amber-500',
     iconWrap: 'bg-amber-100 text-amber-700',
     value: 'text-amber-700',
-    footer: 'bg-amber-50 text-amber-800',
+    accent: 'from-amber-50 to-yellow-50',
+    ring: 'ring-amber-300/35',
+    border: 'border-amber-300/55',
   },
   Draft: {
     icon: FileText,
-    stripe: 'bg-slate-500',
     iconWrap: 'bg-slate-100 text-slate-700',
     value: 'text-slate-700',
-    footer: 'bg-slate-50 text-slate-700',
+    accent: 'from-slate-50 to-zinc-50',
+    ring: 'ring-slate-300/35',
+    border: 'border-slate-300/55',
   },
   Open: {
     icon: FilePlus2,
-    stripe: 'bg-teal',
     iconWrap: 'bg-teal-light text-teal',
     value: 'text-teal',
-    footer: 'bg-[#E8F7F6] text-navy',
+    accent: 'from-cyan-50 to-teal-50',
+    ring: 'ring-cyan-300/35',
+    border: 'border-cyan-300/55',
   },
 }
 
@@ -93,29 +102,23 @@ export default function DoctorClinicStatCard({ item, active, onSelect }) {
     <button
       type="button"
       onClick={() => onSelect?.(item.id)}
-      className={`relative overflow-hidden w-full rounded-2xl border bg-white text-left shadow-[0_8px_24px_rgba(15,23,42,0.06)] cursor-pointer hover:shadow-md hover:border-teal/30 transition-all ${
-        active ? 'border-teal ring-2 ring-teal/20' : 'border-border-gray'
-      }`}
+      className={`w-full rounded-2xl border px-3 py-2 flex items-center justify-between gap-2 cursor-pointer transition-all outline-none bg-gradient-to-r ${tone.accent} ${
+        active
+          ? `${tone.border} shadow-sm ring-2 ${tone.ring}`
+          : 'border-border-gray hover:border-slate-300 hover:shadow-sm'
+      } focus-visible:ring-2 ${tone.ring}`}
     >
-      <span className={`absolute left-0 top-0 bottom-0 w-[5px] ${tone.stripe}`} aria-hidden="true" />
-      <div className="flex items-center gap-3 pl-4 pr-3.5 pt-3 pb-2.5">
-        <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${tone.iconWrap}`}>
-          <Icon className="w-[18px] h-[18px]" strokeWidth={1.8} />
+      <div className="min-w-0 flex items-center gap-2">
+        <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${tone.iconWrap}`}>
+          <Icon className="w-3.5 h-3.5" strokeWidth={1.8} />
         </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-baseline gap-2">
-            <p className="text-sm font-bold text-navy truncate">{item.label}</p>
-            <p className={`ml-auto text-[28px] font-bold tabular-nums leading-none tracking-tight ${tone.value}`}>
-              {item.value}
-            </p>
-          </div>
-          <p className="text-[11px] text-body-gray mt-1 leading-snug truncate">{item.hint}</p>
-        </div>
+        <p className="text-[13px] font-bold text-navy truncate">{item.label}</p>
       </div>
-      <div className={`mx-2.5 mb-2.5 rounded-xl px-3 py-2 flex items-center gap-2 ${tone.footer}`}>
-        <p className="flex-1 min-w-0 text-[11px] font-semibold truncate">{item.footer}</p>
-        <ChevronRight className="w-4 h-4 shrink-0" strokeWidth={2} />
-      </div>
+      <span
+        className={`min-w-7 h-7 px-2 rounded-lg inline-flex items-center justify-center text-[28px] font-bold tabular-nums leading-none tracking-tight shrink-0 bg-white/80 ${tone.value}`}
+      >
+        {item.value}
+      </span>
     </button>
   )
 }

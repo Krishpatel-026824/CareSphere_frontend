@@ -1,4 +1,3 @@
-import { ChevronRight } from 'lucide-react'
 import { clinicTaskBadgeStyles } from '../../data/mocks/doctorClinicTools'
 
 export default function DoctorClinicTaskCard({ task, selected, onSelect }) {
@@ -31,7 +30,6 @@ export default function DoctorClinicTaskCard({ task, selected, onSelect }) {
         <p className="text-[13px] font-semibold text-navy truncate mt-0.5">{task.title}</p>
         <p className="text-[12px] text-body-gray truncate">{task.subtitle}</p>
       </div>
-      <ChevronRight className="w-4 h-4 text-body-gray shrink-0" />
     </button>
   )
 }
