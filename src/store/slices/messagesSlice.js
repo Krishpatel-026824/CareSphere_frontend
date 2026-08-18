@@ -5,6 +5,10 @@ import { countPinnedChats } from '../../data/generators/messagePinGenerator'
 import { MAX_PINNED_CHATS } from '../../data/mocks/messagePins'
 import { conversationPreview } from '../../utils/messageStatus'
 import { loadAuthWorkspace } from '../../utils/authStorage'
+import {
+  findDoctorChatForPatient,
+  generateEmptyPatientConversation,
+} from '../../data/generators/doctorPatientChatGenerator'
 
 const EMPTY_CHAT_PREVIEW = 'No messages yet'
 const initial = generateMessagesData()
@@ -82,6 +86,27 @@ const messagesSlice = createSlice({
       state.isTyping = false
       state.showChatInfo = false
       mapList(state, (item) => (item.id === id ? { ...item, unread: false, unreadCount: 0 } : item))
+    },
+    ensureAndOpenPatientChat(state, action) {
+      const patient = action.payload
+      if (state.workspace !== 'doctor' || !patient?.id) return
+      const existing = findDoctorChatForPatient(state.doctorConversations, patient.id)
+      if (!existing) {
+        state.doctorConversations = [
+          generateEmptyPatientConversation(patient),
+          ...state.doctorConversations,
+        ]
+      }
+      const chat = findDoctorChatForPatient(state.doctorConversations, patient.id)
+      if (!chat) return
+      state.selectedId = chat.id
+      state.query = ''
+      state.draft = ''
+      state.isTyping = false
+      state.showChatInfo = false
+      mapList(state, (item) =>
+        item.id === chat.id ? { ...item, unread: false, unreadCount: 0 } : item,
+      )
     },
     closeConversation(state) {
       state.selectedId = null
@@ -226,6 +251,7 @@ export const {
   setShowDeleteConfirm,
   setShowChatInfo,
   openConversation,
+  ensureAndOpenPatientChat,
   closeConversation,
   autoSelectFirst,
   confirmDeleteChat,

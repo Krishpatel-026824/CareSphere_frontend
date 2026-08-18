@@ -1,0 +1,197 @@
+export const doctorPatientHistoryMock = {
+  'pat-krish': [
+    {
+      dateLabel: '10 May 2026',
+      timeLabel: '09:00 AM',
+      room: 'Consultation Room 2',
+      prepNote: 'BP and ECG review. Continue current beta-blocker.',
+      prepItems: ['Home BP diary', 'Current medication list'],
+    },
+    {
+      dateLabel: '12 Feb 2026',
+      timeLabel: '11:30 AM',
+      room: 'Consultation Room 1',
+      prepNote: 'Baseline cardiology consult after palpitations.',
+      prepItems: ['Valid photo ID', 'Previous ECG reports'],
+    },
+  ],
+  'pat-ananya': [
+    {
+      dateLabel: '04 Apr 2026',
+      timeLabel: '10:15 AM',
+      room: 'Consultation Room 3',
+      prepNote: 'Chest discomfort follow-up. ECG remained normal.',
+      prepItems: ['Symptom diary', 'Previous prescriptions'],
+    },
+    {
+      dateLabel: '18 Jan 2026',
+      timeLabel: '02:00 PM',
+      room: 'Consultation Room 4',
+      prepNote: 'First cardiology consult. History and vitals recorded.',
+      prepItems: ['Valid photo ID'],
+    },
+  ],
+  'pat-rohan': [
+    {
+      dateLabel: '22 Mar 2026',
+      timeLabel: '09:30 AM',
+      room: 'Video consult',
+      visitType: 'Video',
+      prepNote: 'Lipid follow-up. Diet and statin plan reviewed.',
+      prepItems: ['Latest lipid report'],
+    },
+    {
+      dateLabel: '08 Dec 2025',
+      timeLabel: '11:00 AM',
+      room: 'Consultation Room 2',
+      prepNote: 'Cardiovascular risk screening completed.',
+      prepItems: ['Fasting labs'],
+    },
+  ],
+  'pat-priya': [
+    {
+      dateLabel: '02 Jun 2026',
+      timeLabel: '03:30 PM',
+      room: 'Consultation Room 1',
+      prepNote: 'Post-ECG counseling. Continue current plan.',
+      prepItems: ['ECG report'],
+    },
+    {
+      dateLabel: '19 Mar 2026',
+      timeLabel: '10:00 AM',
+      room: 'Consultation Room 4',
+      prepNote: 'New murmur review. Echo requested.',
+      prepItems: ['Valid photo ID', 'Insurance card'],
+    },
+  ],
+  'pat-sarah': [
+    {
+      dateLabel: '21 May 2026',
+      timeLabel: '04:30 PM',
+      room: 'Consultation Room 2',
+      prepNote: 'Holter review. Palpitations were sinus tachycardia.',
+      prepItems: ['Holter summary'],
+    },
+    {
+      dateLabel: '14 Feb 2026',
+      timeLabel: '09:45 AM',
+      room: 'Consultation Room 5',
+      prepNote: 'Exercise-related palpitations assessed.',
+      prepItems: ['Activity log'],
+    },
+  ],
+  'pat-anita': [
+    {
+      dateLabel: '28 Apr 2026',
+      timeLabel: '01:00 PM',
+      room: 'Consultation Room 3',
+      prepNote: 'BP follow-up. Dose adjusted after home readings.',
+      prepItems: ['Home BP diary'],
+    },
+    {
+      dateLabel: '11 Jan 2026',
+      timeLabel: '10:30 AM',
+      room: 'Consultation Room 1',
+      prepNote: 'Hypertension review and medication reconciliation.',
+      prepItems: ['Current medication list'],
+    },
+  ],
+  'pat-kabir': [
+    {
+      dateLabel: '16 May 2026',
+      timeLabel: '09:00 AM',
+      room: 'Consultation Room 4',
+      prepNote: 'Family history screening. Lifestyle plan shared.',
+      prepItems: ['Family history notes'],
+    },
+    {
+      dateLabel: '03 Feb 2026',
+      timeLabel: '12:15 PM',
+      room: 'Consultation Room 2',
+      prepNote: 'New-patient intake and baseline vitals.',
+      prepItems: ['Valid photo ID'],
+    },
+  ],
+  'pat-meera': [
+    {
+      dateLabel: '07 Apr 2026',
+      timeLabel: '11:00 AM',
+      room: 'Video consult',
+      visitType: 'Video',
+      prepNote: 'Post-stent check. Exercise plan progressing well.',
+      prepItems: ['Discharge summary'],
+    },
+    {
+      dateLabel: '20 Dec 2025',
+      timeLabel: '10:00 AM',
+      room: 'Consultation Room 5',
+      prepNote: 'Stent follow-up and medication review.',
+      prepItems: ['Latest ECG', 'Medication list'],
+    },
+  ],
+  'pat-vikram': [
+    {
+      dateLabel: '09 May 2026',
+      timeLabel: '08:45 AM',
+      room: 'Consultation Room 3',
+      prepNote: 'Diabetes and cardiac risk review. HbA1c improved.',
+      prepItems: ['HbA1c report'],
+    },
+    {
+      dateLabel: '17 Jan 2026',
+      timeLabel: '02:30 PM',
+      room: 'Consultation Room 1',
+      prepNote: 'Cardiac risk assessment with diabetes history.',
+      prepItems: ['Current medication list'],
+    },
+  ],
+  'pat-diya': [
+    {
+      dateLabel: '25 Apr 2026',
+      timeLabel: '12:30 PM',
+      room: 'Consultation Room 2',
+      prepNote: 'Migraine-related BP spikes settled with plan.',
+      prepItems: ['Headache diary'],
+    },
+    {
+      dateLabel: '08 Jan 2026',
+      timeLabel: '04:00 PM',
+      room: 'Consultation Room 4',
+      prepNote: 'BP spikes during migraine attacks reviewed.',
+      prepItems: ['Home BP diary'],
+    },
+  ],
+  'pat-neel': [
+    {
+      dateLabel: '18 May 2026',
+      timeLabel: '05:15 PM',
+      room: 'Video consult',
+      visitType: 'Video',
+      prepNote: 'Cholesterol follow-up. Diet advice reinforced.',
+      prepItems: ['Lipid report'],
+    },
+    {
+      dateLabel: '02 Feb 2026',
+      timeLabel: '09:15 AM',
+      room: 'Consultation Room 3',
+      prepNote: 'Dyslipidemia consult and statin counseling.',
+      prepItems: ['Fasting labs'],
+    },
+  ],
+  'pat-aisha': [
+    {
+      dateLabel: '30 Mar 2026',
+      timeLabel: '10:00 AM',
+      room: 'Consultation Room 1',
+      prepNote: 'Pre-op cardiac clearance completed.',
+      prepItems: ['Surgical notes', 'ECG report'],
+    },
+    {
+      dateLabel: '11 Jan 2026',
+      timeLabel: '03:45 PM',
+      room: 'Consultation Room 5',
+      prepNote: 'Pre-operative risk assessment started.',
+      prepItems: ['Referral letter'],
+    },
+  ],
+}

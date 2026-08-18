@@ -3,6 +3,7 @@ import { Search, SlidersHorizontal } from 'lucide-react'
 import ConversationListItem from './ConversationListItem'
 import ConversationPinMenu from './ConversationPinMenu'
 import MessageFilterMenu from './MessageFilterMenu'
+import PatientChatResult from './PatientChatResult'
 import PinLimitToast from './PinLimitToast'
 
 export default function ConversationList({
@@ -15,6 +16,10 @@ export default function ConversationList({
   onListFilterChange,
   onTogglePin,
   pinNotice = false,
+  searchPlaceholder = 'Search messages...',
+  patientResults = [],
+  onStartPatientChat,
+  emptyHint = 'Try another search or filter.',
 }) {
   const [filterOpen, setFilterOpen] = useState(false)
   const [pinMenu, setPinMenu] = useState(null)
@@ -34,7 +39,7 @@ export default function ConversationList({
           <input
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="Search messages..."
+            placeholder={searchPlaceholder}
             className="w-full text-sm text-navy outline-none bg-transparent placeholder:text-body-gray/70"
           />
         </div>
@@ -63,26 +68,38 @@ export default function ConversationList({
       </div>
 
       <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2 mt-3 pr-0.5 overscroll-y-contain">
-        {items.length === 0 ? (
+        {items.length === 0 && patientResults.length === 0 ? (
           <div className="rounded-2xl bg-bg-gray p-6 text-center">
             <p className="text-sm font-semibold text-navy">No conversations</p>
-            <p className="text-xs text-body-gray mt-1">Try another search or filter.</p>
+            <p className="text-xs text-body-gray mt-1">{emptyHint}</p>
           </div>
         ) : (
-          items.map((item, index) => {
-            const showDivider = item.pinnedAt && items[index + 1] && !items[index + 1].pinnedAt
-            return (
-              <div key={item.id} className="flex flex-col gap-2">
-                <ConversationListItem
-                  item={item}
-                  isActive={selectedId === item.id}
-                  onSelect={onSelect}
-                  onOpenMenu={openPinMenu}
-                />
-                {showDivider ? <div className="h-px bg-border-gray mx-1" /> : null}
-              </div>
-            )
-          })
+          <>
+            {items.map((item, index) => {
+              const showDivider = item.pinnedAt && items[index + 1] && !items[index + 1].pinnedAt
+              return (
+                <div key={item.id} className="flex flex-col gap-2">
+                  <ConversationListItem
+                    item={item}
+                    isActive={selectedId === item.id}
+                    onSelect={onSelect}
+                    onOpenMenu={openPinMenu}
+                  />
+                  {showDivider ? <div className="h-px bg-border-gray mx-1" /> : null}
+                </div>
+              )
+            })}
+            {patientResults.length > 0 ? (
+              <>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-body-gray px-1 pt-2">
+                  Start a chat
+                </p>
+                {patientResults.map((patient) => (
+                  <PatientChatResult key={patient.id} patient={patient} onChat={onStartPatientChat} />
+                ))}
+              </>
+            ) : null}
+          </>
         )}
       </div>
 

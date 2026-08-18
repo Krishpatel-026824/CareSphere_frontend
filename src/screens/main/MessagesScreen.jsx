@@ -1,14 +1,18 @@
 import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import DeleteChatConfirm from '../../components/DeleteChatConfirm'
 import ChatInfoPanel from '../../components/messages/ChatInfoPanel'
 import ConversationList from '../../components/messages/ConversationList'
 import MessageThread from '../../components/messages/MessageThread'
 import MessagesHeader from '../../components/messages/MessagesHeader'
+import { getDoctorPatientById } from '../../data/generators/doctorPatientChatGenerator'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { useMessages } from '../../hooks/useMessages'
 
 export default function MessagesScreen() {
   const { lg: isDesktop } = useBreakpoint()
+  const location = useLocation()
+  const navigate = useNavigate()
   const {
     selected,
     selectedId,
@@ -25,7 +29,10 @@ export default function MessagesScreen() {
     setShowChatInfo,
     composerRef,
     filtered,
+    patientMatches,
+    isDoctor,
     openConversation,
+    startPatientChat,
     autoSelectFirst,
     closeConversation,
     confirmDeleteChat,
@@ -39,10 +46,21 @@ export default function MessagesScreen() {
 
   const showChatPanel = Boolean(selectedId)
   const showListPanel = !selectedId || isDesktop
+  const headerSubtitle = isDoctor
+    ? 'Stay connected with your patients.'
+    : 'Stay connected with your doctors and care team.'
 
   useEffect(() => {
     if (isDesktop) autoSelectFirst()
   }, [isDesktop, autoSelectFirst])
+
+  useEffect(() => {
+    const patientId = location.state?.patientId
+    if (!patientId || !isDoctor) return
+    const patient = getDoctorPatientById(patientId)
+    if (patient) startPatientChat(patient)
+    navigate('.', { replace: true, state: {} })
+  }, [isDoctor, location.state?.patientId, navigate, startPatientChat])
 
   return (
     <div
@@ -57,7 +75,7 @@ export default function MessagesScreen() {
           isDesktop ? 'py-3 gap-0' : showChatPanel ? 'py-0 gap-0' : 'py-4 gap-4'
         }`}
       >
-        {!isDesktop && showListPanel ? <MessagesHeader /> : null}
+        {!isDesktop && showListPanel ? <MessagesHeader subtitle={headerSubtitle} /> : null}
 
         <div
           className={`grid min-h-0 flex-1 ${
@@ -68,7 +86,7 @@ export default function MessagesScreen() {
         >
           {showListPanel ? (
             <div className="min-w-0 min-h-0 h-full flex flex-col gap-3">
-              {isDesktop ? <MessagesHeader /> : null}
+              {isDesktop ? <MessagesHeader subtitle={headerSubtitle} /> : null}
               <div className="min-h-0 flex-1">
                 <ConversationList
                   items={filtered}
@@ -80,6 +98,14 @@ export default function MessagesScreen() {
                   onListFilterChange={setListFilter}
                   onTogglePin={togglePin}
                   pinNotice={pinNotice}
+                  searchPlaceholder={isDoctor ? 'Search patients...' : 'Search messages...'}
+                  patientResults={patientMatches}
+                  onStartPatientChat={startPatientChat}
+                  emptyHint={
+                    isDoctor
+                      ? 'Search a patient name to start a chat.'
+                      : 'Try another search or filter.'
+                  }
                 />
               </div>
             </div>

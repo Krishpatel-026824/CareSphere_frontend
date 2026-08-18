@@ -4,6 +4,8 @@ import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
 export default function DoctorVisitPanel({
   visit,
+  hideIdentity = false,
+  className = '',
   canAccept,
   canDecline,
   canComplete,
@@ -20,12 +22,10 @@ export default function DoctorVisitPanel({
     { icon: Clock, label: 'Time', value: visit.timeLabel },
     { icon: MapPin, label: 'Room', value: visit.room },
     { icon: Phone, label: 'Phone', value: visit.phone },
-    { icon: Building2, label: 'Clinic', value: visit.clinic },
-    { icon: MapPin, label: 'City', value: visit.location },
   ]
 
   return (
-    <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-4 sm:p-5 flex flex-col gap-3">
+    <section className={`bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-4 sm:p-5 flex flex-col gap-3 min-h-0 ${className}`}>
       {onBack ? (
         <button
           type="button"
@@ -37,28 +37,43 @@ export default function DoctorVisitPanel({
         </button>
       ) : null}
 
-      <div className="flex items-center gap-3 shrink-0">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-teal-light shrink-0">
-          <img src={visit.patientPhoto} alt="" className="w-full h-full object-cover object-top" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 min-w-0">
-            <h2 className="text-base sm:text-lg font-bold text-navy truncate">{visit.patientName}</h2>
-            <span
-              className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
-                appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
-              }`}
-            >
-              {visit.status}
-            </span>
-          </div>
-          <p className="text-sm text-body-gray mt-0.5 truncate">
+      {hideIdentity ? (
+        <div className="flex items-center justify-between gap-2 shrink-0">
+          <p className="text-sm sm:text-base font-bold text-navy truncate">
             {visit.visitType} • {visit.clinic}
           </p>
+          <span
+            className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
+              appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
+            }`}
+          >
+            {visit.status}
+          </span>
         </div>
-      </div>
+      ) : (
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-teal-light shrink-0">
+            <img src={visit.patientPhoto} alt="" className="w-full h-full object-cover object-top" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <h2 className="text-base sm:text-lg font-bold text-navy truncate">{visit.patientName}</h2>
+              <span
+                className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
+                  appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
+                }`}
+              >
+                {visit.status}
+              </span>
+            </div>
+            <p className="text-sm text-body-gray mt-0.5 truncate">
+              {visit.visitType} • {visit.clinic}
+            </p>
+          </div>
+        </div>
+      )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 shrink-0">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-2 shrink-0">
         {details.map((item) => {
           const Icon = item.icon
           return (
@@ -81,12 +96,14 @@ export default function DoctorVisitPanel({
 
         {visit.prepItems?.length ? (
           <div className="rounded-xl bg-[#F3F4F6] px-3.5 py-3">
-            <p className="text-[11px] font-semibold text-body-gray uppercase tracking-wide">Bring today</p>
-            <ul className="mt-2 flex flex-col gap-1.5">
+            <p className="text-[11px] font-semibold text-body-gray uppercase tracking-wide">
+              {visit.status === 'Completed' ? 'Brought' : 'Bring today'}
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-1.5">
               {visit.prepItems.map((item) => (
                 <li
                   key={item}
-                  className="rounded-xl bg-white border border-[#E6EBF1] px-3 py-2 text-sm font-semibold text-navy leading-snug"
+                  className="rounded-full bg-white border border-[#E6EBF1] px-3 py-1.5 text-xs font-semibold text-navy leading-snug"
                 >
                   {item}
                 </li>
@@ -97,13 +114,16 @@ export default function DoctorVisitPanel({
       </div>
 
       {(visit.fullAddress || visit.landmark) ? (
-        <div className="rounded-xl bg-[#F3F4F6] px-3.5 py-3 shrink-0">
-          {visit.fullAddress ? (
-            <p className="text-sm font-semibold text-navy leading-snug">{visit.fullAddress}</p>
-          ) : null}
-          {visit.landmark ? (
-            <p className="text-xs text-body-gray mt-1">{visit.landmark}</p>
-          ) : null}
+        <div className="rounded-xl bg-[#F3F4F6] px-3.5 py-3 shrink-0 flex items-start gap-2">
+          <Building2 className="w-4 h-4 text-teal shrink-0 mt-0.5" strokeWidth={1.75} />
+          <div className="min-w-0">
+            {visit.fullAddress ? (
+              <p className="text-sm font-semibold text-navy leading-snug">{visit.fullAddress}</p>
+            ) : null}
+            {visit.landmark ? (
+              <p className="text-xs text-body-gray mt-1">{visit.landmark}</p>
+            ) : null}
+          </div>
         </div>
       ) : null}
 

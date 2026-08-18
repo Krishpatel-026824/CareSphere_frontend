@@ -11,8 +11,8 @@ import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
 import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
 import { doctorHomeStatFilters, filterDoctorHomeQueue } from '../../data/generators/doctorHomeGenerator'
+import { generatePatientChartVisits } from '../../data/generators/doctorPatientHistoryGenerator'
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
-import { visitsForPatient } from '../../data/generators/doctorScheduleGenerator'
 import { useDoctorProfile } from '../../hooks/useDoctorProfile'
 import { useDoctorSchedule } from '../../hooks/useDoctorSchedule'
 import {
@@ -94,6 +94,9 @@ export function DoctorPatientsPage() {
     <DoctorPatientsScreen
       patients={patients}
       onSelectPatient={(patient) => navigate(doctorPortalPatientPath(patient.id))}
+      onMessagePatient={(patient) =>
+        navigate(DOCTOR_PATHS.messages, { state: { patientId: patient.id } })
+      }
     />
   )
 }
@@ -112,10 +115,10 @@ export function DoctorPatientPage() {
   return (
     <DoctorPatientDetailScreen
       patient={patient}
-      visits={visitsForPatient(schedule.visits, patientId)}
+      visits={generatePatientChartVisits(schedule.visits, patient)}
       actions={schedule}
       onBack={() => navigate(DOCTOR_PATHS.patients)}
-      onMessage={() => navigate(DOCTOR_PATHS.messages)}
+      onMessage={() => navigate(DOCTOR_PATHS.messages, { state: { patientId: patient.id } })}
     />
   )
 }

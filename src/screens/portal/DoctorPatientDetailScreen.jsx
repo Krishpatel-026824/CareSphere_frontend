@@ -1,7 +1,9 @@
-import { ArrowLeft } from 'lucide-react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
-import AppointmentListCard from '../../components/appointments/AppointmentListCard'
+import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
+import DoctorPatientHeader from '../../components/portal/DoctorPatientHeader'
+import DoctorPatientVisitList from '../../components/portal/DoctorPatientVisitList'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
+import { useDoctorPatientChart } from '../../hooks/useDoctorPatientChart'
 
 export default function DoctorPatientDetailScreen({
   patient,
@@ -10,53 +12,57 @@ export default function DoctorPatientDetailScreen({
   onBack,
   onMessage,
 }) {
+  const chart = useDoctorPatientChart(visits)
   if (!patient) return null
-  const latest = visits[0]
+
+  const selected = chart.selected
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
-      <div className="w-full max-w-[1100px] mx-auto page-pad py-4 sm:py-6 flex flex-col gap-4">
-        <button
-          type="button"
-          onClick={onBack}
-          className="w-10 h-10 rounded-xl border border-border-gray bg-white flex items-center justify-center cursor-pointer"
-          aria-label="Back"
-        >
-          <ArrowLeft className="w-5 h-5 text-navy" />
-        </button>
+    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#F3F4F6] flex flex-col overflow-x-hidden lg:overflow-hidden">
+      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
+        <DoctorPatientHeader
+          patient={patient}
+          visitCount={chart.list.length}
+          onBack={onBack}
+          onMessage={onMessage}
+        />
 
-        <section className="bg-white rounded-2xl border border-border-gray p-4 flex items-center gap-3">
-          <div className="w-14 h-14 rounded-full overflow-hidden bg-teal-light shrink-0">
-            <img src={patient.avatar} alt="" className="w-full h-full object-cover object-top" />
-          </div>
-          <div className="min-w-0">
-            <h1 className="text-xl font-bold text-navy">{patient.name}</h1>
-            <p className="text-sm text-body-gray">
-              {patient.ageLabel} • {patient.gender} • {patient.city}
-            </p>
-          </div>
-        </section>
+        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-3">
+          <DoctorPatientVisitList
+            upcoming={chart.upcoming}
+            history={chart.history}
+            selectedId={selected?.id}
+            onSelect={chart.select}
+            onOpenMenu={actions.openMenu}
+          />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="flex flex-col gap-2">
-            {visits.map((visit) => (
-              <AppointmentListCard key={visit.id} appointment={visit} />
-            ))}
-          </div>
-          {latest ? (
-            <DoctorVisitPanel
-              visit={latest}
-              canAccept={actions.canAccept(latest)}
-              canDecline={actions.canDecline(latest)}
-              canComplete={actions.canComplete(latest)}
-              onAccept={() => actions.requestAction('accept', latest)}
-              onDecline={() => actions.requestAction('decline', latest)}
-              onComplete={() => actions.requestAction('complete', latest)}
-              onMessage={() => onMessage?.(latest)}
-            />
+          {selected ? (
+            <div className="flex-1 min-w-0 w-full min-h-0 xl:overflow-y-auto scroll-y">
+              <DoctorVisitPanel
+                visit={selected}
+                hideIdentity
+                className="xl:min-h-full"
+                canAccept={actions.canAccept(selected)}
+                canDecline={actions.canDecline(selected)}
+                canComplete={actions.canComplete(selected)}
+                onAccept={() => actions.requestAction('accept', selected)}
+                onDecline={() => actions.requestAction('decline', selected)}
+                onComplete={() => actions.requestAction('complete', selected)}
+                onMessage={() => onMessage?.(selected)}
+              />
+            </div>
           ) : null}
         </div>
       </div>
+
+      <AppointmentActionMenu
+        open={Boolean(actions.menu)}
+        options={actions.menu?.options}
+        x={actions.menu?.x}
+        y={actions.menu?.y}
+        onClose={actions.closeMenu}
+        onSelect={(id) => actions.requestAction(id, actions.menu?.visit)}
+      />
       <AppointmentActionDialog
         open={Boolean(actions.dialog)}
         copy={actions.dialog?.copy}

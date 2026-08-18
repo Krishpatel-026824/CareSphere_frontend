@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { getAutoReply } from '../data/generators/messageReply'
 import { sortConversationsByPin } from '../data/generators/messagePinGenerator'
+import { findDoctorPatientsForChat } from '../data/generators/doctorPatientChatGenerator'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
   addReply,
@@ -11,6 +12,7 @@ import {
   deleteForEveryone as deleteForEveryoneAction,
   deleteForMe as deleteForMeAction,
   markOutgoingRead,
+  ensureAndOpenPatientChat as ensureAndOpenPatientChatAction,
   openConversation as openConversationAction,
   pinConversation as pinConversationAction,
   selectActiveConversations,
@@ -37,7 +39,9 @@ export function useMessages() {
     showChatInfo,
     pinNotice,
   } = useAppSelector((state) => state.messages)
+  const workspace = useAppSelector((state) => state.messages.workspace)
   const conversations = useAppSelector(selectActiveConversations)
+  const isDoctor = workspace === 'doctor'
 
   const replyTimer = useRef(null)
   const readTimer = useRef(null)
@@ -56,10 +60,13 @@ export function useMessages() {
       return (
         item.doctorName.toLowerCase().includes(q) ||
         item.specialty.toLowerCase().includes(q) ||
-        item.lastMessage.toLowerCase().includes(q)
+        (item.clinic || '').toLowerCase().includes(q) ||
+        (item.lastMessage || '').toLowerCase().includes(q)
       )
     }),
   )
+
+  const patientMatches = isDoctor ? findDoctorPatientsForChat(query, conversations) : []
 
   useEffect(() => {
     return () => {
@@ -96,6 +103,13 @@ export function useMessages() {
       hasAutoSelected.current = true
     }
   }, [conversations.length, dispatch])
+
+  const startPatientChat = useCallback(
+    (patient) => {
+      dispatch(ensureAndOpenPatientChatAction(patient))
+    },
+    [dispatch],
+  )
 
   function closeConversation() {
     clearChatTimers()
@@ -202,7 +216,10 @@ export function useMessages() {
     composerRef,
     unreadCount,
     filtered,
+    patientMatches,
+    isDoctor,
     openConversation,
+    startPatientChat,
     autoSelectFirst,
     closeConversation,
     confirmDeleteChat,

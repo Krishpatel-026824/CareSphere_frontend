@@ -6,11 +6,35 @@ import { setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
 
 const profileMeta = generateDoctorPortalProfileData()
+const DOCTOR_PREFS_KEY = 'caresphere.doctorPrefs'
+
+function loadDoctorPrefs() {
+  try {
+    const raw = window.localStorage.getItem(DOCTOR_PREFS_KEY)
+    if (!raw) return profileMeta.prefs
+    const saved = JSON.parse(raw)
+    return profileMeta.prefs.map((item) => ({
+      ...item,
+      on: typeof saved[item.id] === 'boolean' ? saved[item.id] : item.on,
+    }))
+  } catch {
+    return profileMeta.prefs
+  }
+}
+
+function saveDoctorPrefs(prefs) {
+  try {
+    const payload = Object.fromEntries(prefs.map((item) => [item.id, item.on]))
+    window.localStorage.setItem(DOCTOR_PREFS_KEY, JSON.stringify(payload))
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
 
 export function useDoctorProfile() {
   const dispatch = useAppDispatch()
   const [details, setDetails] = useState(profileMeta.details)
-  const [prefs, setPrefs] = useState(profileMeta.prefs)
+  const [prefs, setPrefs] = useState(loadDoctorPrefs)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(details)
 
@@ -34,7 +58,11 @@ export function useDoctorProfile() {
   }
 
   function togglePref(id) {
-    setPrefs((current) => current.map((item) => (item.id === id ? { ...item, on: !item.on } : item)))
+    setPrefs((current) => {
+      const next = current.map((item) => (item.id === id ? { ...item, on: !item.on } : item))
+      saveDoctorPrefs(next)
+      return next
+    })
   }
 
   function logoutUser() {
