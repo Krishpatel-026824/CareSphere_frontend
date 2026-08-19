@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
 import HealthRecordsScreen from '../../screens/main/HealthRecordsScreen'
 import LabTestsScreen from '../../screens/main/LabTestsScreen'
+import LabBookingsScreen from '../../screens/main/LabBookingsScreen'
 import PharmacyScreen from '../../screens/main/PharmacyScreen'
 import TelemedicineScreen from '../../screens/main/TelemedicineScreen'
 import { PATHS, doctorProfilePath } from '../paths'
@@ -28,7 +29,12 @@ export function PharmacyPage() {
 
 export function LabTestsPage() {
   const navigate = useNavigate()
-  return <LabTestsScreen onBack={() => navigate(PATHS.home)} />
+  return <LabTestsScreen onBack={() => navigate(PATHS.home)} onNavigateBookings={() => navigate(PATHS.labBookings)} />
+}
+
+export function LabBookingsPage() {
+  const navigate = useNavigate()
+  return <LabBookingsScreen onBack={() => navigate(PATHS.labTests)} />
 }
 
 export function HealthRecordsPage() {

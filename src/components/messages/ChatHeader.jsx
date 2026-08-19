@@ -3,7 +3,7 @@ import { ChevronLeft, Headphones, MoreVertical, Phone, Trash2, UserRound, Video 
 
 export default function ChatHeader({ conversation, isTyping, onBack, onDeleteChat, onInfo }) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const statusLabel = isTyping ? 'typing...' : conversation.online ? 'online' : 'offline'
+  const statusLabel = isTyping ? 'typing...' : ''
 
   return (
     <header className="h-[58px] pl-1 pr-1.5 flex items-center gap-0.5 shrink-0 bg-[#008069] text-white">
@@ -37,41 +37,15 @@ export default function ChatHeader({ conversation, isTyping, onBack, onDeleteCha
         </div>
         <div className="min-w-0">
           <p className="text-[16px] font-medium leading-tight truncate">{conversation.doctorName}</p>
-          <p
-            className={`text-[12.5px] leading-tight truncate mt-px ${
-              isTyping ? 'italic text-[#B6F7C8]' : conversation.online ? 'text-[#B6F7C8]' : 'text-white/75'
-            }`}
-          >
-            {statusLabel}
-          </p>
+          {statusLabel ? (
+            <p className="text-[12.5px] leading-tight truncate mt-px italic text-[#B6F7C8]">
+              {statusLabel}
+            </p>
+          ) : null}
         </div>
       </button>
 
       <div className="flex items-center shrink-0">
-        <button
-          type="button"
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer"
-          aria-label="Video call"
-        >
-          <Video className="w-[22px] h-[22px]" strokeWidth={1.7} />
-        </button>
-        {conversation.phone ? (
-          <a
-            href={`tel:${conversation.phone}`}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10"
-            aria-label="Voice call"
-          >
-            <Phone className="w-[20px] h-[20px]" strokeWidth={1.7} />
-          </a>
-        ) : (
-          <button
-            type="button"
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 cursor-pointer"
-            aria-label="Voice call"
-          >
-            <Phone className="w-[20px] h-[20px]" strokeWidth={1.7} />
-          </button>
-        )}
         <div className="relative">
           <button
             type="button"

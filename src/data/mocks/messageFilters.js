@@ -7,5 +7,4 @@ export const messageActionOptions = [
 export const messageFilterOptions = [
   { id: 'all', label: 'All messages', hint: 'Every conversation' },
   { id: 'unread', label: 'Unread', hint: 'New or unanswered chats' },
-  { id: 'online', label: 'Online now', hint: 'Available to chat' },
 ]

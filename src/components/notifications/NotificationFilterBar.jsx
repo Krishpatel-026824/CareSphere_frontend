@@ -8,32 +8,28 @@ const filters = [
 
 export default function NotificationFilterBar({ activeFilter, counts, onSelect }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-full bg-[#E8F6F5] w-fit max-w-full">
+    <div className="flex flex-wrap items-center gap-1.5">
       {filters.map((filter) => {
         const isActive = activeFilter === filter.id
         const Icon = filter.icon
         const count = counts[filter.id]
-
-        const inactiveClass = {
-          all: 'bg-[#E8F6F5] text-teal',
-          unread: 'bg-[#E8F6F5] text-teal',
-          viewed: 'bg-amber-light text-amber-700',
-        }[filter.id]
 
         return (
           <button
             key={filter.id}
             type="button"
             onClick={() => onSelect(filter.id)}
-            className={`inline-flex items-center gap-2 min-h-11 px-4 rounded-full cursor-pointer transition-all duration-200 ${
-              isActive ? 'bg-teal text-white shadow-sm' : inactiveClass
+            className={`inline-flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-semibold cursor-pointer transition-all ${
+              isActive
+                ? 'bg-teal text-white shadow-sm'
+                : 'bg-white border border-[#E6EBF1] text-[#475569] hover:border-teal/30'
             }`}
           >
-            <Icon className="w-4 h-4" strokeWidth={1.75} />
-            <span className="text-sm font-semibold">{filter.label}</span>
+            <Icon className="w-3.5 h-3.5" strokeWidth={1.75} />
+            {filter.label}
             <span
-              className={`min-w-[22px] h-[22px] px-1.5 rounded-full text-[11px] font-bold flex items-center justify-center ${
-                isActive ? 'bg-white/25 text-white' : 'bg-white/70'
+              className={`min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold flex items-center justify-center ${
+                isActive ? 'bg-white/25 text-white' : 'bg-[#F1F5F9] text-[#64748B]'
               }`}
             >
               {count}

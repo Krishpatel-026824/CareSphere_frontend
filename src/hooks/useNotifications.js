@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
+  deleteNotification,
   markAllAsRead,
   markAsRead,
   refreshNotifications,
@@ -36,6 +37,7 @@ export function useNotifications() {
     viewedCount,
     markAsRead: (id) => dispatch(markAsRead(id)),
     markAllAsRead: () => dispatch(markAllAsRead()),
+    deleteNotification: (id) => dispatch(deleteNotification(id)),
     handleRefresh: () => dispatch(refreshNotifications()),
   }
 }

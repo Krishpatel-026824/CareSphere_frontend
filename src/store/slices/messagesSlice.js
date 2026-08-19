@@ -147,6 +147,7 @@ const messagesSlice = createSlice({
           ...item,
           lastMessage: previewText,
           timeLabel: message.time,
+          lastMessageAt: Date.now(),
           messages: [
             ...item.messages,
             {
@@ -184,6 +185,7 @@ const messagesSlice = createSlice({
           ...item,
           lastMessage: reply.text,
           timeLabel: reply.time,
+          lastMessageAt: Date.now(),
           messages: [...item.messages, reply],
         }
       })
@@ -238,6 +240,46 @@ const messagesSlice = createSlice({
     clearPinNotice(state) {
       state.pinNotice = false
     },
+    addIncomingMessage(state, action) {
+      const { doctorId, doctorName, message, avatar } = action.payload
+      if (!doctorId || !message) return
+      if (state._lastIncomingMsgText === message.text && state._lastIncomingDoctorId === doctorId) return
+      state._lastIncomingMsgText = message.text
+      state._lastIncomingDoctorId = doctorId
+      const key = listKey(state)
+      const existing = state[key].find((c) => c.doctorId === doctorId)
+      const now = Date.now()
+      if (existing) {
+        state[key] = state[key].map((c) => {
+          if (c.id !== existing.id) return c
+          return {
+            ...c,
+            lastMessage: message.text,
+            timeLabel: message.time,
+            lastMessageAt: now,
+            unread: true,
+            unreadCount: (c.unreadCount || 0) + 1,
+            messages: [...c.messages, message],
+          }
+        })
+      } else {
+        const newConversation = {
+          id: `conv-${Date.now()}`,
+          doctorId,
+          doctorName: doctorName || 'Doctor',
+          avatar: avatar || '',
+          specialty: '',
+          online: false,
+          unread: true,
+          unreadCount: 1,
+          lastMessage: message.text,
+          timeLabel: message.time,
+          lastMessageAt: now,
+          messages: [message],
+        }
+        state[key] = [newConversation, ...state[key]]
+      }
+    },
   },
 })
 
@@ -263,6 +305,7 @@ export const {
   pinConversation,
   unpinConversation,
   clearPinNotice,
+  addIncomingMessage,
 } = messagesSlice.actions
 
 export function selectMessagesState(state) {

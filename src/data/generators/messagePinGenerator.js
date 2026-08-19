@@ -7,7 +7,9 @@ export function sortConversationsByPin(conversations = []) {
     if (aPinned && bPinned) return bPinned - aPinned
     if (aPinned) return -1
     if (bPinned) return 1
-    return 0
+    const aTime = a.lastMessageAt || 0
+    const bTime = b.lastMessageAt || 0
+    return bTime - aTime
   })
 }
 

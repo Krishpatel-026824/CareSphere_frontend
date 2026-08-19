@@ -5,10 +5,11 @@ import { resolveAppointmentImages, resolveAppointmentsImages } from '../../data/
 import { applyBookingToAppointment, getUpcomingAppointment } from '../../utils/appointmentFormat'
 
 const STORAGE_KEY = 'caresphere.appointments'
+const RECYCLE_KEY = 'caresphere.appointments.recyclebin'
 
-function loadStoredAppointments() {
+function loadStored(key) {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY)
+    const raw = window.localStorage.getItem(key)
     if (!raw) return []
     return JSON.parse(raw)
   } catch {
@@ -16,13 +17,22 @@ function loadStoredAppointments() {
   }
 }
 
+function loadStoredAppointments() {
+  return loadStored(STORAGE_KEY)
+}
+
+const stripImages = ({ doctorPhoto, heroImage, mapImage, clinicImage, ...rest }) => rest
+
 function saveAppointmentsToStorage(items) {
   try {
-    const serializable = items.map(({ doctorPhoto, heroImage, mapImage, clinicImage, ...rest }) => rest)
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable))
-  } catch {
-    // silently fail
-  }
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items.map(stripImages)))
+  } catch { /* silently fail */ }
+}
+
+function saveRecycleBinToStorage(items) {
+  try {
+    window.localStorage.setItem(RECYCLE_KEY, JSON.stringify(items.map(stripImages)))
+  } catch { /* silently fail */ }
 }
 
 const storedItems = resolveAppointmentsImages(loadStoredAppointments())
@@ -31,11 +41,14 @@ const mergedItems = storedItems.length
   ? [...storedItems.filter((stored) => !defaultItems.some((def) => def.id === stored.id)), ...defaultItems]
   : defaultItems
 
+const storedRecycleBin = resolveAppointmentsImages(loadStored(RECYCLE_KEY))
+
 const appointmentsSlice = createSlice({
   name: 'appointments',
   initialState: {
     items: mergedItems,
     prefs: {},
+    recycleBin: storedRecycleBin,
   },
   reducers: {
     persistReschedule(state, action) {
@@ -98,6 +111,34 @@ const appointmentsSlice = createSlice({
       state.items = state.items.map((item) => item.id === updated.id ? { ...item, ...updated } : item)
       saveAppointmentsToStorage(state.items)
     },
+    softDeleteAppointment(state, action) {
+      const id = action.payload
+      const item = state.items.find((a) => a.id === id)
+      if (!item) return
+      state.recycleBin = [{ ...item, deletedAt: Date.now() }, ...state.recycleBin]
+      state.items = state.items.filter((a) => a.id !== id)
+      saveAppointmentsToStorage(state.items)
+      saveRecycleBinToStorage(state.recycleBin)
+    },
+    restoreAppointment(state, action) {
+      const id = action.payload
+      const item = state.recycleBin.find((a) => a.id === id)
+      if (!item) return
+      const { deletedAt, ...restored } = item
+      state.items = [resolveAppointmentImages(restored), ...state.items]
+      state.recycleBin = state.recycleBin.filter((a) => a.id !== id)
+      saveAppointmentsToStorage(state.items)
+      saveRecycleBinToStorage(state.recycleBin)
+    },
+    permanentDeleteAppointment(state, action) {
+      const id = action.payload
+      state.recycleBin = state.recycleBin.filter((a) => a.id !== id)
+      saveRecycleBinToStorage(state.recycleBin)
+    },
+    emptyRecycleBin(state) {
+      state.recycleBin = []
+      saveRecycleBinToStorage([])
+    },
     updateAppointmentPrefs(state, action) {
       const { appointmentId, next } = action.payload
       if (!appointmentId) return
@@ -112,10 +153,18 @@ export const {
   confirmAppointment,
   cancelAppointment,
   completeAppointment,
+  softDeleteAppointment,
+  restoreAppointment,
+  permanentDeleteAppointment,
+  emptyRecycleBin,
   updateAppointment,
   updateAppointmentPrefs,
   toggleAppointmentTask,
 } = appointmentsSlice.actions
+
+export function selectRecycleBin(state) {
+  return state.appointments.recycleBin
+}
 
 export function selectAppointments(state) {
   return state.appointments.items

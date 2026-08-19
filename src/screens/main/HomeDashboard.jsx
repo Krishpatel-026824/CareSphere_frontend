@@ -75,7 +75,6 @@ export default function HomeDashboard({
 
         <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
 
-        <QuickActionsRow actions={homeData.quickActions} onActionClick={onActionClick} />
       </div>
     </div>
   )

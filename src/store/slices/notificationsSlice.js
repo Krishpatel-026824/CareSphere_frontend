@@ -34,6 +34,17 @@ const notificationsSlice = createSlice({
       const key = listKey(state)
       state[key] = state[key].map((item) => ({ ...item, unread: false }))
     },
+    addNotification(state, action) {
+      const notification = action.payload
+      if (!notification?.id) return
+      const key = listKey(state)
+      state[key] = [notification, ...state[key]]
+    },
+    deleteNotification(state, action) {
+      const id = action.payload
+      const key = listKey(state)
+      state[key] = state[key].filter((item) => item.id !== id)
+    },
     refreshNotifications(state) {
       const key = listKey(state)
       state[key] =
@@ -46,8 +57,10 @@ const notificationsSlice = createSlice({
 export const {
   setNotificationWorkspace,
   setActiveFilter,
+  addNotification,
   markAsRead,
   markAllAsRead,
+  deleteNotification,
   refreshNotifications,
 } = notificationsSlice.actions
 

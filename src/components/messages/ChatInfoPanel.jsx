@@ -70,9 +70,7 @@ export default function ChatInfoPanel({ conversation, onClose }) {
           <div className="rounded-xl bg-bg-gray px-3.5 py-3 flex items-center justify-between gap-3">
             <div>
               <p className="text-[11px] text-body-gray">Status</p>
-              <p className={`text-sm font-semibold ${conversation.online ? 'text-teal' : 'text-navy'}`}>
-                {conversation.online ? 'Online' : 'Offline'}
-              </p>
+              <p className="text-sm font-semibold text-teal">Available</p>
             </div>
             <p className="text-xs text-body-gray">{messageCount} messages</p>
           </div>

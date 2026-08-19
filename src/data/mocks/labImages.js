@@ -1,25 +1,24 @@
-import allergy from '../../assets/lab-tests/allergy.jpg'
-import cbcReport from '../../assets/lab-tests/cbc-report.jpg'
-import crp from '../../assets/lab-tests/crp.jpg'
-import hba1cReport from '../../assets/lab-tests/hba1c-report.jpg'
-import iron from '../../assets/lab-tests/iron.jpg'
-import kft from '../../assets/lab-tests/kft.jpg'
-import lft from '../../assets/lab-tests/lft.jpg'
-import lipidReport from '../../assets/lab-tests/lipid-report.jpg'
-import thyroidReport from '../../assets/lab-tests/thyroid-report.jpg'
-import urine from '../../assets/lab-tests/urine.jpg'
-import vitamind from '../../assets/lab-tests/vitamind.jpg'
-
 export const labImages = {
-  cbcReport,
-  lipidReport,
-  thyroidReport,
-  hba1cReport,
-  lft,
-  kft,
-  vitamind,
-  iron,
-  crp,
-  allergy,
-  urine,
+  cbcReport: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
+  lipidReport: 'https://cdn-icons-png.flaticon.com/128/3004/3004458.png',
+  thyroidReport: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
+  hba1cReport: 'https://cdn-icons-png.flaticon.com/128/2966/2966327.png',
+  lft: 'https://cdn-icons-png.flaticon.com/128/3004/3004613.png',
+  kft: 'https://cdn-icons-png.flaticon.com/128/3004/3004561.png',
+  vitamind: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
+  iron: 'https://cdn-icons-png.flaticon.com/128/2913/2913491.png',
+  crp: 'https://cdn-icons-png.flaticon.com/128/2913/2913474.png',
+  allergy: 'https://cdn-icons-png.flaticon.com/128/2913/2913506.png',
+  urine: 'https://cdn-icons-png.flaticon.com/128/3004/3004625.png',
+  blood: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
+  diabetes: 'https://cdn-icons-png.flaticon.com/128/2966/2966327.png',
+  hormone: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
+  xray: 'https://cdn-icons-png.flaticon.com/128/3004/3004592.png',
+  ecg: 'https://cdn-icons-png.flaticon.com/128/3004/3004470.png',
+  stool: 'https://cdn-icons-png.flaticon.com/128/3004/3004625.png',
+  calcium: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
+  vitaminb12: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
+  electrolyte: 'https://cdn-icons-png.flaticon.com/128/2913/2913491.png',
+  coagulation: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
+  testosterone: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
 }

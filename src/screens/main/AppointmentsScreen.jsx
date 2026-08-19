@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, Clock, Search, Star } from 'lucide-react'
+import { CalendarDays, Clock, Search, Star, Trash2 } from 'lucide-react'
 import Avatar from '@mui/material/Avatar'
+import Dialog from '@mui/material/Dialog'
 import InputAdornment from '@mui/material/InputAdornment'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
@@ -10,6 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
 import AppointmentRecordDetailModal from '../../components/appointments/AppointmentRecordDetailModal'
+import AppointmentRecycleBinModal from '../../components/appointments/AppointmentRecycleBinModal'
 import DoctorProfileModal from '../../components/appointments/DoctorProfileModal'
 import NewAppointmentModal from '../../components/appointments/NewAppointmentModal'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
@@ -21,6 +23,11 @@ export default function AppointmentsScreen({
   doctorCategories = [],
   currentUserName = 'Krish Patel',
   onCreateAppointment,
+  onDeleteAppointment,
+  recycleBin = [],
+  onRestoreAppointment,
+  onPermanentDeleteAppointment,
+  onEmptyRecycleBin,
 }) {
   const [query, setQuery] = useState('')
   const [startDate, setStartDate] = useState(null)
@@ -29,6 +36,8 @@ export default function AppointmentsScreen({
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [selectedAppointmentDetail, setSelectedAppointmentDetail] = useState(null)
   const [showDoctorProfileModal, setShowDoctorProfileModal] = useState(false)
+  const [showRecycleBin, setShowRecycleBin] = useState(false)
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null)
   const [booking, setBooking] = useState({
     fullName: currentUserName || 'Krish Patel',
     mobile: '',
@@ -142,6 +151,8 @@ export default function AppointmentsScreen({
           count={appointments.length}
           upcomingCount={countUpcomingAppointments(appointments)}
           onNewAppointment={openBookingModal}
+          onClearAll={() => setShowRecycleBin(true)}
+          recycleBinCount={recycleBin.length}
         />
 
         <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
@@ -245,13 +256,23 @@ export default function AppointmentsScreen({
                     </div>
 
                     <div className="shrink-0 flex flex-col items-end gap-1.5">
-                      <span
-                        className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
-                          appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
-                        }`}
-                      >
-                        {appointment.status}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
+                            appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+                          }`}
+                        >
+                          {appointment.status}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(appointment.id) }}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors"
+                          aria-label="Delete appointment"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} />
+                        </button>
+                      </div>
                       <span className="text-[11px] text-body-gray inline-flex items-center gap-1">
                         <Star className="w-3 h-3 text-amber-500" strokeWidth={1.9} />
                         {doctors.find((item) => item.id === appointment.doctorId)?.rating || '--'}
@@ -290,6 +311,29 @@ export default function AppointmentsScreen({
           appointment={selectedAppointmentDetail}
           doctor={selectedDoctorProfile}
           onClose={() => setShowDoctorProfileModal(false)}
+        />
+
+        <Dialog open={Boolean(deleteConfirmId)} onClose={() => setDeleteConfirmId(null)} maxWidth="xs" fullWidth PaperProps={{ sx: { borderRadius: '14px' } }}>
+          <div className="p-5 text-center">
+            <div className="w-12 h-12 rounded-full bg-red-50 text-red-500 flex items-center justify-center mx-auto mb-3">
+              <Trash2 className="w-5 h-5" strokeWidth={2} />
+            </div>
+            <h3 className="text-[15px] font-bold text-navy mb-1">Delete appointment?</h3>
+            <p className="text-[13px] text-body-gray mb-5">This will move the appointment to the recycle bin. You can recover it later.</p>
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setDeleteConfirmId(null)} className="flex-1 h-10 rounded-xl border border-[#E6EBF1] text-navy text-sm font-semibold cursor-pointer hover:bg-gray-50 transition-colors">Cancel</button>
+              <button type="button" onClick={() => { onDeleteAppointment?.(deleteConfirmId); setDeleteConfirmId(null) }} className="flex-1 h-10 rounded-xl bg-red-500 text-white text-sm font-semibold cursor-pointer hover:bg-red-600 transition-colors">Delete</button>
+            </div>
+          </div>
+        </Dialog>
+
+        <AppointmentRecycleBinModal
+          open={showRecycleBin}
+          onClose={() => setShowRecycleBin(false)}
+          recycleBin={recycleBin}
+          onRestore={onRestoreAppointment}
+          onPermanentDelete={onPermanentDeleteAppointment}
+          onEmptyAll={onEmptyRecycleBin}
         />
       </div>
     </LocalizationProvider>

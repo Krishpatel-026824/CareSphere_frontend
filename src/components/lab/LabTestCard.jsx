@@ -1,40 +1,22 @@
 import { useState } from 'react'
+import { Info } from 'lucide-react'
 import LabBookButton from './LabBookButton'
 
-export default function LabTestCard({ test, quantity = 0, booked = false, onBook, onRemove }) {
+export default function LabTestCard({ test, quantity = 0, booked = false, onBook, onRemove, onInfo }) {
   const [thumbError, setThumbError] = useState(false)
-  const [bgError, setBgError] = useState(false)
   const showThumb = test.thumbnail && !thumbError
-  const showBg = test.background && !bgError
   const isBooked = booked || quantity > 0
 
   return (
     <article className="relative overflow-hidden bg-white border border-border-gray rounded-[14px] min-h-[132px]">
-      {showBg ? (
-        <>
-          <img
-            src={test.background}
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-y-0 right-0 w-[50%] h-full object-cover pointer-events-none"
-            onError={() => setBgError(true)}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 pointer-events-none bg-gradient-to-r from-white from-[42%] via-white/94 via-[68%] to-white/55"
-          />
-        </>
-      ) : (
-        <div aria-hidden="true" className="absolute inset-0 bg-white" />
-      )}
 
       <div className="relative z-10 min-h-[132px] flex items-center gap-3 px-3.5 py-3 sm:gap-3.5 sm:px-4">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[10px] overflow-hidden shrink-0 bg-bg-gray border border-border-gray/50">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[10px] overflow-hidden shrink-0 bg-teal-light/40 border border-teal/10 flex items-center justify-center">
           {showThumb ? (
             <img
               src={test.thumbnail}
               alt={test.name}
-              className="w-full h-full object-cover"
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain"
               loading="lazy"
               onError={() => setThumbError(true)}
             />
@@ -54,13 +36,21 @@ export default function LabTestCard({ test, quantity = 0, booked = false, onBook
           </p>
         </div>
 
-        <div className="shrink-0 self-center">
+        <div className="shrink-0 self-center flex flex-col gap-2">
           <LabBookButton
             booked={isBooked}
             testName={test.name}
             onBook={() => onBook?.(test.id)}
             onRemove={() => onRemove?.(test.id)}
           />
+          <button
+            type="button"
+            onClick={() => onInfo?.(test)}
+            className="h-9 w-[108px] rounded-xl border border-teal/30 text-teal text-[13px] font-semibold cursor-pointer hover:bg-teal-light inline-flex items-center justify-center gap-1.5"
+          >
+            <Info className="w-3.5 h-3.5" strokeWidth={2} />
+            View info
+          </button>
         </div>
       </div>
     </article>

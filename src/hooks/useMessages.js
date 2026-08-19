@@ -54,7 +54,6 @@ export function useMessages() {
   const filtered = sortConversationsByPin(
     conversations.filter((item) => {
       if (listFilter === 'unread' && !item.unread) return false
-      if (listFilter === 'online' && !item.online) return false
       const q = query.trim().toLowerCase()
       if (!q) return true
       return (
@@ -166,7 +165,6 @@ export function useMessages() {
   }
 
   function queueReply(chatId, conversation, userText) {
-    if (!conversation.online) return
     if (readTimer.current) clearTimeout(readTimer.current)
     readTimer.current = setTimeout(() => {
       dispatch(markOutgoingRead({ chatId, readAt: formatChatTimestamp() }))
@@ -198,7 +196,7 @@ export function useMessages() {
   function sendOutgoing(chatId, message, previewText, replyHint) {
     const conversation = conversations.find((item) => item.id === chatId)
     if (!conversation) return
-    const status = conversation.online ? 'delivered' : 'sent'
+    const status = 'delivered'
     dispatch(sendOutgoingAction({ chatId, message, previewText, status }))
     queueReply(chatId, conversation, replyHint)
   }
