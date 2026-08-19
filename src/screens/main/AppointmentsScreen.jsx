@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react'
 import { CalendarDays, Clock, Search, Star } from 'lucide-react'
 import Avatar from '@mui/material/Avatar'
-import FormControl from '@mui/material/FormControl'
 import InputAdornment from '@mui/material/InputAdornment'
-import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
@@ -27,7 +25,7 @@ export default function AppointmentsScreen({
   const [query, setQuery] = useState('')
   const [startDate, setStartDate] = useState(null)
   const [endDate, setEndDate] = useState(null)
-  const [category, setCategory] = useState('All')
+  const [category, setCategory] = useState('All categories')
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [selectedAppointmentDetail, setSelectedAppointmentDetail] = useState(null)
   const [showDoctorProfileModal, setShowDoctorProfileModal] = useState(false)
@@ -54,7 +52,11 @@ export default function AppointmentsScreen({
     () => doctors.find((item) => item.id === booking.doctorId) || null,
     [booking.doctorId, doctors],
   )
-  const availableTimes = selectedDoctor?.slots?.times || ['09:00 AM', '10:00 AM', '11:00 AM', '04:00 PM']
+  const availableTimes = [
+    '09:00 - 10:00 AM', '10:00 - 11:00 AM', '11:00 - 12:00 PM',
+    '12:00 - 01:00 PM', '01:00 - 02:00 PM', '02:00 - 03:00 PM',
+    '03:00 - 04:00 PM', '04:00 - 05:00 PM', '05:00 - 06:00 PM',
+  ]
 
   const list = useMemo(() => sortAppointmentsForList(appointments), [appointments])
   const selectedDoctorProfile = useMemo(
@@ -62,8 +64,8 @@ export default function AppointmentsScreen({
     [doctors, selectedAppointmentDetail?.doctorId],
   )
   const categories = useMemo(
-    () => ['All', ...new Set(list.map((item) => item.specialty).filter(Boolean))],
-    [list],
+    () => ['All categories', ...modalCategories],
+    [modalCategories],
   )
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -78,7 +80,7 @@ export default function AppointmentsScreen({
         item.clinic?.toLowerCase().includes(q)
       if (!matchesQuery) return false
 
-      if (category !== 'All' && item.specialty !== category) return false
+      if (category !== 'All categories' && item.specialty !== category) return false
 
       const when = parseAppointmentDate(item.dateLabel, item.timeLabel)
       if (start && when && when < start) return false
@@ -143,55 +145,65 @@ export default function AppointmentsScreen({
         />
 
         <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
-          <div className="shrink-0 px-4 sm:px-5 py-4 border-b border-[#E6EBF1]">
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] gap-2.5">
-              <TextField
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search doctor, clinic, category..."
-                size="small"
-                fullWidth
-                sx={muiFieldSx}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.8} />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+          <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1]">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] gap-2.5 items-end">
+              <div>
+                <span className="text-[11px] font-semibold text-[#374151] mb-1 block">Search</span>
+                <TextField
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Doctor, clinic, category..."
+                  size="small"
+                  fullWidth
+                  sx={muiFieldSx}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.8} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </div>
 
-              <DatePicker
-                label="Start date"
-                value={startDate}
-                onChange={(value) => setStartDate(value)}
-                slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                sx={muiFieldSx}
-              />
+              <div>
+                <span className="text-[11px] font-semibold text-[#374151] mb-1 block">Start date</span>
+                <DatePicker
+                  value={startDate}
+                  onChange={(value) => setStartDate(value)}
+                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                  sx={muiFieldSx}
+                />
+              </div>
 
-              <DatePicker
-                label="End date"
-                value={endDate}
-                onChange={(value) => setEndDate(value)}
-                slotProps={{ textField: { size: 'small', fullWidth: true } }}
-                sx={muiFieldSx}
-              />
+              <div>
+                <span className="text-[11px] font-semibold text-[#374151] mb-1 block">End date</span>
+                <DatePicker
+                  value={endDate}
+                  onChange={(value) => setEndDate(value)}
+                  slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                  sx={muiFieldSx}
+                />
+              </div>
 
-              <FormControl fullWidth size="small" sx={muiFieldSx}>
-                <InputLabel id="list-category-label">Category</InputLabel>
+              <div>
+                <span className="text-[11px] font-semibold text-[#374151] mb-1 block">Category</span>
                 <Select
-                  labelId="list-category-label"
+                  fullWidth
+                  size="small"
+                  displayEmpty
                   value={category}
                   onChange={(event) => setCategory(event.target.value)}
-                  label="Category"
+                  sx={{ ...muiFieldSx['& .MuiOutlinedInput-root'], borderRadius: '0.75rem' }}
+                  renderValue={(v) => v || 'All categories'}
                 >
                   {categories.map((item) => (
                     <MenuItem key={item} value={item}>
-                      {item === 'All' ? 'All categories' : item}
+                      {item}
                     </MenuItem>
                   ))}
                 </Select>
-              </FormControl>
+              </div>
             </div>
           </div>
 

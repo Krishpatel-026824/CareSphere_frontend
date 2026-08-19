@@ -1,6 +1,9 @@
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
   markAsTaken,
+  addMedicine,
+  updateMedicine,
+  removeMedicine,
   selectMedicines,
   selectMedicineStartIndex,
   selectPendingReminders,
@@ -20,5 +23,8 @@ export function useMedicineReminders() {
     startIndex,
     pendingCount,
     markAsTaken: (id) => dispatch(markAsTaken(id)),
+    addMedicine: (med) => dispatch(addMedicine(med)),
+    updateMedicine: (med) => dispatch(updateMedicine(med)),
+    removeMedicine: (id) => dispatch(removeMedicine(id)),
   }
 }

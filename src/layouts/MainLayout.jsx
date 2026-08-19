@@ -7,6 +7,8 @@ import { useAppStore } from '../store/useAppStore'
 
 function getActiveTab(pathname) {
   if (pathname.startsWith('/appointments')) return 'appointments'
+  if (pathname.startsWith('/pharmacy')) return 'pharmacy'
+  if (pathname.startsWith('/lab-tests')) return 'labTests'
   if (pathname.startsWith('/health-records')) return 'health'
   if (pathname.startsWith('/messages')) return 'messages'
   if (pathname.startsWith('/profile')) return 'profile'

@@ -1,10 +1,10 @@
 export const pharmacyFilterOptionsMock = [
+  { id: 'analgesics', label: 'Pain & Fever' },
   { id: 'antibiotics', label: 'Antibiotics' },
-  { id: 'analgesics', label: 'Analgesics' },
   { id: 'allergies', label: 'Allergies' },
   { id: 'cetirizines', label: 'Cetirizines' },
-  { id: 'fluids', label: 'Fluids' },
-  { id: 'metformins', label: 'Metformins' },
+  { id: 'metformins', label: 'Diabetes' },
+  { id: 'fluids', label: 'Fluids & ORS' },
   { id: 'others', label: 'Others' },
 ]
 

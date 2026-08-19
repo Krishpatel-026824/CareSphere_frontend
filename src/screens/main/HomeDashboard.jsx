@@ -1,6 +1,7 @@
 import { Bell } from 'lucide-react'
 import HealthOverviewGrid from '../../components/home/HealthOverviewGrid'
-import InsightsPanel from '../../components/home/InsightsPanel'
+import HealthTipCard from '../../components/home/HealthTipCard'
+import MedicineReminderCard from '../../components/home/MedicineReminderCard'
 import QuickActionsRow from '../../components/home/QuickActionsRow'
 import UpcomingAppointmentPanel from '../../components/home/UpcomingAppointmentPanel'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
@@ -56,28 +57,23 @@ export default function HomeDashboard({
           visibleCount={homeData.healthOverviewVisibleCount}
         />
 
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 lg:gap-5 min-w-0 xl:items-stretch">
-          <div className="xl:col-span-3 min-w-0 h-full">
-            <UpcomingAppointmentPanel
-              key={
-                appointment
-                  ? `${appointment.id}-${appointment.status}-${appointment.dateLabel}-${appointment.timeLabel}`
-                  : 'empty'
-              }
-              appointment={appointment}
-              visitSignals={visitSignals}
-              onReschedule={() => onRescheduleAppointment?.(appointment)}
-              onJoinDetails={() => onAppointmentDetails?.(appointment)}
-              onBook={onBookAppointment}
-            />
-          </div>
-          <div className="xl:col-span-2 min-w-0 h-full">
-            <InsightsPanel
-              tips={homeData.healthTips}
-              loopMs={homeData.healthTipLoopMs}
-            />
-          </div>
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0">
+          <UpcomingAppointmentPanel
+            key={
+              appointment
+                ? `${appointment.id}-${appointment.status}-${appointment.dateLabel}-${appointment.timeLabel}`
+                : 'empty'
+            }
+            appointment={appointment}
+            visitSignals={visitSignals}
+            onReschedule={() => onRescheduleAppointment?.(appointment)}
+            onJoinDetails={() => onAppointmentDetails?.(appointment)}
+            onBook={onBookAppointment}
+          />
+          <MedicineReminderCard />
         </div>
+
+        <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
 
         <QuickActionsRow actions={homeData.quickActions} onActionClick={onActionClick} />
       </div>

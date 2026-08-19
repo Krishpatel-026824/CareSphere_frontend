@@ -31,6 +31,8 @@ export const PATHS = {
 export const TAB_PATHS = {
   home: PATHS.home,
   appointments: PATHS.appointments,
+  pharmacy: PATHS.pharmacy,
+  labTests: PATHS.labTests,
   health: PATHS.healthRecords,
   messages: PATHS.messages,
   profile: PATHS.profile,

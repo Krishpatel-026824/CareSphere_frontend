@@ -1,32 +1,21 @@
-import { useRef } from 'react'
+import { useState } from 'react'
 import { Pill } from 'lucide-react'
 import BackHomeButton from '../../components/BackHomeButton'
 import ServicePageHeading from '../../components/ServicePageHeading'
-import PharmacyCartSummary from '../../components/pharmacy/PharmacyCartSummary'
-import PharmacyCheckoutSection from '../../components/pharmacy/PharmacyCheckoutSection'
-import PharmacyFilterSidebar from '../../components/pharmacy/PharmacyFilterSidebar'
 import PharmacyItemCard from '../../components/pharmacy/PharmacyItemCard'
 import PharmacyToolbar from '../../components/pharmacy/PharmacyToolbar'
+import MedicineDetailModal from '../../components/pharmacy/MedicineDetailModal'
 import { pharmacyFooterMock } from '../../data/mocks/pharmacy'
 import { usePharmacyCatalog } from '../../hooks/usePharmacyCatalog'
 import { usePharmacyCart } from '../../hooks/usePharmacyCart'
 
 export default function PharmacyScreen({ onBack }) {
-  const checkoutRef = useRef(null)
-  const catalogRef = useRef(null)
   const cartState = usePharmacyCart()
   const catalog = usePharmacyCatalog(cartState.items)
-
-  function handleCheckout() {
-    checkoutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
-  function handleAddMore() {
-    catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  const [selectedMedicine, setSelectedMedicine] = useState(null)
 
   return (
-    <div className="w-full min-h-full bg-[#F4F7F8]">
+    <div className="w-full min-h-full bg-gradient-to-b from-[#F0F9F8] to-[#F4F7F8]">
       <div className="w-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6">
         <header>
           <BackHomeButton onClick={onBack} />
@@ -34,65 +23,42 @@ export default function PharmacyScreen({ onBack }) {
             icon={Pill}
             tone="bg-orange-100 text-orange-600"
             title="Pharmacy"
-            subtitle="Order medicines and refills from CareSphere Pharmacy"
+            subtitle="Browse medicines and refills from CareSphere Pharmacy"
           />
         </header>
 
-        <div className="flex flex-col xl:flex-row items-start gap-5">
-          <PharmacyFilterSidebar
-            selectedFilters={catalog.selectedFilters}
-            onToggleFilter={catalog.toggleFilter}
-            selectedBrands={catalog.selectedBrands}
-            onToggleBrand={catalog.toggleBrand}
-          />
+        <PharmacyToolbar
+          query={catalog.query}
+          onQueryChange={catalog.setQuery}
+          selectedFilters={catalog.selectedFilters}
+          onToggleFilter={catalog.toggleFilter}
+        />
 
-          <div ref={catalogRef} className="flex-1 min-w-0 w-full flex flex-col gap-5">
-            <PharmacyToolbar
-              query={catalog.query}
-              onQueryChange={catalog.setQuery}
-            />
-            <PharmacyCartSummary
-              itemCount={cartState.bill.itemCount}
-              subtotal={cartState.bill.subtotal}
-              onCheckout={handleCheckout}
-            />
-
-            {catalog.catalogItems.length ? (
-              <section className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))]">
-                {catalog.catalogItems.map((item) => (
-                  <PharmacyItemCard
-                    key={item.id}
-                    item={item}
-                    quantity={cartState.cart[item.id] || 0}
-                    restockRequested={Boolean(cartState.restockRequests[item.id])}
-                    onAdd={cartState.addToCart}
-                    onRemove={cartState.removeFromCart}
-                    onRequestRestock={cartState.requestRestock}
-                    onRestock={cartState.restockItem}
-                  />
-                ))}
-              </section>
-            ) : (
-              <p className="text-sm text-body-gray py-8 text-center">
-                No medicines found for “{catalog.query.trim()}”.
-              </p>
-            )}
+        {catalog.catalogItems.length ? (
+          <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {catalog.catalogItems.map((item) => (
+              <div key={item.id} onClick={() => setSelectedMedicine(item)} className="cursor-pointer">
+                <PharmacyItemCard item={item} />
+              </div>
+            ))}
+          </section>
+        ) : (
+          <div className="rounded-2xl bg-white border border-gray-100 py-12 text-center">
+            <Pill className="w-10 h-10 text-gray-300 mx-auto mb-3" strokeWidth={1.5} />
+            <p className="text-sm text-gray-500">
+              No medicines found for "<span className="font-semibold text-navy">{catalog.query.trim()}</span>"
+            </p>
           </div>
-        </div>
+        )}
 
-        <div ref={checkoutRef}>
-          <PharmacyCheckoutSection
-            bill={cartState.bill}
-            paymentMethod={cartState.paymentMethod}
-            onPaymentChange={cartState.setPaymentMethod}
-            paid={cartState.paid}
-            onPay={cartState.payBill}
-            onAddMore={handleAddMore}
-          />
-        </div>
+        <MedicineDetailModal
+          open={Boolean(selectedMedicine)}
+          onClose={() => setSelectedMedicine(null)}
+          item={selectedMedicine}
+        />
 
-        <footer className="pt-2 border-t border-border-gray text-center">
-          <p className="text-xs text-body-gray">{pharmacyFooterMock}</p>
+        <footer className="pt-3 border-t border-gray-200 text-center">
+          <p className="text-xs text-gray-400">{pharmacyFooterMock}</p>
         </footer>
       </div>
     </div>

@@ -1,16 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp, FlaskConical } from 'lucide-react'
 import BackHomeButton from '../../components/BackHomeButton'
 import ServicePageHeading from '../../components/ServicePageHeading'
 import LabReportsList from '../../components/lab/LabReportsList'
 import LabTestCard from '../../components/lab/LabTestCard'
-import LabTestsBookingSummary from '../../components/lab/LabTestsBookingSummary'
-import LabTestsCheckoutSection from '../../components/lab/LabTestsCheckoutSection'
 import LabTestsFooter from '../../components/lab/LabTestsFooter'
 import { useLabTestsBooking } from '../../hooks/useLabTestsBooking'
 
 export default function LabTestsScreen({ onBack, onReportsGenerated }) {
-  const checkoutRef = useRef(null)
   const catalogRef = useRef(null)
   const [activeFooterLink, setActiveFooterLink] = useState(null)
   const [expandedReportId, setExpandedReportId] = useState(null)
@@ -23,9 +20,6 @@ export default function LabTestsScreen({ onBack, onReportsGenerated }) {
     if (booking.reports.length) setExpandedReportId(booking.reports[0].id)
   }, [booking.reports])
 
-  function handleCheckout() {
-    checkoutRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
 
   function handleAddMore() {
     catalogRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -53,11 +47,6 @@ export default function LabTestsScreen({ onBack, onReportsGenerated }) {
         ) : null}
 
         <div ref={catalogRef} className="flex flex-col gap-3.5">
-          <LabTestsBookingSummary
-            itemCount={booking.bill.itemCount}
-            subtotal={booking.bill.subtotal}
-            onCheckout={handleCheckout}
-          />
 
           <div className="grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr))]">
               {visibleTests.map((test) => (
@@ -87,16 +76,6 @@ export default function LabTestsScreen({ onBack, onReportsGenerated }) {
             ) : null}
         </div>
 
-        <div ref={checkoutRef}>
-          <LabTestsCheckoutSection
-            bill={booking.bill}
-            paymentMethod={booking.paymentMethod}
-            onPaymentChange={booking.setPaymentMethod}
-            paid={booking.paid}
-            onPay={booking.payBill}
-            onAddMore={handleAddMore}
-          />
-        </div>
 
         <LabTestsFooter
           activeLink={activeFooterLink}

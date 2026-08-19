@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from './hooks'
 import {
   addBookedAppointment as addBookedAppointmentAction,
   persistReschedule as persistRescheduleAction,
+  updateAppointment as updateAppointmentAction,
   selectAppointmentPrefs,
   selectAppointments,
   selectUpcomingAppointment,
@@ -36,6 +37,10 @@ export function useAppStore() {
     dispatch(addBookedAppointmentAction({ ...booking, patientName: authUser?.name || 'Krish Patel' }))
   }
 
+  function updateAppointment(updated) {
+    dispatch(updateAppointmentAction(updated))
+  }
+
   function updateAppointmentPrefs(appointmentId, next) {
     dispatch(updatePrefsAction({ appointmentId, next }))
   }
@@ -53,6 +58,7 @@ export function useAppStore() {
     findDoctorById,
     persistReschedule,
     addBookedAppointment,
+    updateAppointment,
     appointmentPrefs,
     updateAppointmentPrefs,
     handleLabReportsGenerated,

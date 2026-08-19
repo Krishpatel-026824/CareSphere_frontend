@@ -1,11 +1,15 @@
-import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, Pill } from 'lucide-react'
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, Pill, Plus, Settings } from 'lucide-react'
+import { useState } from 'react'
 import { usePager } from '../../hooks/usePager'
 import { useMedicineReminders } from '../../hooks/useMedicineReminders'
+import MedicineFormModal from './MedicineFormModal'
 
 const iconStroke = 1.75
 
 export default function MedicineReminderCard() {
-  const { medicines, takenById, startIndex, pendingCount, markAsTaken } = useMedicineReminders()
+  const { medicines, takenById, startIndex, pendingCount, markAsTaken, addMedicine, updateMedicine, removeMedicine } = useMedicineReminders()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editingMedicine, setEditingMedicine] = useState(null)
   const { item: medicine, index, count, canPage, goNext, goPrev } = usePager(medicines, startIndex)
 
   if (!medicine) return null
@@ -31,8 +35,14 @@ export default function MedicineReminderCard() {
       </div>
 
       <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease]">
-        <div className="w-[52px] h-[52px] rounded-2xl bg-[#ECEBFF] flex items-center justify-center shrink-0">
-          <Pill className="w-6 h-6 text-[#7C4DFF]" strokeWidth={iconStroke} />
+        <div className="w-[52px] h-[52px] rounded-2xl overflow-hidden shrink-0 bg-[#ECEBFF]">
+          {medicine.image ? (
+            <img src={medicine.image} alt={medicine.medicineName} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Pill className="w-6 h-6 text-[#7C4DFF]" strokeWidth={iconStroke} />
+            </div>
+          )}
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-base font-bold text-navy leading-tight">{medicine.medicineName}</p>
@@ -84,6 +94,25 @@ export default function MedicineReminderCard() {
         {takenToday ? 'Taken today' : 'Mark as taken'}
       </button>
 
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => { setEditingMedicine(null); setModalOpen(true) }}
+          className="flex-1 h-9 rounded-xl border border-dashed border-[#7C4DFF]/40 text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
+        >
+          <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
+          Add medicine
+        </button>
+        <button
+          type="button"
+          onClick={() => { setEditingMedicine(medicine); setModalOpen(true) }}
+          className="h-9 px-3 rounded-xl border border-[#E4E0FF] text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
+        >
+          <Settings className="w-3.5 h-3.5" strokeWidth={2} />
+          Edit
+        </button>
+      </div>
+
       {canPage ? (
         <div className="flex items-center justify-between gap-3">
           <button
@@ -107,6 +136,13 @@ export default function MedicineReminderCard() {
           </button>
         </div>
       ) : null}
+      <MedicineFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        medicine={editingMedicine}
+        onSave={(data) => editingMedicine ? updateMedicine(data) : addMedicine(data)}
+        onDelete={removeMedicine}
+      />
     </section>
   )
 }

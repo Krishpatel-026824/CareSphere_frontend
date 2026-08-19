@@ -12,7 +12,7 @@ function startOfDay(date) {
 }
 
 function parseTimeParts(timeLabel = '') {
-  const match = timeLabel.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
+  const match = timeLabel.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)/i)
   if (!match) return { hours: 0, minutes: 0 }
   let hours = Number(match[1])
   const minutes = Number(match[2])

@@ -26,10 +26,20 @@ const medicinesSlice = createSlice({
       })
       state.takenById[id] = true
     },
+    addMedicine(state, action) {
+      state.items.push(action.payload)
+    },
+    updateMedicine(state, action) {
+      const updated = action.payload
+      state.items = state.items.map((item) => (item.id === updated.id ? { ...item, ...updated } : item))
+    },
+    removeMedicine(state, action) {
+      state.items = state.items.filter((item) => item.id !== action.payload)
+    },
   },
 })
 
-export const { markAsTaken } = medicinesSlice.actions
+export const { markAsTaken, addMedicine, updateMedicine, removeMedicine } = medicinesSlice.actions
 
 export function selectMedicines(state) {
   return state.medicines.items
