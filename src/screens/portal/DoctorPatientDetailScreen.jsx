@@ -4,6 +4,7 @@ import DoctorPatientHeader from '../../components/portal/DoctorPatientHeader'
 import DoctorPatientVisitList from '../../components/portal/DoctorPatientVisitList'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
 import { useDoctorPatientChart } from '../../hooks/useDoctorPatientChart'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
 
 export default function DoctorPatientDetailScreen({
   patient,
@@ -13,12 +14,13 @@ export default function DoctorPatientDetailScreen({
   onMessage,
 }) {
   const chart = useDoctorPatientChart(visits)
+  const bp = useBreakpoint()
   if (!patient) return null
 
   const selected = chart.selected
 
   return (
-    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#F3F4F6] flex flex-col overflow-x-hidden lg:overflow-hidden">
+    <div className="w-full h-full min-h-full bg-[#F3F4F6] flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
         <DoctorPatientHeader
           patient={patient}
@@ -27,7 +29,7 @@ export default function DoctorPatientDetailScreen({
           onMessage={onMessage}
         />
 
-        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-3">
+        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-3 overflow-hidden">
           <DoctorPatientVisitList
             upcoming={chart.upcoming}
             history={chart.history}
@@ -37,11 +39,11 @@ export default function DoctorPatientDetailScreen({
           />
 
           {selected ? (
-            <div className="flex-1 min-w-0 w-full min-h-0 xl:overflow-y-auto scroll-y">
+            <div className="flex-1 min-w-0 w-full min-h-0 flex flex-col overflow-hidden">
               <DoctorVisitPanel
                 visit={selected}
                 hideIdentity
-                className="xl:min-h-full"
+                fillHeight={bp.xl}
                 canAccept={actions.canAccept(selected)}
                 canDecline={actions.canDecline(selected)}
                 canComplete={actions.canComplete(selected)}

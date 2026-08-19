@@ -5,10 +5,28 @@ import { getUpcomingAppointment } from '../../utils/appointmentFormat'
 
 const ACTIVE = new Set(['Upcoming', 'Confirmed'])
 
+const defaultTasks = [
+  { id: 'checkin', label: 'Patient check-in at front desk', done: false },
+  { id: 'vitals', label: 'Record vitals before consult', done: false },
+  { id: 'history', label: 'Review medical history', done: false },
+]
+
 function setStatus(items, id, status, fromStatuses) {
   return items.map((item) =>
     item.id === id && fromStatuses.has(item.status) ? { ...item, status } : item,
   )
+}
+
+function resolveVisitTasks(visit) {
+  if (visit.tasks?.length) return visit.tasks
+  if (visit.prepItems?.length) {
+    return visit.prepItems.map((label, index) => ({
+      id: `prep-${index}`,
+      label,
+      done: visit.status === 'Completed',
+    }))
+  }
+  return defaultTasks
 }
 
 const doctorScheduleSlice = createSlice({
@@ -26,10 +44,25 @@ const doctorScheduleSlice = createSlice({
     completeDoctorVisit(state, action) {
       state.extras = setStatus(state.extras, action.payload, 'Completed', ACTIVE)
     },
+    toggleDoctorVisitTask(state, action) {
+      const { visitId, taskId } = action.payload
+      state.extras = state.extras.map((visit) => {
+        if (visit.id !== visitId) return visit
+        const tasks = resolveVisitTasks(visit).map((task) =>
+          task.id === taskId ? { ...task, done: !task.done } : task,
+        )
+        return { ...visit, tasks }
+      })
+    },
   },
 })
 
-export const { acceptDoctorVisit, declineDoctorVisit, completeDoctorVisit } = doctorScheduleSlice.actions
+export const {
+  acceptDoctorVisit,
+  declineDoctorVisit,
+  completeDoctorVisit,
+  toggleDoctorVisitTask,
+} = doctorScheduleSlice.actions
 
 export function selectDoctorVisits(state) {
   const doctorId = state.auth.user?.doctorId || DEFAULT_DOCTOR_ID

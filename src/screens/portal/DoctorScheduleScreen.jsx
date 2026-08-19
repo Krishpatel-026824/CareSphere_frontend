@@ -4,7 +4,8 @@ import AppointmentActionMenu from '../../components/appointments/AppointmentActi
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
 import DoctorScheduleListCard from '../../components/portal/DoctorScheduleListCard'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
-import { countUpcomingAppointments, sortAppointmentsForList } from '../../utils/appointmentFormat'
+import { useBreakpoint } from '../../hooks/useBreakpoint'
+import { sortAppointmentsForList } from '../../utils/appointmentFormat'
 
 export default function DoctorScheduleScreen({
   visits = [],
@@ -14,6 +15,7 @@ export default function DoctorScheduleScreen({
   actions,
 }) {
   const list = useMemo(() => sortAppointmentsForList(visits), [visits])
+  const bp = useBreakpoint()
   const defaultId = list[0]?.id
   const [currentId, setCurrentId] = useState(selectedId || defaultId)
 
@@ -29,15 +31,12 @@ export default function DoctorScheduleScreen({
   }
 
   return (
-    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#F3F4F6] flex flex-col overflow-x-hidden lg:overflow-hidden">
+    <div className="w-full h-full min-h-full bg-[#F3F4F6] flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
-        <AppointmentPageHeader
-          title="Schedule"
-          subtitle={`${countUpcomingAppointments(visits)} upcoming`}
-        />
+        <AppointmentPageHeader title="Schedule" />
 
-        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-start gap-3">
-          <section className="w-full xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-3 flex flex-col min-h-0 h-[300px] sm:h-[360px] xl:h-[min(640px,calc(100dvh-10rem))]">
+        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-3 overflow-hidden">
+          <section className="w-full xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-3 flex flex-col min-h-0 h-[280px] sm:h-[340px] xl:h-full xl:min-h-0">
             <div className="px-1 pb-2 shrink-0">
               <h2 className="text-sm font-bold text-navy">Visits</h2>
             </div>
@@ -63,9 +62,10 @@ export default function DoctorScheduleScreen({
           </section>
 
           {selected ? (
-            <div className="flex-1 min-w-0 w-full xl:overflow-y-auto scroll-y">
+            <div className="flex-1 min-w-0 w-full min-h-0 flex flex-col overflow-hidden">
               <DoctorVisitPanel
                 visit={selected}
+                fillHeight={bp.xl}
                 canAccept={actions.canAccept(selected)}
                 canDecline={actions.canDecline(selected)}
                 canComplete={actions.canComplete(selected)}

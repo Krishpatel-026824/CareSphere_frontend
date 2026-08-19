@@ -52,6 +52,18 @@ const appointmentsSlice = createSlice({
           : item,
       )
     },
+    toggleAppointmentTask(state, action) {
+      const { appointmentId, taskId } = action.payload
+      state.items = state.items.map((item) => {
+        if (item.id !== appointmentId || !item.tasks?.length) return item
+        return {
+          ...item,
+          tasks: item.tasks.map((task) =>
+            task.id === taskId ? { ...task, done: !task.done } : task,
+          ),
+        }
+      })
+    },
     updateAppointmentPrefs(state, action) {
       const { appointmentId, next } = action.payload
       if (!appointmentId) return
@@ -67,6 +79,7 @@ export const {
   cancelAppointment,
   completeAppointment,
   updateAppointmentPrefs,
+  toggleAppointmentTask,
 } = appointmentsSlice.actions
 
 export function selectAppointments(state) {
