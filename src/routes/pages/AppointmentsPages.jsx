@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useAppSelector } from '../../store/hooks'
 import { useAppStore } from '../../store/useAppStore'
 import { generateDoctorsForSpecialty } from '../../data/generators/doctorBookingGenerator'
 import { generateRescheduleDoctors } from '../../data/generators/rescheduleDoctorsGenerator'
@@ -23,25 +24,36 @@ function goToNewAppointment(navigate) {
 }
 
 export function AppointmentsPage() {
-  const navigate = useNavigate()
-  const { appointments } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment } = useAppStore()
+  const authUser = useAppSelector((state) => state.auth.user)
+  const appointments =
+    authUser?.roleType === 'patient' && authUser?.name
+      ? allAppointments.filter(
+          (item) => !item.patientName || item.patientName.toLowerCase() === authUser.name.toLowerCase(),
+        )
+      : allAppointments
 
   return (
     <AppointmentsScreen
       appointments={appointments}
-      onSelectAppointment={(appointment) => navigate(appointmentDetailsPath(appointment.id))}
-      onReschedule={(appointment) =>
-        goToReschedule(navigate, appointment, appointmentDetailsPath(appointment.id))
-      }
-      onNewAppointment={() => goToNewAppointment(navigate)}
+      doctors={doctorFlowData.doctors}
+      doctorCategories={doctorFlowData.categories}
+      currentUserName={authUser?.name || 'Krish Patel'}
+      onCreateAppointment={addBookedAppointment}
     />
   )
 }
 
 export function AppointmentDetailsPage() {
-  const navigate = useNavigate()
   const { id } = useParams()
-  const { appointments } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment } = useAppStore()
+  const authUser = useAppSelector((state) => state.auth.user)
+  const appointments =
+    authUser?.roleType === 'patient' && authUser?.name
+      ? allAppointments.filter(
+          (item) => !item.patientName || item.patientName.toLowerCase() === authUser.name.toLowerCase(),
+        )
+      : allAppointments
 
   if (!appointments.find((item) => item.id === id)) {
     return <Navigate to={PATHS.appointments} replace />
@@ -50,12 +62,10 @@ export function AppointmentDetailsPage() {
   return (
     <AppointmentsScreen
       appointments={appointments}
-      selectedId={id}
-      onSelectAppointment={(appointment) => navigate(appointmentDetailsPath(appointment.id))}
-      onReschedule={(appointment) =>
-        goToReschedule(navigate, appointment, appointmentDetailsPath(appointment.id))
-      }
-      onNewAppointment={() => goToNewAppointment(navigate)}
+      doctors={doctorFlowData.doctors}
+      doctorCategories={doctorFlowData.categories}
+      currentUserName={authUser?.name || 'Krish Patel'}
+      onCreateAppointment={addBookedAppointment}
     />
   )
 }

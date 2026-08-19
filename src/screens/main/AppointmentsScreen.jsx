@@ -1,111 +1,295 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
-import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
-import AppointmentDetailPanel from '../../components/appointments/AppointmentDetailPanel'
-import AppointmentListCard from '../../components/appointments/AppointmentListCard'
+import { useMemo, useState } from 'react'
+import { CalendarDays, Clock, Search, Star } from 'lucide-react'
+import Avatar from '@mui/material/Avatar'
+import FormControl from '@mui/material/FormControl'
+import InputAdornment from '@mui/material/InputAdornment'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
+import TextField from '@mui/material/TextField'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
-import { useAppointmentActions } from '../../hooks/useAppointmentActions'
-import { resolveAppointmentImages } from '../../data/mocks/appointmentImages'
-import { PATHS } from '../../routes/paths'
-import {
-  countUpcomingAppointments,
-  getUpcomingAppointment,
-  sortAppointmentsForList,
-} from '../../utils/appointmentFormat'
+import AppointmentRecordDetailModal from '../../components/appointments/AppointmentRecordDetailModal'
+import DoctorProfileModal from '../../components/appointments/DoctorProfileModal'
+import NewAppointmentModal from '../../components/appointments/NewAppointmentModal'
+import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { countUpcomingAppointments, parseAppointmentDate, sortAppointmentsForList } from '../../utils/appointmentFormat'
 
 export default function AppointmentsScreen({
   appointments = [],
-  selectedId = null,
-  onSelectAppointment,
-  onReschedule,
-  onNewAppointment,
+  doctors = [],
+  doctorCategories = [],
+  currentUserName = 'Krish Patel',
+  onCreateAppointment,
 }) {
-  const navigate = useNavigate()
-  const actions = useAppointmentActions()
+  const [query, setQuery] = useState('')
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate] = useState(null)
+  const [category, setCategory] = useState('All')
+  const [showBookingModal, setShowBookingModal] = useState(false)
+  const [selectedAppointmentDetail, setSelectedAppointmentDetail] = useState(null)
+  const [showDoctorProfileModal, setShowDoctorProfileModal] = useState(false)
+  const [booking, setBooking] = useState({
+    fullName: currentUserName || 'Krish Patel',
+    mobile: '',
+    appointmentDate: null,
+    timeSlot: '',
+    category: doctorCategories[0] || '',
+    doctorId: '',
+    note: '',
+  })
+  const [errors, setErrors] = useState({})
+
+  const modalCategories = useMemo(
+    () => (doctorCategories.length ? doctorCategories : [...new Set(doctors.map((item) => item.specialty))]),
+    [doctorCategories, doctors],
+  )
+  const doctorsByCategory = useMemo(() => {
+    if (!booking.category) return doctors
+    return doctors.filter((item) => item.specialty === booking.category)
+  }, [booking.category, doctors])
+  const selectedDoctor = useMemo(
+    () => doctors.find((item) => item.id === booking.doctorId) || null,
+    [booking.doctorId, doctors],
+  )
+  const availableTimes = selectedDoctor?.slots?.times || ['09:00 AM', '10:00 AM', '11:00 AM', '04:00 PM']
+
   const list = useMemo(() => sortAppointmentsForList(appointments), [appointments])
-  const defaultId = getUpcomingAppointment(list)?.id || list[0]?.id
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(selectedId || defaultId)
+  const selectedDoctorProfile = useMemo(
+    () => doctors.find((item) => item.id === selectedAppointmentDetail?.doctorId) || null,
+    [doctors, selectedAppointmentDetail?.doctorId],
+  )
+  const categories = useMemo(
+    () => ['All', ...new Set(list.map((item) => item.specialty).filter(Boolean))],
+    [list],
+  )
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase()
+    const start = startDate ? startDate.startOf('day').toDate() : null
+    const end = endDate ? endDate.endOf('day').toDate() : null
 
-  useEffect(() => {
-    if (selectedId) setSelectedAppointmentId(selectedId)
-  }, [selectedId])
+    return list.filter((item) => {
+      const matchesQuery =
+        !q ||
+        item.doctorName?.toLowerCase().includes(q) ||
+        item.specialty?.toLowerCase().includes(q) ||
+        item.clinic?.toLowerCase().includes(q)
+      if (!matchesQuery) return false
 
-  const selectedAppointment = useMemo(() => {
-    const match = list.find((item) => item.id === selectedAppointmentId) || list[0]
-    return match ? resolveAppointmentImages(match) : null
-  }, [list, selectedAppointmentId])
+      if (category !== 'All' && item.specialty !== category) return false
 
-  function handleSelect(appointment) {
-    setSelectedAppointmentId(appointment.id)
-    onSelectAppointment?.(appointment)
+      const when = parseAppointmentDate(item.dateLabel, item.timeLabel)
+      if (start && when && when < start) return false
+      if (end && when && when > end) return false
+      return true
+    })
+  }, [category, endDate, list, query, startDate])
+
+  function openBookingModal() {
+    setBooking({
+      fullName: currentUserName || 'Krish Patel',
+      mobile: '',
+      appointmentDate: null,
+      timeSlot: '',
+      category: modalCategories[0] || '',
+      doctorId: '',
+      note: '',
+    })
+    setErrors({})
+    setShowBookingModal(true)
   }
 
-  function handleReschedule(appointment) {
-    if (onReschedule) {
-      onReschedule(appointment)
-      return
-    }
-    navigate(PATHS.reschedule, { state: { appointment, returnTo: PATHS.appointments } })
+  function validateBookingForm() {
+    const next = {}
+    if (!booking.fullName.trim()) next.fullName = 'Full name is required'
+    if (!/^\+?\d[\d\s-]{8,14}$/.test(booking.mobile.trim())) next.mobile = 'Enter a valid mobile number'
+    if (!booking.appointmentDate) next.appointmentDate = 'Appointment date is required'
+    if (!booking.timeSlot) next.timeSlot = 'Time slot is required'
+    if (!booking.category) next.category = 'Category is required'
+    if (!booking.doctorId) next.doctorId = 'Doctor selection is required'
+    setErrors(next)
+    return Object.keys(next).length === 0
+  }
+
+  function handleSaveBooking() {
+    if (!validateBookingForm()) return
+    if (!selectedDoctor) return
+    onCreateAppointment?.({
+      doctor: selectedDoctor,
+      selectedDate: booking.appointmentDate.format('YYYY-MM-DD'),
+      selectedTime: booking.timeSlot,
+      appointmentId: `CSAP${Date.now().toString().slice(-8)}`,
+      patientName: booking.fullName.trim(),
+      mobile: booking.mobile.trim(),
+      note: booking.note.trim(),
+    })
+    setShowBookingModal(false)
+  }
+
+  function updateBooking(next) {
+    setBooking((prev) => ({ ...prev, ...next }))
   }
 
   return (
-    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#E8F1F2] flex flex-col overflow-x-hidden lg:overflow-hidden">
-      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#E8F1F2] flex flex-col overflow-x-hidden lg:overflow-hidden">
+        <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
         <AppointmentPageHeader
           count={appointments.length}
           upcomingCount={countUpcomingAppointments(appointments)}
-          onNewAppointment={onNewAppointment}
+          onNewAppointment={openBookingModal}
         />
 
-        <div className="flex-1 min-h-0 flex flex-col lg:flex-row items-stretch gap-3 sm:gap-4">
-          <div className="w-full lg:w-[300px] xl:w-[320px] shrink-0 flex flex-col gap-2 lg:min-h-0 lg:overflow-y-auto lg:pr-1">
-            {list.length === 0 ? (
-              <p className="rounded-xl border border-border-gray bg-white p-4 text-sm text-body-gray">
-                No appointments yet. Book a visit to get started.
-              </p>
-            ) : (
-              list.map((appointment) => (
-                <AppointmentListCard
-                  key={appointment.id}
-                  appointment={resolveAppointmentImages(appointment)}
-                  selected={selectedAppointment?.id === appointment.id}
-                  onSelect={handleSelect}
-                  onOpenMenu={actions.openMenu}
-                />
-              ))
-            )}
+        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
+          <div className="shrink-0 px-4 sm:px-5 py-4 border-b border-[#E6EBF1]">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] gap-2.5">
+              <TextField
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search doctor, clinic, category..."
+                size="small"
+                fullWidth
+                sx={muiFieldSx}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.8} />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <DatePicker
+                label="Start date"
+                value={startDate}
+                onChange={(value) => setStartDate(value)}
+                slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                sx={muiFieldSx}
+              />
+
+              <DatePicker
+                label="End date"
+                value={endDate}
+                onChange={(value) => setEndDate(value)}
+                slotProps={{ textField: { size: 'small', fullWidth: true } }}
+                sx={muiFieldSx}
+              />
+
+              <FormControl fullWidth size="small" sx={muiFieldSx}>
+                <InputLabel id="list-category-label">Category</InputLabel>
+                <Select
+                  labelId="list-category-label"
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                  label="Category"
+                >
+                  {categories.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item === 'All' ? 'All categories' : item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
           </div>
 
-          {selectedAppointment ? (
-            <AppointmentDetailPanel
-              appointment={selectedAppointment}
-              onReschedule={handleReschedule}
-              onCancel={(appointment) => actions.requestAction('cancel', appointment)}
-              onConfirm={(appointment) => actions.requestAction('confirm', appointment)}
-            />
-          ) : (
-            <div className="flex-1 rounded-2xl border border-border-gray bg-white p-6 text-sm text-body-gray">
-              Select an appointment to see details.
-            </div>
-          )}
-        </div>
-      </div>
+          <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-5 py-4">
+            {filtered.length === 0 ? (
+              <p className="rounded-xl border border-border-gray bg-[#F8FAFC] p-4 text-sm text-body-gray">
+                No appointments found for this filter.
+              </p>
+            ) : (
+              <div className="flex flex-col gap-2.5">
+                {filtered.map((appointment) => (
+                  <article
+                    key={appointment.id}
+                    onClick={() => setSelectedAppointmentDetail(appointment)}
+                    className="rounded-xl border border-[#E6EBF1] bg-[#FAFBFC] hover:bg-white px-4 py-3 flex items-start justify-between gap-3 cursor-pointer"
+                  >
+                    <div className="min-w-0 flex items-start gap-3">
+                      <Avatar
+                        src={appointment.doctorPhoto}
+                        alt={appointment.doctorName}
+                        sx={{ width: 44, height: 44, mt: 0.3 }}
+                      />
+                      <div className="min-w-0">
+                        <h3 className="text-sm font-bold text-navy truncate">{appointment.doctorName}</h3>
+                        <p className="text-xs text-body-gray mt-0.5 truncate">
+                        {appointment.specialty} • {appointment.clinic}
+                        </p>
+                        <p className="text-xs text-body-gray mt-1.5 flex items-center gap-3">
+                          <span className="inline-flex items-center gap-1">
+                            <CalendarDays className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
+                            {appointment.dateLabel}
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <Clock className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
+                            {appointment.timeLabel}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
 
-      <AppointmentActionMenu
-        open={Boolean(actions.menu)}
-        x={actions.menu?.x}
-        y={actions.menu?.y}
-        options={actions.menu?.options}
-        onSelect={(id) => actions.requestAction(id, actions.menu.appointment)}
-        onClose={actions.closeMenu}
-      />
-      <AppointmentActionDialog
-        open={Boolean(actions.dialog)}
-        copy={actions.dialog?.copy}
-        onClose={actions.closeDialog}
-        onConfirm={actions.submitDialog}
-      />
-    </div>
+                    <div className="shrink-0 flex flex-col items-end gap-1.5">
+                      <span
+                        className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
+                          appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+                        }`}
+                      >
+                        {appointment.status}
+                      </span>
+                      <span className="text-[11px] text-body-gray inline-flex items-center gap-1">
+                        <Star className="w-3 h-3 text-amber-500" strokeWidth={1.9} />
+                        {doctors.find((item) => item.id === appointment.doctorId)?.rating || '--'}
+                      </span>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+        </div>
+        <NewAppointmentModal
+          open={showBookingModal}
+          onClose={() => setShowBookingModal(false)}
+          booking={booking}
+          errors={errors}
+          modalCategories={modalCategories}
+          doctorsByCategory={doctorsByCategory}
+          doctors={doctors}
+          availableTimes={availableTimes}
+          onChange={updateBooking}
+          onSave={handleSaveBooking}
+        />
+
+        <AppointmentRecordDetailModal
+          open={Boolean(selectedAppointmentDetail)}
+          appointment={selectedAppointmentDetail}
+          doctor={selectedDoctorProfile}
+          onClose={() => setSelectedAppointmentDetail(null)}
+          onOpenDoctor={() => setShowDoctorProfileModal(true)}
+        />
+
+        <DoctorProfileModal
+          open={showDoctorProfileModal}
+          appointment={selectedAppointmentDetail}
+          doctor={selectedDoctorProfile}
+          onClose={() => setShowDoctorProfileModal(false)}
+        />
+      </div>
+    </LocalizationProvider>
   )
+}
+
+const muiFieldSx = {
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '0.75rem',
+    backgroundColor: '#FFFFFF',
+  },
+  '& .MuiInputLabel-root': {
+    fontSize: '0.875rem',
+  },
 }

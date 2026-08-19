@@ -13,7 +13,7 @@ function MessageMeta({ time, showTicks, status }) {
   )
 }
 
-export default function MessageBubble({ message, selected = false, onSelect }) {
+export default function MessageBubble({ message, selected = false, onSelect, onOpenMenu, onOpenAttachment }) {
   const isMe = message.from === 'me'
   const attachment = message.attachment
   const isImage = attachment?.kind === 'image' && attachment.url
@@ -34,7 +34,7 @@ export default function MessageBubble({ message, selected = false, onSelect }) {
         }}
         onContextMenu={(event) => {
           event.preventDefault()
-          onSelect?.(message, event)
+          onOpenMenu?.(message, event)
         }}
         className={`wa-bubble cursor-pointer ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'} ${
           selected ? 'wa-bubble-selected' : ''
@@ -46,29 +46,37 @@ export default function MessageBubble({ message, selected = false, onSelect }) {
             <MessageMeta time={message.time} showTicks={isMe} status={status} />
           </p>
         ) : null}
-        {!deleted && isImage ? (
-          <a href={attachment.url} target="_blank" rel="noreferrer" className="block mb-1" onClick={(event) => event.preventDefault()}>
-            <img
-              src={attachment.url}
-              alt={attachment.name || 'Attachment'}
-              className="max-h-52 w-full max-w-[18rem] rounded-[6px] object-cover"
-            />
-          </a>
-        ) : null}
-        {!deleted && attachment && !isImage ? (
-          <a
-            href={attachment.url}
-            download={attachment.name}
-            className="flex items-center gap-2.5 min-w-[12rem] mb-1"
+        {!deleted && attachment ? (
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation()
+              onOpenAttachment?.(attachment, message.from)
+            }}
+            className={`mb-1 cursor-pointer text-left ${isImage ? 'block' : 'flex items-center gap-2.5 min-w-[12rem]'}`}
           >
-            <span className="w-10 h-10 rounded-xl bg-white/80 text-[#00A884] flex items-center justify-center shrink-0">
-              <FileText className="w-5 h-5" strokeWidth={1.75} />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-sm font-semibold truncate text-[#111b21]">{attachment.name}</span>
-              <span className="block text-[11px] mt-0.5 text-[#667781]">{formatFileSize(attachment.size)}</span>
-            </span>
-          </a>
+            {isImage ? (
+              <img
+                src={attachment.url}
+                alt={attachment.name || 'Attachment'}
+                className="max-h-52 w-full max-w-[18rem] rounded-[6px] object-cover"
+              />
+            ) : (
+              <>
+                <span className="w-10 h-10 rounded-xl bg-white/80 text-[#00A884] flex items-center justify-center shrink-0">
+                  <FileText className="w-5 h-5" strokeWidth={1.75} />
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold truncate text-[#111b21]">
+                    {attachment.name}
+                  </span>
+                  <span className="block text-[11px] mt-0.5 text-[#667781]">
+                    {formatFileSize(attachment.size)}
+                  </span>
+                </span>
+              </>
+            )}
+          </button>
         ) : null}
         {!deleted ? (
           <p className="chat-message-text after:clear-both after:table after:content-['']">

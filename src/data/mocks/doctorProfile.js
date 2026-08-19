@@ -1,5 +1,5 @@
 import { extraDoctorAvatars } from './doctorAvatars'
-import doctorRohan from '../../assets/appointments/doctor-rohan.jpg'
+const doctorRohan = 'https://randomuser.me/api/portraits/men/32.jpg'
 
 export const doctorProfileDetailsMock = {
   name: 'Dr. James Carter',

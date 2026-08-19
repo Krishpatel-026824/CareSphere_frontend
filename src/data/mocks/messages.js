@@ -1,8 +1,8 @@
-import doctorAmit from '../../assets/appointments/doctor-amit.jpg'
-import doctorJay from '../../assets/appointments/doctor-jay.jpg'
-import doctorKavya from '../../assets/appointments/doctor-kavya.jpg'
-import doctorMeera from '../../assets/appointments/doctor-meera.jpg'
-import doctorRohan from '../../assets/appointments/doctor-rohan.jpg'
+const doctorRohan = 'https://randomuser.me/api/portraits/men/32.jpg'
+const doctorAmit = 'https://randomuser.me/api/portraits/men/45.jpg'
+const doctorKavya = 'https://randomuser.me/api/portraits/women/44.jpg'
+const doctorJay = 'https://randomuser.me/api/portraits/men/52.jpg'
+const doctorMeera = 'https://randomuser.me/api/portraits/women/65.jpg'
 
 export const careSupportConversationId = 'msg-2'
 

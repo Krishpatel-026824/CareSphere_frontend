@@ -14,6 +14,7 @@ import { selectMessagesBadge } from './slices/messagesSlice'
 
 export function useAppStore() {
   const dispatch = useAppDispatch()
+  const authUser = useAppSelector((state) => state.auth.user)
   const appointments = useAppSelector(selectAppointments)
   const appointmentPrefs = useAppSelector(selectAppointmentPrefs)
   const upcomingAppointment = useAppSelector(selectUpcomingAppointment)
@@ -32,7 +33,7 @@ export function useAppStore() {
   }
 
   function addBookedAppointment(booking) {
-    dispatch(addBookedAppointmentAction(booking))
+    dispatch(addBookedAppointmentAction({ ...booking, patientName: authUser?.name || 'Krish Patel' }))
   }
 
   function updateAppointmentPrefs(appointmentId, next) {

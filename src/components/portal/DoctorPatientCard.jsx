@@ -1,6 +1,12 @@
 import { CalendarDays, ChevronRight, Clock, MessageCircle } from 'lucide-react'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
+const patientStatusStyles = {
+  Upcoming: 'bg-sky-100 text-sky-700 border border-sky-200',
+  Confirmed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+  Completed: 'bg-slate-100 text-slate-600 border border-slate-200',
+}
+
 export default function DoctorPatientCard({ patient, onSelect, onMessage }) {
   const next = patient.nextVisit
   const isCompleted = next?.status === 'Completed'
@@ -48,8 +54,8 @@ export default function DoctorPatientCard({ patient, onSelect, onMessage }) {
       <div className="flex items-center gap-2 shrink-0">
         {next ? (
           <span
-            className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-              appointmentStatusStyles[next.status] || appointmentStatusStyles.Upcoming
+            className={`inline-flex items-center justify-center min-w-[86px] h-8 text-[11px] font-semibold tracking-[0.01em] rounded-full ${
+              patientStatusStyles[next.status] || appointmentStatusStyles[next.status] || patientStatusStyles.Upcoming
             }`}
           >
             {next.status}
@@ -59,13 +65,20 @@ export default function DoctorPatientCard({ patient, onSelect, onMessage }) {
           <button
             type="button"
             onClick={() => onMessage(patient)}
-            className="w-9 h-9 rounded-full bg-teal-light text-teal flex items-center justify-center cursor-pointer hover:bg-teal hover:text-white"
+            className="w-8 h-8 rounded-full bg-teal-light text-teal flex items-center justify-center cursor-pointer hover:bg-teal hover:text-white"
             aria-label={`Chat with ${patient.name}`}
           >
-            <MessageCircle className="w-4 h-4" strokeWidth={1.75} />
+            <MessageCircle className="w-3.5 h-3.5" strokeWidth={1.9} />
           </button>
         ) : null}
-        <ChevronRight className="w-5 h-5 text-body-gray group-hover:text-teal" strokeWidth={1.75} />
+        <button
+          type="button"
+          onClick={() => onSelect?.(patient)}
+          className="w-8 h-8 rounded-full bg-[#F1F5F9] text-body-gray group-hover:text-teal flex items-center justify-center cursor-pointer"
+          aria-label={`Open ${patient.name}`}
+        >
+          <ChevronRight className="w-4 h-4" strokeWidth={1.9} />
+        </button>
       </div>
     </div>
   )

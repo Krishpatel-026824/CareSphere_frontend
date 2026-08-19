@@ -3,6 +3,7 @@ import { appointmentImageMap } from './appointmentImages'
 export const appointmentsMock = [
   {
     id: 'apt-1',
+    patientName: 'Krish Patel',
     doctorId: 'doc-101',
     doctorName: 'Dr. James Carter',
     specialty: 'Cardiologist',
@@ -29,6 +30,7 @@ export const appointmentsMock = [
   },
   {
     id: 'apt-2',
+    patientName: 'Krish Patel',
     doctorId: 'doc-104',
     doctorName: 'Dr. Sophia Bennett',
     specialty: 'Dermatologist',
@@ -56,6 +58,7 @@ export const appointmentsMock = [
   },
   {
     id: 'apt-3',
+    patientName: 'Krish Patel',
     doctorId: 'doc-106',
     doctorName: 'Dr. Olivia Hart',
     specialty: 'General Physician',
@@ -82,6 +85,7 @@ export const appointmentsMock = [
   },
   {
     id: 'apt-4',
+    patientName: 'Aisha Khan',
     doctorId: 'doc-102',
     doctorName: 'Dr. Daniel Brooks',
     specialty: 'Cardiologist',
@@ -109,6 +113,7 @@ export const appointmentsMock = [
   },
   {
     id: 'apt-5',
+    patientName: 'Rohan Mehta',
     doctorId: 'doc-105',
     doctorName: 'Dr. Michael Reed',
     specialty: 'Pediatrician',

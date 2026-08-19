@@ -4,10 +4,37 @@ import { appointmentsMock } from '../../data/mocks/appointments'
 import { resolveAppointmentImages, resolveAppointmentsImages } from '../../data/mocks/appointmentImages'
 import { applyBookingToAppointment, getUpcomingAppointment } from '../../utils/appointmentFormat'
 
+const STORAGE_KEY = 'caresphere.appointments'
+
+function loadStoredAppointments() {
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY)
+    if (!raw) return []
+    return JSON.parse(raw)
+  } catch {
+    return []
+  }
+}
+
+function saveAppointmentsToStorage(items) {
+  try {
+    const serializable = items.map(({ doctorPhoto, heroImage, mapImage, clinicImage, ...rest }) => rest)
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(serializable))
+  } catch {
+    // silently fail
+  }
+}
+
+const storedItems = resolveAppointmentsImages(loadStoredAppointments())
+const defaultItems = resolveAppointmentsImages(appointmentsMock)
+const mergedItems = storedItems.length
+  ? [...storedItems.filter((stored) => !defaultItems.some((def) => def.id === stored.id)), ...defaultItems]
+  : defaultItems
+
 const appointmentsSlice = createSlice({
   name: 'appointments',
   initialState: {
-    items: resolveAppointmentsImages(appointmentsMock),
+    items: mergedItems,
     prefs: {},
   },
   reducers: {
@@ -29,6 +56,7 @@ const appointmentsSlice = createSlice({
       if (!appointment?.id) return
       if (state.items.some((item) => item.id === appointment.id)) return
       state.items = [resolveAppointmentImages(appointment), ...state.items]
+      saveAppointmentsToStorage(state.items)
     },
     confirmAppointment(state, action) {
       const id = action.payload

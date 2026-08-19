@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { MessageSquareText } from 'lucide-react'
+import { MessageSquareText, Trash2, X } from 'lucide-react'
 import ChatComposer from './ChatComposer'
 import ChatHeader from './ChatHeader'
 import MessageActionsMenu from './MessageActionsMenu'
+import MessageAttachmentViewer from './MessageAttachmentViewer'
 import MessageBubble from './MessageBubble'
 import MessageInfoSheet from './MessageInfoSheet'
 
@@ -25,6 +26,27 @@ export default function MessageThread({
   const [picked, setPicked] = useState(null)
   const [sheet, setSheet] = useState(null)
   const [menuPos, setMenuPos] = useState(null)
+  const [viewerAttachment, setViewerAttachment] = useState(null)
+  const [viewerSender, setViewerSender] = useState('')
+
+  function toggleMessageSelection(message) {
+    if (!message) return
+    if (picked?.id === message.id) {
+      setPicked(null)
+      setSheet(null)
+      return
+    }
+    setPicked(message)
+    setSheet(null)
+  }
+
+  function handleDeleteSelected() {
+    if (!picked) return
+    if (picked.from === 'me' && !picked.deleted) onDeleteForEveryone?.(picked.id)
+    else onDeleteForMe?.(picked.id)
+    setPicked(null)
+    setSheet(null)
+  }
 
   function openMessageMenu(message, event) {
     const board = boardRef.current?.getBoundingClientRect()
@@ -70,13 +92,40 @@ export default function MessageThread({
 
   return (
     <div className="chat-panel h-full min-h-0 flex-1 rounded-2xl border border-border-gray bg-[#e5ddd5] shadow-sm flex flex-col overflow-hidden">
-      <ChatHeader
-        conversation={conversation}
-        isTyping={isTyping}
-        onBack={onBack}
-        onDeleteChat={onDeleteChat}
-        onInfo={onInfo}
-      />
+      {picked ? (
+        <div className="shrink-0 h-[59px] px-3 sm:px-4 bg-[#075E54] text-white flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setPicked(null)
+                setSheet(null)
+              }}
+              className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/15"
+              aria-label="Clear selection"
+            >
+              <X className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <p className="text-sm font-semibold">1 selected</p>
+          </div>
+          <button
+            type="button"
+            onClick={handleDeleteSelected}
+            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/15"
+            aria-label="Delete selected message"
+          >
+            <Trash2 className="w-5 h-5" strokeWidth={2} />
+          </button>
+        </div>
+      ) : (
+        <ChatHeader
+          conversation={conversation}
+          isTyping={isTyping}
+          onBack={onBack}
+          onDeleteChat={onDeleteChat}
+          onInfo={onInfo}
+        />
+      )}
 
       <div ref={boardRef} className="relative flex-1 min-h-0 flex flex-col">
         <div className="chat-wallpaper absolute inset-0 pointer-events-none" />
@@ -97,7 +146,12 @@ export default function MessageThread({
                     key={message.id}
                     message={message}
                     selected={picked?.id === message.id}
-                    onSelect={openMessageMenu}
+                    onSelect={toggleMessageSelection}
+                    onOpenMenu={openMessageMenu}
+                    onOpenAttachment={(attachment, from) => {
+                      setViewerAttachment(attachment)
+                      setViewerSender(from === 'me' ? 'You' : conversation.doctorName)
+                    }}
                   />
                 ))}
               {isTyping ? (
@@ -113,6 +167,17 @@ export default function MessageThread({
             </>
           )}
         </div>
+
+        {viewerAttachment ? (
+          <MessageAttachmentViewer
+            attachment={viewerAttachment}
+            senderName={viewerSender}
+            onClose={() => {
+              setViewerAttachment(null)
+              setViewerSender('')
+            }}
+          />
+        ) : null}
 
         {sheet === 'actions' && picked ? (
           <MessageActionsMenu

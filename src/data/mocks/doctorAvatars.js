@@ -1,37 +1,19 @@
-import doctorAnjali from '../../assets/doctors/doctor-anjali.jpg'
-import doctorArjun from '../../assets/doctors/doctor-arjun.jpg'
-import doctorDhruv from '../../assets/doctors/doctor-dhruv.jpg'
-import doctorHarsh from '../../assets/doctors/doctor-harsh.jpg'
-import doctorKaran from '../../assets/doctors/doctor-karan.jpg'
-import doctorKavita from '../../assets/doctors/doctor-kavita.jpg'
-import doctorLeena from '../../assets/doctors/doctor-leena.jpg'
-import doctorManish from '../../assets/doctors/doctor-manish.jpg'
-import doctorNeha from '../../assets/doctors/doctor-neha.jpg'
-import doctorNidhi from '../../assets/doctors/doctor-nidhi.jpg'
-import doctorNikhil from '../../assets/doctors/doctor-nikhil.jpg'
-import doctorPooja from '../../assets/doctors/doctor-pooja.jpg'
-import doctorPriya from '../../assets/doctors/doctor-priya.jpg'
-import doctorRhea from '../../assets/doctors/doctor-rhea.jpg'
-import doctorSneha from '../../assets/doctors/doctor-sneha.jpg'
-import doctorSuresh from '../../assets/doctors/doctor-suresh.jpg'
-import doctorVivek from '../../assets/doctors/doctor-vivek.jpg'
-
 export const extraDoctorAvatars = {
-  'doc-103': doctorNeha,
-  'doc-107': doctorSuresh,
-  'doc-108': doctorAnjali,
-  'doc-109': doctorRhea,
-  'doc-110': doctorNikhil,
-  'doc-111': doctorPooja,
-  'doc-112': doctorHarsh,
-  'doc-113': doctorNidhi,
-  'doc-114': doctorKavita,
-  'doc-115': doctorSneha,
-  'doc-116': doctorArjun,
-  'doc-117': doctorLeena,
-  'doc-118': doctorVivek,
-  'doc-119': doctorManish,
-  'doc-120': doctorPriya,
-  'doc-121': doctorDhruv,
-  'doc-122': doctorKaran,
+  'doc-103': 'https://randomuser.me/api/portraits/women/33.jpg',
+  'doc-107': 'https://randomuser.me/api/portraits/men/75.jpg',
+  'doc-108': 'https://randomuser.me/api/portraits/women/50.jpg',
+  'doc-109': 'https://randomuser.me/api/portraits/women/28.jpg',
+  'doc-110': 'https://randomuser.me/api/portraits/men/36.jpg',
+  'doc-111': 'https://randomuser.me/api/portraits/women/55.jpg',
+  'doc-112': 'https://randomuser.me/api/portraits/men/41.jpg',
+  'doc-113': 'https://randomuser.me/api/portraits/women/62.jpg',
+  'doc-114': 'https://randomuser.me/api/portraits/women/70.jpg',
+  'doc-115': 'https://randomuser.me/api/portraits/women/38.jpg',
+  'doc-116': 'https://randomuser.me/api/portraits/men/58.jpg',
+  'doc-117': 'https://randomuser.me/api/portraits/women/42.jpg',
+  'doc-118': 'https://randomuser.me/api/portraits/men/29.jpg',
+  'doc-119': 'https://randomuser.me/api/portraits/men/66.jpg',
+  'doc-120': 'https://randomuser.me/api/portraits/women/48.jpg',
+  'doc-121': 'https://randomuser.me/api/portraits/men/25.jpg',
+  'doc-122': 'https://randomuser.me/api/portraits/men/55.jpg',
 }
