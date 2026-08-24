@@ -4,9 +4,17 @@ import { useAppDispatch } from '../store/hooks'
 import { logout } from '../store/slices/authSlice'
 import { setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
+import { DOCTOR_AVATAR_KEY, readStoredAvatar, writeStoredAvatar } from '../utils/profileAvatarStorage'
 
 const profileMeta = generateDoctorPortalProfileData()
 const DOCTOR_PREFS_KEY = 'caresphere.doctorPrefs'
+
+function loadDoctorDetails() {
+  return {
+    ...profileMeta.details,
+    avatar: readStoredAvatar(DOCTOR_AVATAR_KEY, profileMeta.details.avatar),
+  }
+}
 
 function loadDoctorPrefs() {
   try {
@@ -33,7 +41,7 @@ function saveDoctorPrefs(prefs) {
 
 export function useDoctorProfile() {
   const dispatch = useAppDispatch()
-  const [details, setDetails] = useState(profileMeta.details)
+  const [details, setDetails] = useState(loadDoctorDetails)
   const [prefs, setPrefs] = useState(loadDoctorPrefs)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(details)
@@ -65,6 +73,12 @@ export function useDoctorProfile() {
     })
   }
 
+  function updateAvatar(avatar) {
+    writeStoredAvatar(DOCTOR_AVATAR_KEY, avatar)
+    setDetails((current) => ({ ...current, avatar }))
+    setDraft((current) => ({ ...current, avatar }))
+  }
+
   function logoutUser() {
     dispatch(setWorkspace('patient'))
     dispatch(setNotificationWorkspace('patient'))
@@ -85,6 +99,7 @@ export function useDoctorProfile() {
     cancelEdit,
     saveEdit,
     updateDraft,
+    updateAvatar,
     togglePref,
     logoutUser,
   }

@@ -1,6 +1,5 @@
-import { Heart, MessageCircle } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { mainNavTabs, profileNavTab as defaultProfileTab } from '../../data/mocks/sidebarNav'
-import { useOpenCareSupport } from '../../hooks/useOpenCareSupport'
 import { useAppSelector } from '../../store/hooks'
 import { selectProfileDetails } from '../../store/slices/profileSlice'
 import SidebarFooterCard from './SidebarFooterCard'
@@ -14,7 +13,6 @@ export default function AppSidebar({
   profileTab,
   sidebarUser,
 }) {
-  const openCareSupport = useOpenCareSupport()
   const profile = useAppSelector(selectProfileDetails)
   const navTabs = tabs || mainNavTabs
   const profileItem = profileTab || defaultProfileTab
@@ -55,16 +53,6 @@ export default function AppSidebar({
       </nav>
 
       <div className="shrink-0 mt-auto p-3 flex flex-col gap-3">
-        <SidebarFooterCard onClick={openCareSupport}>
-          <span className="w-8 h-8 rounded-full bg-[#2B2F33] flex items-center justify-center shrink-0">
-            <MessageCircle className="w-4 h-4 text-white" strokeWidth={1.75} />
-          </span>
-          <div className="min-w-0 flex-1 py-0.5">
-            <p className="text-[14px] font-semibold text-white leading-tight">Need help?</p>
-            <p className="text-[12px] text-white/50 mt-1 truncate leading-tight">Talk to Care Support</p>
-          </div>
-        </SidebarFooterCard>
-
         <SidebarFooterCard onClick={() => onTabChange('profile')}>
           <div className="w-8 h-8 rounded-full bg-teal flex items-center justify-center text-[13px] font-bold text-white shrink-0 overflow-hidden">
             {user.avatar ? (

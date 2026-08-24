@@ -3,7 +3,6 @@ import AppointmentActionDialog from '../../components/appointments/AppointmentAc
 import DoctorNextVisitPanel from '../../components/portal/DoctorNextVisitPanel'
 import DoctorQueuePanel from '../../components/portal/DoctorQueuePanel'
 import DoctorStatRow from '../../components/portal/DoctorStatRow'
-import DoctorQuickActionsRow from '../../components/portal/DoctorQuickActionsRow'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
 import DoctorHomeStatusScreen from './DoctorHomeStatusScreen'
 import { generateDoctorHomeData } from '../../data/generators/doctorHomeGenerator'
@@ -17,7 +16,6 @@ export default function DoctorHomeScreen({
   onBellClick,
   onOpenVisit,
   onAcceptVisit,
-  onActionClick,
   onStatClick,
   onSelectVisit,
   onClearVisit,
@@ -98,8 +96,6 @@ export default function DoctorHomeScreen({
               </div>
             </div>
           </div>
-
-          <DoctorQuickActionsRow actions={data.quickActions} onActionClick={onActionClick} />
         </div>
       )}
       <AppointmentActionDialog

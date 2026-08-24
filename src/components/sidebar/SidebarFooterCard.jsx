@@ -1,9 +1,9 @@
-export default function SidebarFooterCard({ children, onClick }) {
+export default function SidebarFooterCard({ onClick, children }) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="group w-full rounded-xl border border-[#3F3F3F] p-2 flex items-center gap-3 text-left cursor-pointer hover:bg-white/[0.04] transition-colors duration-200"
+      className="w-full flex items-center gap-3 rounded-2xl bg-[#2B2F33] hover:bg-[#32363B] px-3 py-2.5 text-left cursor-pointer transition-colors border border-white/5"
     >
       {children}
     </button>

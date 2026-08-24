@@ -1,4 +1,4 @@
-import { pharmacyImages } from './pharmacyImages'
+import { patientImages } from './patientImages'
 
 export const healthOverviewVisibleCount = 4
 
@@ -93,6 +93,6 @@ export const quickActionsMock = [
 export const userProfileMock = {
   name: 'Krish Patel',
   role: 'Care member',
-  avatar: pharmacyImages.krishPatel,
+  avatar: patientImages.krishPatel,
   initials: 'KP',
 }

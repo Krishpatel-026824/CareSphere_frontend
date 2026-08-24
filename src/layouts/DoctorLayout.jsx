@@ -5,6 +5,7 @@ import { doctorProfileDetailsMock } from '../data/mocks/doctorProfile'
 import { AUTH_ROLE_DOCTOR } from '../data/mocks/authRoles'
 import { DOCTOR_TAB_PATHS, PATHS } from '../routes/paths'
 import { useAppSelector } from '../store/hooks'
+import { DOCTOR_AVATAR_KEY, readStoredAvatar } from '../utils/profileAvatarStorage'
 
 function getActiveTab(pathname) {
   if (pathname.startsWith('/doctor/schedule')) return 'schedule'
@@ -45,7 +46,7 @@ export default function DoctorLayout() {
         name: user.name,
         role: user.role,
         initials: user.initials || doctorProfileDetailsMock.initials,
-        avatar: doctorProfileDetailsMock.avatar,
+        avatar: readStoredAvatar(DOCTOR_AVATAR_KEY, doctorProfileDetailsMock.avatar),
       }}
     >
       <Outlet />

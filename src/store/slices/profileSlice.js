@@ -1,7 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { generateProfileData, withUpdatedDetails } from '../../data/generators/profileGenerator'
+import { PATIENT_AVATAR_KEY, readStoredAvatar } from '../../utils/profileAvatarStorage'
 
-const initial = generateProfileData()
+const generated = generateProfileData()
+const initial = {
+  ...generated,
+  details: {
+    ...generated.details,
+    avatar: readStoredAvatar(PATIENT_AVATAR_KEY, generated.details.avatar),
+  },
+}
 
 const profileSlice = createSlice({
   name: 'profile',

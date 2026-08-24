@@ -68,12 +68,12 @@ export default function HealthRecordsScreen({ onBack }) {
   }
 
   return (
-    <div className="w-full min-h-full bg-[#F4F7F8]">
+    <div className="w-full min-h-full bg-gradient-to-br from-[#D8F4F1] via-[#F0F9FF] to-[#EDE9FE]">
       <div className="w-full max-w-[1440px] mx-auto page-pad py-6 sm:py-8 flex flex-col gap-5 min-h-full">
         <header>
           <ServicePageHeading
             icon={FileHeart}
-            tone="bg-teal-light text-teal"
+            tone="bg-gradient-to-br from-teal to-sky-500 text-white shadow-lg shadow-teal/25"
             title="Health Records"
             subtitle="Your past and current lab reports stay here — open and review them anytime"
           />

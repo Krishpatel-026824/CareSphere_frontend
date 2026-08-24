@@ -16,9 +16,9 @@ export const doctorProfileDetailsMock = {
 }
 
 export const doctorProfileStatsMock = [
-  { id: 'patients', label: 'Patients', value: '4' },
-  { id: 'visits', label: 'Upcoming', value: '3' },
-  { id: 'messages', label: 'Chats', value: '4' },
+  { id: 'patients', label: 'Patients', hint: 'Active patients', value: '4', icon: 'file' },
+  { id: 'visits', label: 'Upcoming', hint: 'Scheduled visits', value: '3', icon: 'calendar' },
+  { id: 'messages', label: 'Chats', hint: 'Open conversations', value: '4', icon: 'bell' },
 ]
 
 export const doctorProfileFieldsMock = [
@@ -31,12 +31,12 @@ export const doctorProfileFieldsMock = [
 ]
 
 export const doctorProfileInfoRowsMock = [
-  { id: 'email', label: 'Email' },
-  { id: 'phone', label: 'Phone' },
-  { id: 'qualification', label: 'Qualification' },
-  { id: 'hospital', label: 'Hospital' },
-  { id: 'city', label: 'City' },
-  { id: 'languages', label: 'Languages' },
+  { id: 'email', label: 'Email', icon: 'mail' },
+  { id: 'phone', label: 'Phone', icon: 'phone' },
+  { id: 'qualification', label: 'Qualification', icon: 'award' },
+  { id: 'hospital', label: 'Hospital', icon: 'building' },
+  { id: 'city', label: 'City', icon: 'map' },
+  { id: 'languages', label: 'Languages', icon: 'languages' },
 ]
 
 export const doctorProfileMenuMock = [
@@ -75,9 +75,10 @@ export const doctorProfileMenuMock = [
 ]
 
 export const doctorProfilePrefsMock = [
-  { id: 'reminders', label: 'Visit reminders', hint: 'Alert before each consult', on: true },
-  { id: 'email', label: 'Email updates', hint: 'New bookings and reports', on: true },
-  { id: 'sms', label: 'SMS alerts', hint: 'Cancellations and running late', on: false },
+  { id: 'reminders', label: 'Visit reminders', hint: 'Alert before each consult', icon: 'calendar', on: true },
+  { id: 'email', label: 'Email updates', hint: 'New bookings and reports', icon: 'mail', on: true },
+  { id: 'sms', label: 'SMS alerts', hint: 'Cancellations and running late', icon: 'message', on: false },
+  { id: 'promotions', label: 'Promotions & offers', hint: 'Clinic tips and special deals', icon: 'bell', on: true },
 ]
 
 export const doctorClinicTeamMock = [

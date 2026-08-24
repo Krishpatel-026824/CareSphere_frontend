@@ -26,11 +26,45 @@ export const recordTypeIcons = {
 }
 
 export const recordTypeTones = {
-  ecg: 'bg-emerald-50 text-emerald-600',
-  allergy: 'bg-violet-50 text-violet-600',
-  checkup: 'bg-sky-50 text-sky-600',
-  pharmacy: 'bg-amber-50 text-amber-600',
+  ecg: 'bg-emerald-500 text-white shadow-sm shadow-emerald-200',
+  allergy: 'bg-violet-500 text-white shadow-sm shadow-violet-200',
+  checkup: 'bg-sky-500 text-white shadow-sm shadow-sky-200',
+  pharmacy: 'bg-amber-500 text-white shadow-sm shadow-amber-200',
+  lab: 'bg-teal text-white shadow-sm shadow-teal/30',
+}
+
+export const recordCardSurfaces = {
+  ecg: 'bg-gradient-to-r from-emerald-50 to-white border-emerald-200 hover:border-emerald-400 hover:shadow-emerald-100',
+  allergy: 'bg-gradient-to-r from-violet-50 to-white border-violet-200 hover:border-violet-400 hover:shadow-violet-100',
+  checkup: 'bg-gradient-to-r from-sky-50 to-white border-sky-200 hover:border-sky-400 hover:shadow-sky-100',
+  pharmacy: 'bg-gradient-to-r from-amber-50 to-white border-amber-200 hover:border-amber-400 hover:shadow-amber-100',
+  lab: 'bg-gradient-to-r from-[#D8F4F1] to-white border-teal/30 hover:border-teal hover:shadow-teal/10',
+}
+
+export const recordBadgeTones = {
+  ecg: 'bg-emerald-100 text-emerald-700',
+  allergy: 'bg-violet-100 text-violet-700',
+  checkup: 'bg-sky-100 text-sky-700',
+  pharmacy: 'bg-amber-100 text-amber-800',
   lab: 'bg-teal-light text-teal',
+}
+
+export const healthRecordFilterStyles = {
+  all: {
+    active: 'bg-indigo-500 text-white shadow-md shadow-indigo-200',
+    idle: 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100',
+    countIdle: 'bg-white text-indigo-600',
+  },
+  lab: {
+    active: 'bg-teal text-white shadow-md shadow-teal/25',
+    idle: 'bg-teal-light text-teal hover:bg-[#C5EFEB]',
+    countIdle: 'bg-white text-teal',
+  },
+  other: {
+    active: 'bg-amber-500 text-white shadow-md shadow-amber-200',
+    idle: 'bg-amber-50 text-amber-800 hover:bg-amber-100',
+    countIdle: 'bg-white text-amber-700',
+  },
 }
 
 export const recordViewTones = {

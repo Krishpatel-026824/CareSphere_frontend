@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
+import { CalendarDays } from 'lucide-react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
 import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
-import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
-import DoctorScheduleListCard from '../../components/portal/DoctorScheduleListCard'
+import DoctorScheduleVisitList from '../../components/portal/DoctorScheduleVisitList'
 import DoctorVisitPanel from '../../components/portal/DoctorVisitPanel'
+import { generateDoctorScheduleSummary } from '../../data/generators/doctorScheduleGenerator'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import { sortAppointmentsForList } from '../../utils/appointmentFormat'
 
@@ -15,6 +16,7 @@ export default function DoctorScheduleScreen({
   actions,
 }) {
   const list = useMemo(() => sortAppointmentsForList(visits), [visits])
+  const summary = useMemo(() => generateDoctorScheduleSummary(list), [list])
   const bp = useBreakpoint()
   const defaultId = list[0]?.id
   const [currentId, setCurrentId] = useState(selectedId || defaultId)
@@ -30,36 +32,43 @@ export default function DoctorScheduleScreen({
     onSelectVisit?.(visit)
   }
 
-  return (
-    <div className="w-full h-full min-h-full bg-[#F3F4F6] flex flex-col overflow-hidden">
-      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
-        <AppointmentPageHeader title="Schedule" />
+  const stats = [
+    { label: 'Today', value: summary.todayCount },
+    { label: 'Confirmed', value: summary.confirmedCount },
+    { label: 'Queue', value: summary.upcomingCount },
+  ]
 
-        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-3 overflow-hidden">
-          <section className="w-full xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-3 flex flex-col min-h-0 h-[280px] sm:h-[340px] xl:h-full xl:min-h-0">
-            <div className="px-1 pb-2 shrink-0">
-              <h2 className="text-sm font-bold text-navy">Visits</h2>
-            </div>
-            <div className="scroll-y flex-1 min-h-0 pr-2">
-              {list.length === 0 ? (
-                <p className="rounded-xl border border-border-gray bg-[#F3F4F6] p-4 text-sm text-body-gray">
-                  No visits in your clinic queue yet.
-                </p>
-              ) : (
-                <div className="flex flex-col gap-2">
-                  {list.map((visit) => (
-                    <DoctorScheduleListCard
-                      key={visit.id}
-                      visit={visit}
-                      selected={selected?.id === visit.id}
-                      onSelect={handleSelect}
-                      onOpenMenu={actions.openMenu}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
+  return (
+    <div className="w-full h-full min-h-full bg-gradient-to-br from-[#E8F7F5] via-[#F3F0FF] to-[#EAF4FE] flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
+        <header className="shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-teal">Clinic day</p>
+            <h1 className="font-display text-[28px] sm:text-[34px] font-bold text-navy tracking-tight leading-none mt-1">
+              Schedule
+            </h1>
+            <p className="text-sm text-body-gray mt-2">{summary.dateLine}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="min-w-[88px] rounded-2xl bg-white/80 border border-white px-3.5 py-2.5 shadow-sm"
+              >
+                <p className="text-[11px] font-semibold text-body-gray">{stat.label}</p>
+                <p className="text-lg font-bold text-navy leading-none mt-1">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        </header>
+
+        <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-4 overflow-hidden">
+          <DoctorScheduleVisitList
+            visits={list}
+            selectedId={selected?.id}
+            onSelect={handleSelect}
+            onOpenMenu={actions.openMenu}
+          />
 
           {selected ? (
             <div className="flex-1 min-w-0 w-full min-h-0 flex flex-col overflow-hidden">
@@ -75,7 +84,15 @@ export default function DoctorScheduleScreen({
                 onMessage={() => onMessage?.(selected)}
               />
             </div>
-          ) : null}
+          ) : (
+            <div className="flex-1 min-h-0 rounded-3xl bg-white/70 border border-white flex flex-col items-center justify-center gap-3 text-center px-6">
+              <span className="w-14 h-14 rounded-2xl bg-teal-light text-teal flex items-center justify-center">
+                <CalendarDays className="w-7 h-7" strokeWidth={1.75} />
+              </span>
+              <p className="text-base font-bold text-navy">No visit selected</p>
+              <p className="text-sm text-body-gray">Choose a patient from the list to open the visit workspace.</p>
+            </div>
+          )}
         </div>
       </div>
 

@@ -192,6 +192,7 @@ export function DoctorProfilePage() {
       onChange={profile.updateDraft}
       onSave={profile.saveEdit}
       onCancel={profile.cancelEdit}
+      onAvatarChange={profile.updateAvatar}
       onMenu={(pathKey) => navigate(doctorMenuRoutes[pathKey] || DOCTOR_PATHS.home)}
       onTogglePref={profile.togglePref}
       onLogout={() => {

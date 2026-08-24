@@ -1,8 +1,30 @@
-import { doctorExtraVisitsMock, doctorLinkedPatientMock } from '../mocks/doctorVisits'
+import { doctorClinicDefaultsMock, doctorLinkedPatientMock, doctorVisitTimeSlotsMock } from '../mocks/doctorVisits'
+import { doctorPatientsMock } from '../mocks/doctorPatients'
 import { DEFAULT_DOCTOR_ID } from '../mocks/doctorSession'
+import { formatDateLabel } from '../../utils/appointmentFormat'
 
-export function generateDoctorExtraVisits() {
-  return doctorExtraVisitsMock.map((visit) => toDoctorVisit(visit))
+export function generateDoctorExtraVisits(now = new Date()) {
+  return doctorPatientsMock.map((patient, index) => {
+    const dayOffset = Math.floor(index / 3)
+    const date = new Date(now)
+    date.setHours(0, 0, 0, 0)
+    date.setDate(date.getDate() + dayOffset)
+
+    return toDoctorVisit({
+      id: `dvis-${patient.id}`,
+      doctorId: DEFAULT_DOCTOR_ID,
+      patientId: patient.id,
+      patientName: patient.name,
+      patientPhoto: patient.avatar,
+      dateLabel: formatDateLabel(date),
+      timeLabel: doctorVisitTimeSlotsMock[index % doctorVisitTimeSlotsMock.length],
+      status: index % 4 === 0 ? 'Upcoming' : 'Confirmed',
+      ...doctorClinicDefaultsMock,
+      room: `Consultation Room ${(index % 5) + 1}`,
+      prepNote: `Consult for ${patient.name}. Review latest notes and vitals.`,
+      prepItems: ['Valid photo ID', 'Previous prescriptions'],
+    })
+  })
 }
 
 export function toDoctorVisit(visit, patient) {
@@ -33,6 +55,11 @@ export function mapAppointmentToDoctorVisit(appointment, patient = doctorLinkedP
       patientName: patient.name,
       patientPhoto: patient.avatar,
       visitReason: patient.visitReason,
+      visitType: appointment.visitType || doctorClinicDefaultsMock.visitType,
+      room:
+        appointment.room && !String(appointment.room).toLowerCase().includes('video')
+          ? appointment.room
+          : doctorClinicDefaultsMock.room,
     },
     patient,
   )
@@ -45,9 +72,12 @@ export function mergeDoctorVisits(appointments = [], extraVisits = [], doctorId 
     .filter(Boolean)
 
   const linkedIds = new Set(linked.map((item) => item.linkedAppointmentId))
+  const linkedPatientIds = new Set(linked.map((item) => item.patientId).filter(Boolean))
+
   const extras = extraVisits
     .filter((item) => item.doctorId === doctorId)
     .filter((item) => !linkedIds.has(item.id))
+    .filter((item) => !linkedPatientIds.has(item.patientId))
     .map((item) => toDoctorVisit(item))
 
   return [...linked, ...extras]
@@ -55,4 +85,21 @@ export function mergeDoctorVisits(appointments = [], extraVisits = [], doctorId 
 
 export function visitsForPatient(visits = [], patientId) {
   return visits.filter((item) => item.patientId === patientId)
+}
+
+export function generateDoctorScheduleSummary(visits = [], now = new Date()) {
+  const todayLabel = formatDateLabel(now)
+  return {
+    todayLabel,
+    dateLine: now.toLocaleDateString('en-IN', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }),
+    todayCount: visits.filter((item) => item.dateLabel === todayLabel).length,
+    confirmedCount: visits.filter((item) => item.status === 'Confirmed').length,
+    upcomingCount: visits.filter((item) => item.status === 'Upcoming').length,
+    totalCount: visits.length,
+  }
 }

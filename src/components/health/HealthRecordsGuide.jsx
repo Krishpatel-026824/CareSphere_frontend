@@ -6,9 +6,9 @@ export default function HealthRecordsGuide() {
   const HeaderIcon = guideHeaderIcon
 
   return (
-    <section className="w-full rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+    <section className="w-full rounded-2xl border border-indigo-200 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-5 sm:p-6 shadow-lg shadow-indigo-100/40">
       <div className="flex items-start gap-3">
-        <span className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+        <span className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-200">
           <HeaderIcon className="w-5 h-5" strokeWidth={1.75} />
         </span>
         <div className="min-w-0">

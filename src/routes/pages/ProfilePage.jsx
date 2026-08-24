@@ -13,8 +13,6 @@ export default function ProfilePage() {
       stats={profile.stats}
       infoRows={profile.infoRows}
       fields={profile.fields}
-      menu={profile.menu}
-      careCircle={profile.careCircle}
       prefs={profile.prefs}
       isEditing={profile.isEditing}
       draft={profile.draft}
@@ -22,7 +20,7 @@ export default function ProfilePage() {
       onChange={profile.updateDraft}
       onSave={profile.saveEdit}
       onCancel={profile.cancelEdit}
-      onMenu={(pathKey) => navigate(PATHS[pathKey] || PATHS.home)}
+      onAvatarChange={profile.updateAvatar}
       onTogglePref={profile.togglePref}
       onLogout={() => {
         profile.logoutUser()

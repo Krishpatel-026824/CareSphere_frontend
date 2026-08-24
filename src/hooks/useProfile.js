@@ -6,6 +6,7 @@ import { selectPendingReminders } from '../store/slices/medicinesSlice'
 import { setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
 import { saveProfile, togglePref } from '../store/slices/profileSlice'
+import { PATIENT_AVATAR_KEY, writeStoredAvatar } from '../utils/profileAvatarStorage'
 
 const profileMeta = generateProfileData()
 
@@ -50,6 +51,10 @@ export function useProfile() {
     cancelEdit,
     saveEdit,
     updateDraft,
+    updateAvatar: (avatar) => {
+      writeStoredAvatar(PATIENT_AVATAR_KEY, avatar)
+      dispatch(saveProfile({ ...details, avatar }))
+    },
     togglePref: (id) => dispatch(togglePref(id)),
     logoutUser: () => {
       dispatch(setWorkspace('patient'))

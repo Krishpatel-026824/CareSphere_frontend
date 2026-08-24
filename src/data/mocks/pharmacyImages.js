@@ -9,7 +9,6 @@ import prednisone from '../../assets/medicines/prednisone.jpg'
 import ibuprofen from '../../assets/medicines/ibuprofen.jpg'
 import lisinopril from '../../assets/medicines/lisinopril.jpg'
 import refreshTears from '../../assets/medicines/refresh-tears.jpg'
-import krishPatel from '../../assets/medicines/krish-patel.jpg'
 import azithromycin from '../../assets/medicines/azithromycin.jpg'
 import omeprazole from '../../assets/medicines/omeprazole.jpg'
 import pantoprazole from '../../assets/medicines/pantoprazole.jpg'
@@ -65,7 +64,6 @@ export const pharmacyImages = {
   ibuprofen,
   lisinopril,
   refreshTears,
-  krishPatel,
   azithromycin,
   omeprazole,
   pantoprazole,

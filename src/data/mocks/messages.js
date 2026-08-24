@@ -4,8 +4,6 @@ const doctorKavya = 'https://randomuser.me/api/portraits/women/44.jpg'
 const doctorJay = 'https://randomuser.me/api/portraits/men/52.jpg'
 const doctorMeera = 'https://randomuser.me/api/portraits/women/65.jpg'
 
-export const careSupportConversationId = 'msg-2'
-
 export const messagesMock = [
   {
     id: 'msg-1',
@@ -39,41 +37,6 @@ export const messagesMock = [
         from: 'them',
         text: 'Please bring your previous ECG reports for tomorrow.',
         time: '10:24 AM',
-      },
-    ],
-  },
-  {
-    id: 'msg-2',
-    doctorName: 'CareSphere Support',
-    specialty: 'Care Support',
-    clinic: 'CareSphere Helpdesk',
-    phone: '',
-    avatar: null,
-    pinLocked: true,
-    lastMessage: 'Your medicine reminder is set for 08:00 PM today.',
-    timeLabel: 'Yesterday',
-    unread: true,
-    unreadCount: 1,
-    online: true,
-    messages: [
-      {
-        id: 't2-1',
-        from: 'them',
-        text: 'Hi Krish! We are here to help with your CareSphere account.',
-        time: 'Yesterday',
-      },
-      {
-        id: 't2-2',
-        from: 'them',
-        text: 'Your medicine reminder is set for 08:00 PM today.',
-        time: 'Yesterday',
-      },
-      {
-        id: 't2-3',
-        from: 'me',
-        text: 'Got it, thank you!',
-        time: 'Yesterday',
-        read: true,
       },
     ],
   },

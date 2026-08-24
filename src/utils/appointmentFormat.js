@@ -147,3 +147,31 @@ export function countUpcomingAppointments(appointments = [], now = new Date()) {
     return time == null || time >= today
   }).length
 }
+
+export function visitDayHeading(dateLabel, now = new Date()) {
+  const parsed = parseAppointmentDate(dateLabel, '12:00 AM', now)
+  if (!parsed) return dateLabel
+
+  const diff = Math.round((startOfDay(parsed) - startOfDay(now)) / 86400000)
+  if (diff === 0) return 'Today'
+  if (diff === 1) return 'Tomorrow'
+  if (diff === -1) return 'Yesterday'
+  return dateLabel
+}
+
+export function groupVisitsByDate(visits = []) {
+  const groups = []
+  const map = new Map()
+
+  visits.forEach((visit) => {
+    const key = visit.dateLabel || 'Upcoming'
+    if (!map.has(key)) {
+      const group = { id: key, label: key, visits: [] }
+      map.set(key, group)
+      groups.push(group)
+    }
+    map.get(key).visits.push(visit)
+  })
+
+  return groups
+}

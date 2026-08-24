@@ -12,6 +12,7 @@ export const patientSessionMock = {
   role: 'Care member',
   initials: 'KP',
   doctorId: null,
+  avatar: 'https://randomuser.me/api/portraits/men/11.jpg',
 }
 
 export const doctorSessionMock = {
@@ -24,4 +25,5 @@ export const doctorSessionMock = {
   email: 'james.carter@caresphere.com',
   phone: '(901) 425-9878',
   hospital: 'CareSphere Heart Center',
+  avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
 }

@@ -1,9 +1,6 @@
 import { LogOut } from 'lucide-react'
-import ProfileCareCircleCard from '../../components/profile/ProfileCareCircleCard'
 import ProfileHeader from '../../components/profile/ProfileHeader'
 import ProfileHero from '../../components/profile/ProfileHero'
-import ProfileInfoCard from '../../components/profile/ProfileInfoCard'
-import ProfileMenuCard from '../../components/profile/ProfileMenuCard'
 import ProfilePrefsCard from '../../components/profile/ProfilePrefsCard'
 
 export default function ProfileScreen({
@@ -11,8 +8,6 @@ export default function ProfileScreen({
   stats,
   infoRows,
   fields,
-  menu,
-  careCircle,
   prefs,
   isEditing,
   draft,
@@ -20,40 +15,37 @@ export default function ProfileScreen({
   onChange,
   onSave,
   onCancel,
-  onMenu,
   onTogglePref,
   onLogout,
+  onAvatarChange,
 }) {
   return (
-    <div className="w-full min-h-full bg-[#F3F7FA]">
-      <div className="w-full min-h-full page-pad py-5 sm:py-6 lg:py-7 flex flex-col gap-6 max-w-[1440px] mx-auto">
+    <div className="w-full min-h-full bg-gradient-to-br from-[#E8F7F5] via-[#F3F0FF] to-[#EAF4FE]">
+      <div className="w-full min-h-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6 max-w-[1180px] mx-auto">
         <ProfileHeader onEdit={onStartEdit} isEditing={isEditing} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 min-w-0 lg:items-start">
-          <div className="lg:col-span-3 min-w-0 flex flex-col gap-6">
-            <ProfileHero details={details} stats={stats} />
-            <ProfileInfoCard
-              details={details}
-              infoRows={infoRows}
-              fields={fields}
-              isEditing={isEditing}
-              draft={draft}
-              onChange={onChange}
-              onSave={onSave}
-              onCancel={onCancel}
-            />
-            <ProfileCareCircleCard members={careCircle} />
-          </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_0.9fr] gap-5 min-w-0 lg:items-start">
+          <ProfileHero
+            details={details}
+            stats={stats}
+            infoRows={infoRows}
+            fields={fields}
+            isEditing={isEditing}
+            draft={draft}
+            onChange={onChange}
+            onSave={onSave}
+            onCancel={onCancel}
+            onAvatarChange={onAvatarChange}
+          />
 
-          <div className="lg:col-span-2 min-w-0 flex flex-col gap-6">
-            <ProfileMenuCard items={menu} onSelect={onMenu} />
+          <div className="min-w-0 flex flex-col gap-4">
             <ProfilePrefsCard prefs={prefs} onToggle={onTogglePref} />
             <button
               type="button"
               onClick={onLogout}
-              className="min-h-12 rounded-2xl border border-red-200 bg-white text-red-500 text-sm font-semibold cursor-pointer hover:bg-red-50 inline-flex items-center justify-center gap-2"
+              className="min-h-12 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm font-semibold cursor-pointer hover:bg-red-100/70 hover:border-red-300 transition-all inline-flex items-center justify-center gap-2"
             >
-              <LogOut className="w-4 h-4" strokeWidth={1.75} />
+              <LogOut className="w-4 h-4" strokeWidth={2} />
               Sign out
             </button>
           </div>
