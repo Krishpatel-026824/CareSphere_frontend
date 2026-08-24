@@ -1,7 +1,6 @@
 import NotificationFilterBar from '../../components/notifications/NotificationFilterBar'
 import NotificationGrid from '../../components/notifications/NotificationGrid'
 import NotificationHeader from '../../components/notifications/NotificationHeader'
-import NotificationStatRow from '../../components/notifications/NotificationStatRow'
 import { useNotifications } from '../../hooks/useNotifications'
 
 export default function NotificationsScreen() {

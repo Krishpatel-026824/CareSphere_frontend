@@ -1,4 +1,5 @@
 import { medicineRemindersMock } from '../mocks/medicineReminders'
+import { withPharmacyMedicineImage } from './medicineImageResolver'
 
 function timeLabelToMinutes(label = '') {
   const match = label.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i)
@@ -21,12 +22,16 @@ export function getUpcomingMedicineIndex(medicines = [], now = new Date()) {
 }
 
 export function generateMedicineRemindersData() {
-  return {
-    medicines: medicineRemindersMock.map((item) => ({
+  const medicines = medicineRemindersMock.map((item) =>
+    withPharmacyMedicineImage({
       ...item,
       remaining: `${item.remainingCount} left`,
-    })),
-    startIndex: getUpcomingMedicineIndex(medicineRemindersMock),
+    }),
+  )
+
+  return {
+    medicines,
+    startIndex: getUpcomingMedicineIndex(medicines),
   }
 }
 

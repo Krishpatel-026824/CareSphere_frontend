@@ -12,7 +12,9 @@ function startOfDay(date) {
 }
 
 function parseTimeParts(timeLabel = '') {
-  const match = timeLabel.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)/i)
+  const match = String(timeLabel)
+    .trim()
+    .match(/(\d{1,2}):(\d{2})\s*(?:-\s*\d{1,2}:\d{2}\s*)?(AM|PM)/i)
   if (!match) return { hours: 0, minutes: 0 }
   let hours = Number(match[1])
   const minutes = Number(match[2])
@@ -20,6 +22,14 @@ function parseTimeParts(timeLabel = '') {
   if (period === 'PM' && hours < 12) hours += 12
   if (period === 'AM' && hours === 12) hours = 0
   return { hours, minutes }
+}
+
+const SEED_APPOINTMENT_IDS = new Set(appointmentsMock.map((item) => item.id))
+
+export function isUserBookedAppointment(appointment) {
+  if (!appointment?.id) return false
+  if (appointment.isUserBooked || appointment.isUserBooked) return true
+  return !SEED_APPOINTMENT_IDS.has(appointment.id)
 }
 
 export function parseAppointmentDate(dateLabel = '', timeLabel = '', now = new Date()) {
@@ -87,6 +97,7 @@ export function applyBookingToAppointment(appointment, booking) {
     dateLabel: formatBookingDateLabel(booking.selectedDate),
     timeLabel: booking.selectedTime,
     status: 'Confirmed',
+    isUserBooked: true,
   }
 }
 
@@ -107,6 +118,12 @@ export function getUpcomingAppointment(appointments = [], now = new Date()) {
       .filter(({ time }) => time >= today)
       .sort((left, right) => left.time - right.time)[0]?.item || null
   )
+}
+
+/** Earliest upcoming visit the user booked — used on the home page. */
+export function getHomeBookedAppointment(appointments = [], now = new Date()) {
+  const booked = appointments.filter(isUserBookedAppointment)
+  return getUpcomingAppointment(booked, now)
 }
 
 export function sortAppointmentsForList(appointments = [], now = new Date()) {

@@ -18,6 +18,8 @@ import { selectDoctorFlow } from './slices/doctorsSlice'
 import { addLabReports, selectHealthRecords } from './slices/healthSlice'
 import { addIncomingMessage, selectMessagesBadge } from './slices/messagesSlice'
 import { addNotification as addNotificationAction } from './slices/notificationsSlice'
+import { generateLabBookingNotification } from '../data/generators/labBookingNotificationGenerator'
+import { generateAppointmentUpdateNotice } from '../data/generators/appointmentUpdateNoticeGenerator'
 
 export function useAppStore() {
   const dispatch = useAppDispatch()
@@ -74,7 +76,19 @@ export function useAppStore() {
   }
 
   function updateAppointment(updated) {
+    if (!updated?.id) return
+    const previous = appointments.find((item) => item.id === updated.id)
     dispatch(updateAppointmentAction(updated))
+
+    const notice = generateAppointmentUpdateNotice({
+      previous,
+      next: { ...previous, ...updated },
+      patientName: authUser?.name?.split(' ')[0] || 'Krish',
+    })
+    if (!notice) return
+
+    dispatch(addNotificationAction(notice.notification))
+    if (notice.chat) dispatch(addIncomingMessage(notice.chat))
   }
 
   function updateAppointmentPrefs(appointmentId, next) {
@@ -101,6 +115,11 @@ export function useAppStore() {
     dispatch(addLabReports(reports))
   }
 
+  function notifyLabBooking(booking) {
+    const notification = generateLabBookingNotification(booking)
+    if (notification) dispatch(addNotificationAction(notification))
+  }
+
   return {
     appointments,
     healthRecords,
@@ -119,5 +138,6 @@ export function useAppStore() {
     appointmentPrefs,
     updateAppointmentPrefs,
     handleLabReportsGenerated,
+    notifyLabBooking,
   }
 }

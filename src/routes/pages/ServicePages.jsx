@@ -29,7 +29,14 @@ export function PharmacyPage() {
 
 export function LabTestsPage() {
   const navigate = useNavigate()
-  return <LabTestsScreen onBack={() => navigate(PATHS.home)} onNavigateBookings={() => navigate(PATHS.labBookings)} />
+  const { notifyLabBooking } = useAppStore()
+  return (
+    <LabTestsScreen
+      onBack={() => navigate(PATHS.home)}
+      onNavigateBookings={() => navigate(PATHS.labBookings)}
+      onLabBooked={notifyLabBooking}
+    />
+  )
 }
 
 export function LabBookingsPage() {

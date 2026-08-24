@@ -24,7 +24,7 @@ function goToNewAppointment(navigate) {
 }
 
 export function AppointmentsPage() {
-  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
   const authUser = useAppSelector((state) => state.auth.user)
   const appointments =
     authUser?.roleType === 'patient' && authUser?.name
@@ -40,6 +40,7 @@ export function AppointmentsPage() {
       doctorCategories={doctorFlowData.categories}
       currentUserName={authUser?.name || 'Krish Patel'}
       onCreateAppointment={addBookedAppointment}
+      onUpdateAppointment={updateAppointment}
       onDeleteAppointment={softDeleteAppointment}
       recycleBin={recycleBin}
       onRestoreAppointment={restoreAppointment}
@@ -51,7 +52,7 @@ export function AppointmentsPage() {
 
 export function AppointmentDetailsPage() {
   const { id } = useParams()
-  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
   const authUser = useAppSelector((state) => state.auth.user)
   const appointments =
     authUser?.roleType === 'patient' && authUser?.name
@@ -71,6 +72,7 @@ export function AppointmentDetailsPage() {
       doctorCategories={doctorFlowData.categories}
       currentUserName={authUser?.name || 'Krish Patel'}
       onCreateAppointment={addBookedAppointment}
+      onUpdateAppointment={updateAppointment}
       onDeleteAppointment={softDeleteAppointment}
       recycleBin={recycleBin}
       onRestoreAppointment={restoreAppointment}

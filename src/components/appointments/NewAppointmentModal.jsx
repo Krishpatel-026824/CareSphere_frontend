@@ -146,8 +146,15 @@ export default function NewAppointmentModal({
             <DatePicker
               value={booking.appointmentDate}
               onChange={(value) => onChange({ appointmentDate: value })}
+              format="DD/MM/YYYY"
               minDate={dayjs()}
-              slotProps={{ textField: { size: 'small', fullWidth: true, placeholder: 'Select date' } }}
+              slotProps={{
+                textField: {
+                  size: 'small',
+                  fullWidth: true,
+                  placeholder: 'DD/MM/YYYY',
+                },
+              }}
               sx={fieldSx}
             />
           </Field>
@@ -161,7 +168,11 @@ export default function NewAppointmentModal({
               onChange={(e) => onChange({ timeSlot: e.target.value })}
               disabled={!booking.doctorId}
               sx={selectSx}
-              MenuProps={{ PaperProps: { sx: { maxHeight: 180 } }, anchorOrigin: { vertical: 'top', horizontal: 'left' }, transformOrigin: { vertical: 'bottom', horizontal: 'left' } }}
+              MenuProps={{
+                PaperProps: { sx: { maxHeight: 180 } },
+                anchorOrigin: { vertical: 'top', horizontal: 'left' },
+                transformOrigin: { vertical: 'bottom', horizontal: 'left' },
+              }}
               renderValue={(v) => v || <span className="text-[#9CA3AF]">Select time slot</span>}
             >
               {availableTimes.map((time) => (

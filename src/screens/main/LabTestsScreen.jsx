@@ -8,8 +8,11 @@ import LabTestDetailModal from '../../components/lab/LabTestDetailModal'
 import LabBookingFormModal from '../../components/lab/LabBookingFormModal'
 import LabTestsFooter from '../../components/lab/LabTestsFooter'
 import { useLabTestsBooking } from '../../hooks/useLabTestsBooking'
+import { useAppDispatch } from '../../store/hooks'
+import { addLabReportFromBooking } from '../../store/slices/healthSlice'
 
-export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateBookings }) {
+export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateBookings, onLabBooked }) {
+  const dispatch = useAppDispatch()
   const catalogRef = useRef(null)
   const [activeFooterLink, setActiveFooterLink] = useState(null)
   const [expandedReportId, setExpandedReportId] = useState(null)
@@ -46,6 +49,8 @@ export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateB
     const existing = JSON.parse(localStorage.getItem('labBookings') || '[]')
     const updated = [data, ...existing]
     localStorage.setItem('labBookings', JSON.stringify(updated))
+    dispatch(addLabReportFromBooking(data))
+    onLabBooked?.(data)
     onNavigateBookings?.()
   }
 

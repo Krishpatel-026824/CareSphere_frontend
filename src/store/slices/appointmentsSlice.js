@@ -2,7 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 import { generateAppointmentFromBooking } from '../../data/generators/appointmentsGenerator'
 import { appointmentsMock } from '../../data/mocks/appointments'
 import { resolveAppointmentImages, resolveAppointmentsImages } from '../../data/mocks/appointmentImages'
-import { applyBookingToAppointment, getUpcomingAppointment } from '../../utils/appointmentFormat'
+import {
+  applyBookingToAppointment,
+  getHomeBookedAppointment,
+  getUpcomingAppointment,
+} from '../../utils/appointmentFormat'
 
 const STORAGE_KEY = 'caresphere.appointments'
 const RECYCLE_KEY = 'caresphere.appointments.recyclebin'
@@ -175,6 +179,10 @@ export function selectAppointmentPrefs(state) {
 }
 
 export function selectUpcomingAppointment(state) {
+  return getHomeBookedAppointment(state.appointments.items)
+}
+
+export function selectNextUpcomingAppointment(state) {
   return getUpcomingAppointment(state.appointments.items)
 }
 

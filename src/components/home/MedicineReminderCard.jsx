@@ -35,13 +35,17 @@ export default function MedicineReminderCard() {
       </div>
 
       <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease]">
-        <div className="w-[52px] h-[52px] rounded-2xl overflow-hidden shrink-0 bg-[#ECEBFF]">
+        <div className="w-[56px] h-[56px] rounded-xl overflow-hidden shrink-0 border border-gray-100 bg-white shadow-sm flex items-center justify-center">
           {medicine.image ? (
-            <img src={medicine.image} alt={medicine.medicineName} className="w-full h-full object-cover" />
+            <img
+              src={medicine.image}
+              alt={medicine.medicineName}
+              className="w-full h-full object-cover"
+            />
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <span className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#ECEBFF] to-[#F5F3FF]">
               <Pill className="w-6 h-6 text-[#7C4DFF]" strokeWidth={iconStroke} />
-            </div>
+            </span>
           )}
         </div>
         <div className="min-w-0 flex-1">

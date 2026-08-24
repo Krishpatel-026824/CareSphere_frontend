@@ -5,7 +5,7 @@ export default function ServicePageHeading({ icon: Icon, tone, title, subtitle, 
         {Icon ? <Icon className="w-7 h-7" strokeWidth={1.75} /> : null}
       </div>
       <div className="min-w-0">
-        <h1 className="text-[32px] sm:text-[36px] font-bold text-navy tracking-tight leading-none">{title}</h1>
+        <h1 className="font-display text-[32px] sm:text-[36px] font-bold text-navy tracking-tight leading-none">{title}</h1>
         {subtitle ? <p className="text-sm text-body-gray mt-2">{subtitle}</p> : null}
       </div>
     </div>

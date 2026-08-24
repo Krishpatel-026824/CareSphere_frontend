@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, Clock, Search, Star, Trash2 } from 'lucide-react'
+import { CalendarDays, Clock, Pencil, Search, Star, Trash2 } from 'lucide-react'
 import Avatar from '@mui/material/Avatar'
 import Dialog from '@mui/material/Dialog'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -14,6 +14,7 @@ import AppointmentRecordDetailModal from '../../components/appointments/Appointm
 import AppointmentRecycleBinModal from '../../components/appointments/AppointmentRecycleBinModal'
 import DoctorProfileModal from '../../components/appointments/DoctorProfileModal'
 import NewAppointmentModal from '../../components/appointments/NewAppointmentModal'
+import EditAppointmentModal from '../../components/home/EditAppointmentModal'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 import { countUpcomingAppointments, parseAppointmentDate, sortAppointmentsForList } from '../../utils/appointmentFormat'
 
@@ -23,6 +24,7 @@ export default function AppointmentsScreen({
   doctorCategories = [],
   currentUserName = 'Krish Patel',
   onCreateAppointment,
+  onUpdateAppointment,
   onDeleteAppointment,
   recycleBin = [],
   onRestoreAppointment,
@@ -35,6 +37,7 @@ export default function AppointmentsScreen({
   const [category, setCategory] = useState('All categories')
   const [showBookingModal, setShowBookingModal] = useState(false)
   const [selectedAppointmentDetail, setSelectedAppointmentDetail] = useState(null)
+  const [editingAppointment, setEditingAppointment] = useState(null)
   const [showDoctorProfileModal, setShowDoctorProfileModal] = useState(false)
   const [showRecycleBin, setShowRecycleBin] = useState(false)
   const [deleteConfirmId, setDeleteConfirmId] = useState(null)
@@ -256,7 +259,7 @@ export default function AppointmentsScreen({
                     </div>
 
                     <div className="shrink-0 flex flex-col items-end gap-1.5">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
                         <span
                           className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
                             appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
@@ -264,6 +267,17 @@ export default function AppointmentsScreen({
                         >
                           {appointment.status}
                         </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setEditingAppointment(appointment)
+                          }}
+                          className="w-7 h-7 rounded-lg flex items-center justify-center text-teal hover:bg-teal-light cursor-pointer transition-colors"
+                          aria-label="Edit appointment"
+                        >
+                          <Pencil className="w-3.5 h-3.5" strokeWidth={1.75} />
+                        </button>
                         <button
                           type="button"
                           onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(appointment.id) }}
@@ -296,6 +310,19 @@ export default function AppointmentsScreen({
           availableTimes={availableTimes}
           onChange={updateBooking}
           onSave={handleSaveBooking}
+        />
+
+        <EditAppointmentModal
+          open={Boolean(editingAppointment)}
+          appointment={editingAppointment}
+          onClose={() => setEditingAppointment(null)}
+          onSave={(updated) => {
+            onUpdateAppointment?.(updated)
+            setEditingAppointment(null)
+            if (selectedAppointmentDetail?.id === updated.id) {
+              setSelectedAppointmentDetail(updated)
+            }
+          }}
         />
 
         <AppointmentRecordDetailModal

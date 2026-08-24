@@ -19,7 +19,7 @@ export default function NotificationGrid({ items, onRead, onDelete, onShowAll })
   }
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2.5">
       {items.map((item) => (
         <NotificationCard key={item.id} item={item} onRead={onRead} onDelete={onDelete} />
       ))}

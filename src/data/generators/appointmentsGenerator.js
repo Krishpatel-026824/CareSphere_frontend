@@ -27,6 +27,8 @@ export function generateAppointmentFromBooking(booking) {
 
   return {
     id: `apt-${booking.appointmentId || Date.now()}`,
+    isUserBooked: true,
+    bookedAt: Date.now(),
     patientName: booking.patientName || 'Krish Patel',
     doctorId: doctor.id,
     doctorName: doctor.name,

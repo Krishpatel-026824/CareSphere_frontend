@@ -3,6 +3,7 @@ import {
   countPendingReminders,
   generateMedicineRemindersData,
 } from '../../data/generators/medicineRemindersGenerator'
+import { withPharmacyMedicineImage } from '../../data/generators/medicineImageResolver'
 
 const initial = generateMedicineRemindersData()
 
@@ -27,10 +28,10 @@ const medicinesSlice = createSlice({
       state.takenById[id] = true
     },
     addMedicine(state, action) {
-      state.items.push(action.payload)
+      state.items.push(withPharmacyMedicineImage(action.payload))
     },
     updateMedicine(state, action) {
-      const updated = action.payload
+      const updated = withPharmacyMedicineImage(action.payload)
       state.items = state.items.map((item) => (item.id === updated.id ? { ...item, ...updated } : item))
     },
     removeMedicine(state, action) {

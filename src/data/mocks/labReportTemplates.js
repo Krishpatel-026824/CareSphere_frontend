@@ -1,5 +1,7 @@
+import { labReportTemplatesExtendedMock } from './labReportTemplatesExtended'
+
 export const labPatientMock = {
-  name: 'Rahul Sharma',
+  name: 'Krish Patel',
   age: 32,
   gender: 'Male',
   patientId: 'CS-PAT-10482',
@@ -124,4 +126,9 @@ export const labReportTemplatesMock = {
     ],
     interpretation: 'Routine urinalysis with microscopy is within normal limits.',
   },
+  ...labReportTemplatesExtendedMock,
+}
+
+export function getLabReportTemplate(testId) {
+  return labReportTemplatesMock[testId] || null
 }

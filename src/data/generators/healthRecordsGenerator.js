@@ -6,6 +6,7 @@ import {
 } from '../mocks/healthRecords'
 import { healthRecordsExtraMock } from '../mocks/healthRecordsExtra'
 import { buildHealthRecordReport, getHealthRecordImage } from './healthRecordReportGenerator'
+import { buildLabReportFromHealthRecord } from './labReportGenerator'
 
 function parseRecordDate(dateLabel = '') {
   const parsed = Date.parse(dateLabel)
@@ -14,11 +15,15 @@ function parseRecordDate(dateLabel = '') {
 
 export function generateHealthRecordsData() {
   const records = [...healthRecordsMock, ...healthRecordsExtraMock]
-    .map((record) => ({
-      ...record,
-      preview: record.preview || getHealthRecordImage(record),
-      detail: healthRecordDetailsMock[record.id] || null,
-    }))
+    .map((record) => {
+      const report = record.type === 'Lab' ? buildLabReportFromHealthRecord(record) : null
+      return {
+        ...record,
+        preview: record.preview || getHealthRecordImage(record),
+        detail: healthRecordDetailsMock[record.id] || null,
+        report: report || record.report || null,
+      }
+    })
     .sort((a, b) => {
       const left = parseRecordDate(a.dateLabel)?.getTime() || 0
       const right = parseRecordDate(b.dateLabel)?.getTime() || 0
@@ -41,6 +46,16 @@ export function filterHealthRecords(records = [], query = '') {
   )
 }
 
+export function isLabHealthRecord(record = {}) {
+  return record.type === 'Lab' || record.icon === 'lab' || Boolean(record.report?.parameters?.length)
+}
+
+export function filterHealthRecordsByKind(records = [], kind = 'all') {
+  if (kind === 'lab') return records.filter(isLabHealthRecord)
+  if (kind === 'other') return records.filter((record) => !isLabHealthRecord(record))
+  return records
+}
+
 export function getHealthRecordDetail(record) {
   if (!record) return { kind: 'basic', data: {} }
 
@@ -50,6 +65,11 @@ export function getHealthRecordDetail(record) {
 
   if (record.report?.parameters) {
     return { kind: 'lab', data: record.report }
+  }
+
+  if (record.type === 'Lab') {
+    const labReport = buildLabReportFromHealthRecord(record)
+    if (labReport) return { kind: 'lab', data: labReport }
   }
 
   const data = buildHealthRecordReport(record)
