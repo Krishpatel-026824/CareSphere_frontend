@@ -6,7 +6,7 @@ export default function DoctorHomeStatStrip({ stats = [], onSelect, activeId }) 
   }
 
   return (
-    <div className="shrink-0 flex flex-wrap items-center gap-2">
+    <div className="shrink-0 flex items-center gap-2 min-w-max sm:min-w-0 sm:flex-wrap">
       {stats.map((item) => {
         const active = item.id === activeId
         return (
@@ -14,7 +14,7 @@ export default function DoctorHomeStatStrip({ stats = [], onSelect, activeId }) 
             key={item.id}
             type="button"
             onClick={() => onSelect?.(item.id)}
-            className={`inline-flex items-center gap-2 rounded-full pl-3 pr-1.5 py-1.5 cursor-pointer transition-all ${
+            className={`inline-flex items-center gap-2 rounded-full pl-3 pr-1.5 py-1.5 cursor-pointer transition-all whitespace-nowrap ${
               tones[item.id] || tones.upcoming
             } ${active ? 'ring-2 ring-teal/30' : 'hover:brightness-[0.98]'}`}
           >

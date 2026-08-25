@@ -5,7 +5,6 @@ import {
   FlaskConical,
   House,
   MessageCircleMore,
-  Stethoscope,
   Users,
 } from 'lucide-react'
 
@@ -21,7 +20,6 @@ export const doctorProfileNavTab = { id: 'profile', label: 'Profile', icon: Circ
 export const doctorSidebarQuickActions = [
   { id: 'pharmacy', key: 'prescribe', label: 'Write Rx', icon: FileText },
   { id: 'labReports', key: 'labReports', label: 'Lab reports', icon: FlaskConical },
-  { id: 'records', key: 'notes', label: 'Add note', icon: Stethoscope },
 ]
 
 export const doctorBottomNavTabs = [

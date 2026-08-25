@@ -1,4 +1,4 @@
-import { doctorHomeStatPagesMock, doctorQuickActionsMock } from '../mocks/doctorHome'
+import { doctorHomeStatPagesMock } from '../mocks/doctorHome'
 import { countUpcomingAppointments, isActiveUpcoming, sortAppointmentsForList } from '../../utils/appointmentFormat'
 
 export function generateDoctorHomeData(visits = [], nextVisit = null) {
@@ -41,7 +41,6 @@ export function generateDoctorHomeData(visits = [], nextVisit = null) {
     ],
     nextVisit,
     queue,
-    quickActions: doctorQuickActionsMock,
   }
 }
 

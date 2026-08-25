@@ -64,7 +64,7 @@ export default function MessagesScreen() {
 
   return (
     <div
-      className={`messages-screen w-full bg-bg-gray ${
+      className={`messages-screen w-full bg-transparent ${
         showChatPanel && !isDesktop
           ? 'fixed inset-x-0 top-0 z-20 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] overflow-hidden lg:static lg:inset-auto lg:bottom-auto lg:z-auto lg:overflow-visible lg:h-full'
           : 'min-h-full lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden'

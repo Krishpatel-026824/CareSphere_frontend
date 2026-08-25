@@ -22,16 +22,25 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
 
   return (
     <AuthCardLayout>
-      <AuthBrandMark caption={isDoctor ? 'Clinic Workspace' : 'Health Dashboard'} />
+      <div className="animate-login-rise">
+        <AuthBrandMark caption={isDoctor ? 'Clinic Workspace' : 'Health Dashboard'} />
+      </div>
 
-      <header className="mt-7 mb-6 text-center">
-        <h1 className="font-display text-[28px] font-bold text-navy leading-tight tracking-tight">Welcome back</h1>
-        <p className="mt-2 text-sm text-body-gray">
-          {isDoctor ? 'Sign in to your clinic workspace' : 'Sign in to continue your health journey'}
+      <header className="mt-4 sm:mt-5 mb-4 sm:mb-5 text-center animate-login-rise-delay-1">
+        <h1 className="font-display text-[24px] sm:text-[28px] font-bold text-navy leading-tight tracking-tight">
+          Welcome back
+        </h1>
+        <p className="mt-1.5 text-[12px] sm:text-[13px] text-body-gray leading-snug px-1">
+          {isDoctor
+            ? 'Sign in to manage visits, patients, and clinic tools'
+            : 'Sign in to continue your CareSphere health journey'}
         </p>
       </header>
 
-      <div className="mb-4">
+      <div className="mb-4 animate-login-rise-delay-2">
+        <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-body-gray mb-2 px-0.5">
+          Sign in as
+        </p>
         <RoleToggle value={roleType} options={authRoleOptions} onChange={setRoleType} />
       </div>
 
@@ -40,7 +49,7 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
           e.preventDefault()
           submitLogin()
         }}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-3.5 animate-login-rise-delay-3"
       >
         <AuthInput
           id="login-email"
@@ -64,7 +73,7 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
           onTogglePassword={() => setShowPassword((v) => !v)}
         />
 
-        <div className="flex justify-end">
+        <div className="flex justify-end -mt-1">
           <button
             type="button"
             onClick={onForgotPassword}
@@ -74,25 +83,31 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
           </button>
         </div>
 
-        <Button type="submit" className="min-h-[50px] text-[15px]">
+        <Button type="submit" className="min-h-[48px] text-[15px] shadow-[0_10px_20px_-10px_rgba(14,165,160,0.65)]">
           Sign In
         </Button>
       </form>
 
-      <SocialAuthRow onGoogle={submitLogin} onApple={submitLogin} />
+      <div className="animate-login-rise-delay-4">
+        <SocialAuthRow onGoogle={submitLogin} onApple={submitLogin} />
 
-      {isDoctor ? null : (
-        <p className="mt-6 text-center text-sm text-body-gray">
-          Don&apos;t have an account?{' '}
-          <button
-            type="button"
-            onClick={onSignUp}
-            className="border-none bg-transparent text-teal font-semibold cursor-pointer text-sm hover:opacity-80"
-          >
-            Sign Up
-          </button>
-        </p>
-      )}
+        {isDoctor ? (
+          <p className="mt-5 text-center text-[12px] text-body-gray">
+            Clinic access for CareSphere doctors and care teams.
+          </p>
+        ) : (
+          <p className="mt-5 text-center text-sm text-body-gray">
+            Don&apos;t have an account?{' '}
+            <button
+              type="button"
+              onClick={onSignUp}
+              className="border-none bg-transparent text-teal font-semibold cursor-pointer text-sm hover:opacity-80"
+            >
+              Sign Up
+            </button>
+          </p>
+        )}
+      </div>
     </AuthCardLayout>
   )
 }

@@ -38,6 +38,11 @@ export function DoctorHomePage() {
   const [homeStat, setHomeStat] = useState(null)
   const selectedVisit = schedule.visits.find((visit) => visit.id === selectedId) || null
 
+  function openOnSchedule(visit) {
+    if (!visit?.id) return
+    navigate(doctorPortalVisitPath(visit.id))
+  }
+
   return (
     <DoctorHomeScreen
       visits={schedule.visits}
@@ -45,18 +50,13 @@ export function DoctorHomePage() {
       selectedVisit={selectedVisit}
       homeStat={homeStat}
       onBellClick={() => navigate(DOCTOR_PATHS.notifications)}
-      onOpenVisit={(visit) => setSelectedId(visit.id)}
-      onSelectVisit={(visit) => setSelectedId(visit.id)}
-      onClearVisit={() => setSelectedId(null)}
+      onOpenVisit={openOnSchedule}
+      onSelectVisit={openOnSchedule}
       onClearStat={() => {
         setHomeStat(null)
         setSelectedId(null)
       }}
       onAcceptVisit={(visit) => schedule.requestAction('accept', visit)}
-      onActionClick={(key) => {
-        const path = DOCTOR_PATHS[key]
-        if (path) navigate(path)
-      }}
       onStatClick={(id) => {
         const match = filterDoctorHomeQueue(schedule.visits, doctorHomeStatFilters[id])[0]
         setHomeStat(id)
@@ -81,6 +81,7 @@ export function DoctorSchedulePage() {
       visits={schedule.visits}
       selectedId={id}
       onSelectVisit={(visit) => navigate(doctorPortalVisitPath(visit.id), { replace: true })}
+      onClearVisit={() => navigate(DOCTOR_PATHS.schedule, { replace: true })}
       onMessage={() => navigate(DOCTOR_PATHS.messages)}
       actions={schedule}
     />
@@ -118,7 +119,6 @@ export function DoctorPatientPage() {
     <DoctorPatientDetailScreen
       patient={patient}
       visits={generatePatientChartVisits(schedule.visits, patient)}
-      actions={schedule}
       onBack={() => navigate(DOCTOR_PATHS.patients)}
       onMessage={() => navigate(DOCTOR_PATHS.messages, { state: { patientId: patient.id } })}
     />

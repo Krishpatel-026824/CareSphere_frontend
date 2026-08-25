@@ -35,9 +35,15 @@ const notificationsSlice = createSlice({
       state[key] = state[key].map((item) => ({ ...item, unread: false }))
     },
     addNotification(state, action) {
-      const notification = action.payload
-      if (!notification?.id) return
-      const key = listKey(state)
+      const payload = action.payload
+      if (!payload?.id) return
+      const { _workspace, ...notification } = payload
+      const key =
+        _workspace === 'patient'
+          ? 'items'
+          : _workspace === 'doctor'
+            ? 'doctorItems'
+            : listKey(state)
       state[key] = [notification, ...state[key]]
     },
     deleteNotification(state, action) {

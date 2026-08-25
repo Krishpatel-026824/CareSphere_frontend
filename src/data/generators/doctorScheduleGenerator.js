@@ -1,7 +1,7 @@
 import { doctorClinicDefaultsMock, doctorLinkedPatientMock, doctorVisitTimeSlotsMock } from '../mocks/doctorVisits'
 import { doctorPatientsMock } from '../mocks/doctorPatients'
 import { DEFAULT_DOCTOR_ID } from '../mocks/doctorSession'
-import { formatDateLabel } from '../../utils/appointmentFormat'
+import { formatDateLabel, parseAppointmentDate, visitDayHeading } from '../../utils/appointmentFormat'
 
 export function generateDoctorExtraVisits(now = new Date()) {
   return doctorPatientsMock.map((patient, index) => {
@@ -102,4 +102,29 @@ export function generateDoctorScheduleSummary(visits = [], now = new Date()) {
     upcomingCount: visits.filter((item) => item.status === 'Upcoming').length,
     totalCount: visits.length,
   }
+}
+
+export function generateDoctorScheduleDays(visits = [], now = new Date()) {
+  const todayLabel = formatDateLabel(now)
+  const labels = [...new Set(visits.map((visit) => visit.dateLabel).filter(Boolean))]
+
+  if (!labels.includes(todayLabel)) labels.unshift(todayLabel)
+
+  return labels
+    .map((dateLabel) => {
+      const parsed = parseAppointmentDate(dateLabel, '12:00 AM', now)
+      const dayVisits = visits.filter((visit) => visit.dateLabel === dateLabel)
+      return {
+        id: dateLabel,
+        dateLabel,
+        weekday: parsed ? parsed.toLocaleDateString('en-IN', { weekday: 'short' }) : '',
+        day: parsed ? String(parsed.getDate()) : dateLabel,
+        month: parsed ? parsed.toLocaleDateString('en-IN', { month: 'short' }) : '',
+        heading: visitDayHeading(dateLabel, now),
+        isToday: dateLabel === todayLabel,
+        count: dayVisits.length,
+        sortKey: parsed ? parsed.getTime() : Number.MAX_SAFE_INTEGER,
+      }
+    })
+    .sort((left, right) => left.sortKey - right.sortKey)
 }

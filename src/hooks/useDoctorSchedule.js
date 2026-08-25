@@ -6,6 +6,8 @@ import {
   doctorVisitDialogCopy,
   doctorVisitMenuOptions,
 } from '../data/generators/doctorActionsGenerator'
+import { generateDoctorVisitActionNotice } from '../data/generators/doctorVisitActionNoticeGenerator'
+import { generatePatientVisitResponseNotice } from '../data/generators/patientVisitResponseNoticeGenerator'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
   cancelAppointment,
@@ -19,6 +21,10 @@ import {
   selectDoctorNextVisit,
   selectDoctorVisits,
 } from '../store/slices/doctorScheduleSlice'
+import {
+  addNotification,
+  setNotificationWorkspace,
+} from '../store/slices/notificationsSlice'
 
 export function useDoctorSchedule() {
   const dispatch = useAppDispatch()
@@ -39,6 +45,19 @@ export function useDoctorSchedule() {
     if (type === 'complete') dispatch(completeDoctorVisit(visit.id))
   }
 
+  function notifyDoctorAction(type, visit) {
+    const doctorNotice = generateDoctorVisitActionNotice(type, visit)
+    if (doctorNotice) {
+      dispatch(setNotificationWorkspace('doctor'))
+      dispatch(addNotification({ ...doctorNotice, _workspace: 'doctor' }))
+    }
+
+    const patientNotice = generatePatientVisitResponseNotice(type, visit)
+    if (patientNotice) {
+      dispatch(addNotification(patientNotice))
+    }
+  }
+
   function openMenu(visit, event) {
     const options = doctorVisitMenuOptions(visit)
     if (!options.length) return
@@ -55,7 +74,9 @@ export function useDoctorSchedule() {
 
   function submitDialog() {
     if (!dialog?.visit) return
-    applyStatus(dialog.visit, dialog.type)
+    const { visit, type } = dialog
+    applyStatus(visit, type)
+    notifyDoctorAction(type, visit)
     setDialog(null)
   }
 

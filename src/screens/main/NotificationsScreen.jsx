@@ -19,7 +19,7 @@ export default function NotificationsScreen() {
   } = useNotifications()
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
+    <div className="w-full min-h-full bg-transparent">
       <div className="w-full max-w-[960px] mx-auto page-pad py-5 sm:py-6 flex flex-col gap-4">
         <NotificationHeader
           unreadCount={unreadCount}

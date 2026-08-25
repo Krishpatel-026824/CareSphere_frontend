@@ -10,6 +10,7 @@ import LabTestsFooter from '../../components/lab/LabTestsFooter'
 import { useLabTestsBooking } from '../../hooks/useLabTestsBooking'
 import { useAppDispatch } from '../../store/hooks'
 import { addLabReportFromBooking } from '../../store/slices/healthSlice'
+import { addLabBooking } from '../../store/slices/labSlice'
 
 export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateBookings, onLabBooked }) {
   const dispatch = useAppDispatch()
@@ -46,9 +47,7 @@ export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateB
   }, [booking.reports])
 
   function handleBookSubmit(data) {
-    const existing = JSON.parse(localStorage.getItem('labBookings') || '[]')
-    const updated = [data, ...existing]
-    localStorage.setItem('labBookings', JSON.stringify(updated))
+    dispatch(addLabBooking(data))
     dispatch(addLabReportFromBooking(data))
     onLabBooked?.(data)
     onNavigateBookings?.()
@@ -58,11 +57,12 @@ export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateB
     <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full page-pad py-5 sm:py-6 lg:py-7 flex flex-col gap-5">
         <header>
+          {onBack ? <BackHomeButton onClick={onBack} label="Back to lab bookings" /> : null}
           <ServicePageHeading
             icon={FlaskConical}
             tone="bg-amber-100 text-amber-600"
-            title="Lab tests"
-            subtitle="Book home sample collection or visit a partner lab"
+            title="Book new lab test"
+            subtitle="Choose a test, then confirm date and collection details"
           />
         </header>
 
@@ -184,6 +184,7 @@ export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateB
         open={Boolean(bookingTest)}
         onClose={() => setBookingTest(null)}
         test={bookingTest}
+        tests={booking.tests}
         onSubmit={handleBookSubmit}
       />
     </div>

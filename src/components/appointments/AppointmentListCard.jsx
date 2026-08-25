@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { CalendarDays, ChevronRight, Clock } from 'lucide-react'
-import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { getPatientAppointmentStatusLabel, getPatientAppointmentStatusStyle } from '../../data/mocks/appointmentActions'
 
 export default function AppointmentListCard({ appointment, selected, onSelect, onOpenMenu }) {
   const holdTimer = useRef(null)
@@ -52,10 +52,10 @@ export default function AppointmentListCard({ appointment, selected, onSelect, o
           <h2 className="text-[13px] font-bold text-navy truncate">{appointment.doctorName}</h2>
           <span
             className={`text-[9px] font-semibold px-1.5 py-px rounded-full shrink-0 ${
-              appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+              getPatientAppointmentStatusStyle(appointment.status)
             }`}
           >
-            {appointment.status}
+            {getPatientAppointmentStatusLabel(appointment.status)}
           </span>
         </div>
         <p className="text-[11px] text-body-gray truncate leading-tight mt-0.5">

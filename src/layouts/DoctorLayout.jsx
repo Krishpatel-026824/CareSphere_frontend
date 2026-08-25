@@ -5,6 +5,7 @@ import { doctorBottomNavTabs, doctorMainNavTabs, doctorProfileNavTab, doctorSide
 import { doctorProfileDetailsMock } from '../data/mocks/doctorProfile'
 import { DOCTOR_PATHS, DOCTOR_TAB_PATHS, PATHS } from '../routes/paths'
 import { useAppSelector } from '../store/hooks'
+import { getDoctorPageSurface } from '../utils/doctorPageSurface'
 import { DOCTOR_AVATAR_KEY, readStoredAvatar } from '../utils/profileAvatarStorage'
 
 function getActiveTab(pathname) {
@@ -49,6 +50,7 @@ export default function DoctorLayout() {
       profileTab={doctorProfileNavTab}
       quickActions={doctorSidebarQuickActions}
       onQuickAction={handleQuickAction}
+      pageSurface={getDoctorPageSurface(location.pathname)}
       sidebarUser={{
         name: user.name,
         role: user.role,

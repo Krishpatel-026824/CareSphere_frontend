@@ -19,8 +19,10 @@ export default function AuthInput({
       <label htmlFor={id} className="block mb-1.5 text-[13px] font-medium text-navy">
         {label}
       </label>
-      <div className="flex items-center gap-3 min-h-[50px] px-3.5 rounded-xl border border-[#E5E7EB] bg-white focus-within:border-teal transition-colors">
-        {Icon ? <Icon className="w-[18px] h-[18px] shrink-0 text-body-gray" strokeWidth={1.75} /> : null}
+      <div className="flex items-center gap-3 min-h-[50px] px-3.5 rounded-xl border border-[#D0D9E3] bg-[#F7FAFC] focus-within:border-teal focus-within:bg-white focus-within:ring-2 focus-within:ring-teal/15 transition-all">
+        {Icon ? (
+          <Icon className="w-[18px] h-[18px] shrink-0 text-teal" strokeWidth={1.85} />
+        ) : null}
         <input
           id={id}
           type={isPassword && showPassword ? 'text' : type}

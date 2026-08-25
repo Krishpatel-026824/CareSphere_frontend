@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { useAppStore } from '../../store/useAppStore'
 import HealthRecordsScreen from '../../screens/main/HealthRecordsScreen'
 import LabTestsScreen from '../../screens/main/LabTestsScreen'
@@ -12,20 +12,24 @@ export function PharmacyPage() {
 }
 
 export function LabTestsPage() {
+  return <LabBookingsScreen />
+}
+
+export function LabBookNewPage() {
   const navigate = useNavigate()
   const { notifyLabBooking } = useAppStore()
+
   return (
     <LabTestsScreen
-      onBack={() => navigate(PATHS.home)}
-      onNavigateBookings={() => navigate(PATHS.labBookings)}
+      onBack={() => navigate(PATHS.labTests)}
+      onNavigateBookings={() => navigate(PATHS.labTests)}
       onLabBooked={notifyLabBooking}
     />
   )
 }
 
 export function LabBookingsPage() {
-  const navigate = useNavigate()
-  return <LabBookingsScreen onBack={() => navigate(PATHS.labTests)} />
+  return <Navigate to={PATHS.labTests} replace />
 }
 
 export function HealthRecordsPage() {

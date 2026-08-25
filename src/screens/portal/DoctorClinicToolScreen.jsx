@@ -33,7 +33,7 @@ export default function DoctorClinicToolScreen({
   }, [selected?.id, filterId])
 
   return (
-    <div className="w-full h-full min-h-full bg-bg-gray flex flex-col">
+    <div className="w-full h-full min-h-full bg-transparent flex flex-col">
       <div className="w-full flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4 max-w-[1440px] mx-auto">
         <QuickActionHeader title={title} subtitle={subtitle} onBack={onBack} />
 

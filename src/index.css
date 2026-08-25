@@ -46,6 +46,55 @@
   overflow: hidden;
 }
 
+/* Per-route page atmospheres (content area only) */
+.page-surface {
+  background-color: #e8eef4;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.page-surface--home {
+  background-image:
+    radial-gradient(ellipse 85% 55% at 0% -10%, rgba(14, 165, 160, 0.18), transparent 58%),
+    radial-gradient(ellipse 55% 40% at 100% 0%, rgba(7, 26, 47, 0.07), transparent 52%),
+    linear-gradient(180deg, #e3f1f0 0%, #e8eef4 45%, #e8eef4 100%);
+}
+
+.page-surface--schedule {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 100% -5%, rgba(14, 165, 160, 0.16), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 0% 100%, rgba(56, 120, 180, 0.1), transparent 50%),
+    linear-gradient(180deg, #e2edf5 0%, #e8eef4 42%, #e8eef4 100%);
+}
+
+.page-surface--patients {
+  background-image:
+    radial-gradient(ellipse 75% 50% at 0% 0%, rgba(70, 110, 170, 0.14), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 100% 100%, rgba(14, 165, 160, 0.12), transparent 50%),
+    linear-gradient(180deg, #e4eaf4 0%, #e8eef4 42%, #e8eef4 100%);
+}
+
+.page-surface--messages {
+  background-image:
+    radial-gradient(ellipse 70% 50% at 50% -10%, rgba(14, 165, 160, 0.14), transparent 55%),
+    radial-gradient(ellipse 45% 35% at 100% 100%, rgba(7, 26, 47, 0.06), transparent 50%),
+    linear-gradient(180deg, #e3eff2 0%, #e8eef4 40%, #e8eef4 100%);
+}
+
+.page-surface--profile {
+  background-image:
+    radial-gradient(ellipse 65% 45% at 100% 0%, rgba(7, 26, 47, 0.1), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 0% 100%, rgba(14, 165, 160, 0.12), transparent 50%),
+    linear-gradient(180deg, #e5e9ef 0%, #e8eef4 42%, #e8eef4 100%);
+}
+
+.page-surface--tools {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 0% 0%, rgba(13, 148, 136, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 35% at 100% 80%, rgba(56, 120, 180, 0.08), transparent 50%),
+    linear-gradient(180deg, #e2f2ee 0%, #e8eef4 42%, #e8eef4 100%);
+}
+
 .safe-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
@@ -61,6 +110,13 @@
 }
 
 @media (min-width: 640px) {
+  .page-pad {
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+@media (min-width: 768px) {
   .page-pad {
     padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
     padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
@@ -170,12 +226,55 @@
   }
 }
 
+@keyframes authBgDrift {
+  0%,
+  100% {
+    transform: scale(1.04) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.08) translate3d(-1.2%, 0.8%, 0);
+  }
+}
+
+@keyframes brandPulse {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px rgba(14, 165, 160, 0.28);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 12px 28px rgba(14, 165, 160, 0.4);
+    transform: scale(1.04);
+  }
+}
+
 .animate-fade-slide {
   animation: fadeSlide 0.5s ease;
 }
 
 .animate-float-soft {
   animation: floatSoft 3.2s ease-in-out infinite;
+}
+
+@keyframes authCaptionIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes authLightSweep {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
 }
 
 .animate-login-rise {
@@ -192,6 +291,63 @@
 
 .animate-login-rise-delay-3 {
   animation: loginRise 0.65s ease 0.24s both;
+}
+
+.animate-login-rise-delay-4 {
+  animation: loginRise 0.65s ease 0.32s both;
+}
+
+.animate-auth-bg-drift {
+  animation: authBgDrift 18s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-auth-caption {
+  animation: authCaptionIn 0.9s ease 0.25s both;
+}
+
+.animate-auth-caption-delay {
+  animation: authCaptionIn 0.9s ease 0.45s both;
+}
+
+.animate-auth-light-sweep {
+  animation: authLightSweep 8s ease-in-out infinite;
+}
+
+/* Auth screens: never show a scrollbar at any resolution */
+.auth-no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.auth-no-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.animate-brand-pulse {
+  animation: brandPulse 3.6s ease-in-out infinite;
+}
+
+.animate-brand-pulse-wrap span:nth-child(2) {
+  animation: brandPulse 3.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-soft,
+  .animate-auth-bg-drift,
+  .animate-auth-caption,
+  .animate-auth-caption-delay,
+  .animate-auth-light-sweep,
+  .animate-brand-pulse,
+  .animate-login-rise,
+  .animate-login-rise-delay-1,
+  .animate-login-rise-delay-2,
+  .animate-login-rise-delay-3,
+  .animate-login-rise-delay-4 {
+    animation: none;
+  }
 }
 
 .chat-panel {

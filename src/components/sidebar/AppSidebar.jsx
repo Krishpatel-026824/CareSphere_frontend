@@ -1,4 +1,4 @@
-import { Heart } from 'lucide-react'
+import CareSphereLogo from '../brand/CareSphereLogo'
 import { mainNavTabs, profileNavTab as defaultProfileTab } from '../../data/mocks/sidebarNav'
 import { useAppSelector } from '../../store/hooks'
 import { selectProfileDetails } from '../../store/slices/profileSlice'
@@ -22,17 +22,9 @@ export default function AppSidebar({
   const user = sidebarUser || profile
 
   return (
-    <aside className="hidden lg:flex w-[252px] shrink-0 flex-col h-full bg-[#1E2124]">
+    <aside className="hidden lg:flex w-[220px] xl:w-[252px] shrink-0 flex-col h-full bg-[#1E2124]">
       <div className="p-4 shrink-0">
-        <div className="flex flex-col items-center text-center">
-          <div className="relative flex items-center justify-center">
-            <span className="absolute w-14 h-14 rounded-full bg-teal/20 blur-lg" aria-hidden="true" />
-            <Heart className="relative w-8 h-8 text-teal fill-teal" strokeWidth={1.5} />
-          </div>
-          <p className="mt-3 font-display text-[22px] font-bold text-white leading-none tracking-tight">
-            CareSphere
-          </p>
-        </div>
+        <CareSphereLogo variant="dark" size="md" />
       </div>
 
       <nav className="p-3 flex flex-col gap-1 overflow-y-auto">

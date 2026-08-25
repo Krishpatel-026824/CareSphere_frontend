@@ -30,6 +30,18 @@ export const notificationTypeThemes = {
     chip: 'bg-[#D1FAE5] text-[#065F46]',
     badge: 'Confirmed',
   },
+  completed: {
+    label: 'Completed',
+    icon: CheckCircle2,
+    listBg: 'bg-teal-50',
+    listIcon: 'text-teal',
+    gradient: 'from-[#0D9488] via-[#0EA5A0] to-[#0F766E]',
+    panel: 'from-[#F0FDFA] to-white',
+    border: 'border-teal/30',
+    shadow: 'shadow-[0_12px_28px_rgba(14,165,160,0.14)]',
+    chip: 'bg-[#CCFBF1] text-[#115E59]',
+    badge: 'Done',
+  },
   medicine: {
     label: 'Medicine',
     icon: Pill,

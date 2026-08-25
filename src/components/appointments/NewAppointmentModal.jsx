@@ -198,7 +198,7 @@ export default function NewAppointmentModal({
           onClick={onSave}
           className="h-11 px-6 rounded-xl bg-[#0EA5A0] text-white text-sm font-semibold cursor-pointer hover:bg-[#0D9490] transition-colors shadow-sm"
         >
-          Save
+          Book
         </button>
       </div>
     </Dialog>

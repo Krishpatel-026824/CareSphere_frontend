@@ -15,7 +15,7 @@ import AppointmentRecycleBinModal from '../../components/appointments/Appointmen
 import DoctorProfileModal from '../../components/appointments/DoctorProfileModal'
 import NewAppointmentModal from '../../components/appointments/NewAppointmentModal'
 import EditAppointmentModal from '../../components/home/EditAppointmentModal'
-import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { getPatientAppointmentStatusLabel, getPatientAppointmentStatusStyle } from '../../data/mocks/appointmentActions'
 import { countUpcomingAppointments, parseAppointmentDate, sortAppointmentsForList } from '../../utils/appointmentFormat'
 
 export default function AppointmentsScreen({
@@ -262,10 +262,10 @@ export default function AppointmentsScreen({
                       <div className="flex items-center gap-1.5">
                         <span
                           className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
-                            appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+                            getPatientAppointmentStatusStyle(appointment.status)
                           }`}
                         >
-                          {appointment.status}
+                          {getPatientAppointmentStatusLabel(appointment.status)}
                         </span>
                         <button
                           type="button"

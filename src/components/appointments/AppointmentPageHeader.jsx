@@ -9,6 +9,8 @@ export default function AppointmentPageHeader({
   title = 'Appointments',
   subtitle,
   newLabel = 'New appointment',
+  icon: Icon = CalendarCheck,
+  iconTone = 'bg-teal text-white',
 }) {
   const resolvedSubtitle =
     subtitle ??
@@ -17,8 +19,8 @@ export default function AppointmentPageHeader({
   return (
     <header className="shrink-0 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3 min-w-0">
-        <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-teal text-white flex items-center justify-center shrink-0">
-          <CalendarCheck className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />
+        <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${iconTone} flex items-center justify-center shrink-0`}>
+          <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />
         </div>
         <div className={`min-w-0 ${resolvedSubtitle ? '' : 'flex items-center min-h-11 sm:min-h-12'}`}>
           <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-navy tracking-tight leading-none">

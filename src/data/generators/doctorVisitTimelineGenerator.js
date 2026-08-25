@@ -6,7 +6,9 @@ export function generateDoctorVisitTimeline(visit, tasks = []) {
   const isCancelled = status === 'Cancelled'
   const isConfirmed = status === 'Confirmed' || isCompleted
   const isUpcoming = status === 'Upcoming'
-  const allTasksDone = tasks.length > 0 && tasks.every((task) => task.done)
+  const hasTasks = tasks.length > 0
+  const doneCount = tasks.filter((task) => task.done).length
+  const allTasksDone = hasTasks && doneCount === tasks.length
 
   if (isCancelled) {
     return [
@@ -17,31 +19,43 @@ export function generateDoctorVisitTimeline(visit, tasks = []) {
     ]
   }
 
-  const checkInDone = isCompleted || (isConfirmed && allTasksDone)
-  const checkInCurrent = isConfirmed && !isCompleted && !allTasksDone
-  const completeCurrent = isConfirmed && allTasksDone && !isCompleted
+  // Booked → Confirmed → Check-in (via checklist) → Completed
+  let confirmedState = 'upcoming'
+  let checkInState = 'upcoming'
+  let doneState = 'upcoming'
+
+  if (isUpcoming) {
+    confirmedState = 'current'
+  } else if (isConfirmed) {
+    confirmedState = 'done'
+
+    if (isCompleted) {
+      checkInState = 'done'
+      doneState = 'done'
+    } else if (!hasTasks || allTasksDone) {
+      // Checklist finished (or no checklist) → check-in done, ready to complete
+      checkInState = 'done'
+      doneState = 'current'
+    } else {
+      // Still ticking checklist items
+      checkInState = 'current'
+      doneState = 'upcoming'
+    }
+  }
 
   return [
     { id: 'booked', label: 'Booked', state: 'done' },
-    {
-      id: 'confirmed',
-      label: 'Confirmed',
-      state: isUpcoming ? 'current' : 'done',
-    },
+    { id: 'confirmed', label: 'Confirmed', state: confirmedState },
     {
       id: 'checkin',
-      label: isCompleted ? 'Checked in' : 'Check-in',
-      state: checkInDone ? 'done' : checkInCurrent ? 'current' : 'upcoming',
+      label: checkInState === 'done' ? 'Checked in' : 'Check-in',
+      state: checkInState,
     },
-    {
-      id: 'done',
-      label: 'Completed',
-      state: isCompleted ? 'done' : completeCurrent ? 'current' : 'upcoming',
-    },
+    { id: 'done', label: 'Completed', state: doneState },
   ]
 }
 
-export function getDoctorVisitTimelineHint(steps = []) {
+export function getDoctorVisitTimelineHint(steps = [], tasks = []) {
   const current = steps.find((step) => step.state === 'current')
   if (!current) {
     return steps.every((step) => step.state === 'done')
@@ -50,7 +64,12 @@ export function getDoctorVisitTimelineHint(steps = []) {
   }
 
   if (current.id === 'confirmed') return 'Accept the visit to confirm the appointment'
-  if (current.id === 'checkin') return 'Finish the visit checklist to mark check-in'
-  if (current.id === 'done') return 'All prep done — mark visit completed when finished'
+  if (current.id === 'checkin') {
+    const total = tasks.length
+    const done = tasks.filter((task) => task.done).length
+    if (total > 0) return `Tick checklist items to finish check-in (${done}/${total})`
+    return 'Finish the visit checklist to mark check-in'
+  }
+  if (current.id === 'done') return 'Check-in done — tap Mark completed to finish'
   return ''
 }

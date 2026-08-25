@@ -40,6 +40,7 @@ import ProfilePage from './pages/ProfilePage'
 import {
   HealthRecordsPage,
   LabTestsPage,
+  LabBookNewPage,
   LabBookingsPage,
   PharmacyPage,
 } from './pages/ServicePages'
@@ -138,6 +139,7 @@ export default function AppRoutes() {
         <Route path={PATHS.telemedicine} element={<Navigate to={PATHS.home} replace />} />
         <Route path={PATHS.pharmacy} element={<PharmacyPage />} />
         <Route path={PATHS.labTests} element={<LabTestsPage />} />
+        <Route path={PATHS.labBookNew} element={<LabBookNewPage />} />
         <Route path={PATHS.labBookings} element={<LabBookingsPage />} />
         <Route path={PATHS.healthRecords} element={<HealthRecordsPage />} />
         <Route path={PATHS.doctors} element={<DoctorCategoriesPage />} />

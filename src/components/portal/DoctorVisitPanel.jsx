@@ -14,6 +14,7 @@ export default function DoctorVisitPanel({
   hideIdentity = false,
   fillHeight = false,
   className = '',
+  readOnly = false,
   canAccept,
   canDecline,
   canComplete,
@@ -41,11 +42,14 @@ export default function DoctorVisitPanel({
       } ${className}`}
     >
       <DoctorVisitHero visit={visit} detail={detail} hideIdentity={hideIdentity} onBack={onBack} />
-      <DoctorVisitTimeline steps={generateDoctorVisitTimeline(visit, tasks)} />
+      <DoctorVisitTimeline steps={generateDoctorVisitTimeline(visit, tasks)} tasks={tasks} />
       <DoctorVisitMeta items={details} />
 
       <div className={`flex flex-col gap-4 min-h-0 min-w-0 ${fillHeight ? 'flex-1 overflow-y-auto scroll-y pr-0.5' : ''}`}>
-        <DoctorVisitChecklist tasks={tasks} onToggleTask={toggleTask} />
+        <DoctorVisitChecklist
+          tasks={tasks}
+          onToggleTask={readOnly ? undefined : toggleTask}
+        />
         <DoctorVisitPatientSnapshot patientMeta={detail.patientMeta} detail={detail} />
 
         {visit.fullAddress || visit.landmark ? (
@@ -61,17 +65,27 @@ export default function DoctorVisitPanel({
         ) : null}
       </div>
 
-      <DoctorVisitActions
-        visit={visit}
-        canAccept={canAccept}
-        canDecline={canDecline}
-        canComplete={canComplete}
-        showMessage={showMessage}
-        onAccept={onAccept}
-        onDecline={onDecline}
-        onComplete={onComplete}
-        onMessage={onMessage}
-      />
+      {readOnly ? (
+        showMessage ? (
+          <DoctorVisitActions
+            visit={visit}
+            showMessage
+            onMessage={onMessage}
+          />
+        ) : null
+      ) : (
+        <DoctorVisitActions
+          visit={visit}
+          canAccept={canAccept}
+          canDecline={canDecline}
+          canComplete={canComplete}
+          showMessage={showMessage}
+          onAccept={onAccept}
+          onDecline={onDecline}
+          onComplete={onComplete}
+          onMessage={onMessage}
+        />
+      )}
     </section>
   )
 }

@@ -1,22 +1,25 @@
+import { History } from 'lucide-react'
 import DoctorPatientVisitCard from './DoctorPatientVisitCard'
 
-function VisitGroup({ title, visits, selectedId, onSelect, onOpenMenu }) {
+function VisitGroup({ title, visits, displayOnly, selectedId, onSelect }) {
   if (!visits.length) return null
 
   return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-[11px] font-semibold uppercase tracking-wide text-body-gray px-1">
+    <div className="flex flex-col gap-2.5">
+      <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-body-gray/80 px-0.5">
         {title}
       </h3>
-      {visits.map((visit) => (
-        <DoctorPatientVisitCard
-          key={visit.id}
-          visit={visit}
-          selected={selectedId === visit.id}
-          onSelect={onSelect}
-          onOpenMenu={onOpenMenu}
-        />
-      ))}
+      <div className="flex flex-col gap-2">
+        {visits.map((visit) => (
+          <DoctorPatientVisitCard
+            key={visit.id}
+            visit={visit}
+            displayOnly={displayOnly}
+            selected={!displayOnly && selectedId === visit.id}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
     </div>
   )
 }
@@ -26,38 +29,59 @@ export default function DoctorPatientVisitList({
   history = [],
   selectedId,
   onSelect,
-  onOpenMenu,
+  displayOnly = false,
+  fill = false,
 }) {
   const empty = upcoming.length === 0 && history.length === 0
+  const total = upcoming.length + history.length
 
   return (
-    <section className="w-full xl:w-[340px] 2xl:w-[380px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-3 flex flex-col min-h-0 h-[280px] sm:h-[340px] xl:h-full">
-      <div className="px-1 pb-2 shrink-0 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-bold text-navy">Visit history</h2>
-        <span className="text-[11px] text-body-gray">
+    <section
+      className={`w-full rounded-2xl border border-white bg-white/95 shadow-[0_12px_28px_-20px_rgba(7,26,47,0.28)] p-4 sm:p-5 flex flex-col min-h-0 ${
+        fill || displayOnly
+          ? 'h-full'
+          : 'xl:w-[340px] 2xl:w-[380px] shrink-0 h-[280px] sm:h-[340px] xl:h-full'
+      }`}
+    >
+      <div className="shrink-0 flex items-start justify-between gap-3 mb-3.5">
+        <div className="flex items-start gap-3 min-w-0">
+          <span className="w-10 h-10 rounded-xl bg-[#E8F7F6] text-teal flex items-center justify-center shrink-0">
+            <History className="w-5 h-5" strokeWidth={1.9} />
+          </span>
+          <div className="min-w-0">
+            <h2 className="font-display text-lg sm:text-xl font-bold text-navy tracking-tight">
+              Visit history
+            </h2>
+            <p className="text-[12px] text-body-gray mt-1">
+              {total} total · clinic timeline
+            </p>
+          </div>
+        </div>
+        <span className="text-[11px] font-semibold text-body-gray bg-[#F7FAFC] border border-[#EAF0F5] px-2.5 py-1 rounded-full shrink-0">
           {upcoming.length} upcoming · {history.length} past
         </span>
       </div>
-      <div className="scroll-y flex-1 min-h-0 pr-2">
+
+      <div className="scroll-y flex-1 min-h-0 pr-1">
         {empty ? (
-          <p className="rounded-xl border border-border-gray bg-[#F3F4F6] p-4 text-sm text-body-gray">
-            No visits on file for this patient yet.
-          </p>
+          <div className="h-full min-h-[160px] rounded-2xl border border-dashed border-[#D0D9E3] bg-[#F7FAFC] flex items-center justify-center p-6">
+            <p className="text-sm text-body-gray text-center">No visits on file for this patient yet.</p>
+          </div>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-5 pb-2">
             <VisitGroup
               title="Upcoming"
               visits={upcoming}
+              displayOnly={displayOnly}
               selectedId={selectedId}
               onSelect={onSelect}
-              onOpenMenu={onOpenMenu}
             />
             <VisitGroup
               title="Past visits"
               visits={history}
+              displayOnly={displayOnly}
               selectedId={selectedId}
               onSelect={onSelect}
-              onOpenMenu={onOpenMenu}
             />
           </div>
         )}

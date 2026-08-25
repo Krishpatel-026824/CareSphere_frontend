@@ -17,7 +17,7 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient, o
   const panelTitle = allWorkDone ? 'Patients' : 'Clinic queue'
 
   return (
-    <div className="w-full h-full min-h-full bg-bg-gray flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-full bg-transparent flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
         <AppointmentPageHeader title="Patients" />
 
@@ -36,7 +36,7 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient, o
               </div>
 
               <div className="flex-1 min-h-0 overflow-y-auto scroll-y px-4 sm:px-5 py-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                   {patients.map((patient) => (
                     <DoctorPatientCard
                       key={patient.id}

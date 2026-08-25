@@ -54,8 +54,8 @@ export function useAppStore() {
     dispatch(addNotificationAction({
       id: `notif-appt-${Date.now()}`,
       type: 'appointment',
-      title: 'Appointment Booked',
-      message: `Your appointment with ${doctorName} is confirmed for ${date} at ${time}. Please arrive 10 minutes early.`,
+      title: 'Appointment requested',
+      message: `Your request with ${doctorName} for ${date} at ${time} was sent. Status: Requested — waiting for the doctor to accept.`,
       timeLabel: 'Just now',
       unread: true,
     }))
@@ -70,7 +70,7 @@ export function useAppStore() {
         message: {
           id: `msg-appt-${booking.doctor.id}-${Date.now()}`,
           from: 'them',
-          text: `Hello ${patientName}, your appointment with me on ${date} at ${time} has been confirmed. Please arrive 10 minutes early and bring any recent reports. Looking forward to seeing you! 😊`,
+          text: `Hello ${patientName}, I received your appointment request for ${date} at ${time}. I will review it shortly — you will see Accepted or Rejected once I respond.`,
           time: timeLabel,
         },
       }))

@@ -20,7 +20,7 @@ export default function ProfileScreen({
   onAvatarChange,
 }) {
   return (
-    <div className="w-full min-h-full bg-bg-gray">
+    <div className="w-full min-h-full bg-transparent">
       <div className="w-full min-h-full page-pad py-4 sm:py-5 lg:py-6 flex flex-col gap-4 sm:gap-5 max-w-[1440px] mx-auto">
         <ProfileHeader onEdit={onStartEdit} isEditing={isEditing} />
 

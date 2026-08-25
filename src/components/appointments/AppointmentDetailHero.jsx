@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { CalendarDays, Clock, DoorOpen, MapPin, Phone, X } from 'lucide-react'
-import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { getPatientAppointmentStatusLabel, getPatientAppointmentStatusStyle } from '../../data/mocks/appointmentActions'
 
 function doctorInitials(name = '') {
   return name
@@ -42,8 +42,8 @@ export default function AppointmentDetailHero({ appointment }) {
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-base sm:text-lg font-bold text-navy leading-tight">{appointment.doctorName}</h3>
             {appointment.status ? (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming}`}>
-                {appointment.status}
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${getPatientAppointmentStatusStyle(appointment.status)}`}>
+                {getPatientAppointmentStatusLabel(appointment.status)}
               </span>
             ) : null}
           </div>

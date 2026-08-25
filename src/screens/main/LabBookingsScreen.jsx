@@ -1,35 +1,40 @@
 import { useState } from 'react'
-import { FlaskConical } from 'lucide-react'
-import BackHomeButton from '../../components/BackHomeButton'
-import ServicePageHeading from '../../components/ServicePageHeading'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { useAppStore } from '../../store/useAppStore'
+import LabBookingFormModal from '../../components/lab/LabBookingFormModal'
 import LabMyBookings from '../../components/lab/LabMyBookings'
+import { addLabReportFromBooking } from '../../store/slices/healthSlice'
+import { addLabBooking, removeLabBooking, selectLabBookings } from '../../store/slices/labSlice'
 
-export default function LabBookingsScreen({ onBack }) {
-  const [bookings] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('labBookings') || '[]') } catch { return [] }
-  })
+export default function LabBookingsScreen() {
+  const dispatch = useAppDispatch()
+  const { notifyLabBooking } = useAppStore()
+  const bookings = useAppSelector(selectLabBookings) ?? []
+  const tests = useAppSelector((state) => state.lab.tests) ?? []
+  const [showBookingForm, setShowBookingForm] = useState(false)
+
+  function handleBookSubmit(data) {
+    dispatch(addLabBooking(data))
+    dispatch(addLabReportFromBooking(data))
+    notifyLabBooking?.(data)
+    setShowBookingForm(false)
+  }
 
   return (
-    <div className="w-full min-h-full bg-bg-gray">
-      <div className="w-full page-pad py-5 sm:py-6 lg:py-7 flex flex-col gap-5">
-        <header>
-          <BackHomeButton onClick={onBack} />
-          <ServicePageHeading
-            icon={FlaskConical}
-            tone="bg-amber-100 text-amber-600"
-            title="My Lab Bookings"
-            subtitle="All your booked lab tests"
-          />
-        </header>
+    <>
+      <LabMyBookings
+        bookings={bookings}
+        tests={tests}
+        onBookNew={() => setShowBookingForm(true)}
+        onRemove={(id) => dispatch(removeLabBooking(id))}
+      />
 
-        {bookings.length ? (
-          <LabMyBookings bookings={bookings} />
-        ) : (
-          <div className="bg-white rounded-xl border border-border-gray p-8 text-center">
-            <p className="text-[15px] text-gray-500">No bookings yet. Book a lab test to see it here.</p>
-          </div>
-        )}
-      </div>
-    </div>
+      <LabBookingFormModal
+        open={showBookingForm}
+        onClose={() => setShowBookingForm(false)}
+        tests={tests}
+        onSubmit={handleBookSubmit}
+      />
+    </>
   )
 }

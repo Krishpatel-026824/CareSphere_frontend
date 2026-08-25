@@ -80,7 +80,7 @@ export const healthRecordsTipsMock = [
 
 export const healthRecordsGuideMock = {
   title: 'Your records, simplified',
-  subtitle: 'Three colorful shortcuts to keep every report ready, shareable, and automatically up to date.',
+  subtitle: 'Three simple steps to keep every report ready, shareable, and automatically up to date.',
 }
 
 export const healthRecordsFooterMock = {

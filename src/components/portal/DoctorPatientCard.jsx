@@ -9,8 +9,7 @@ const patientStatusStyles = {
 
 export default function DoctorPatientCard({ patient, onSelect, onMessage }) {
   const next = patient.nextVisit
-  const isCompleted = next?.status === 'Completed'
-  const showMessage = Boolean(onMessage) && !isCompleted
+  const showMessage = Boolean(onMessage)
 
   return (
     <div className="group w-full min-w-0 rounded-2xl border border-[#E6EBF1] bg-[#FAFBFC] hover:bg-white hover:border-teal/30 hover:shadow-sm px-4 py-3.5 flex items-center gap-3.5 transition-colors">
@@ -75,7 +74,8 @@ export default function DoctorPatientCard({ patient, onSelect, onMessage }) {
           type="button"
           onClick={() => onSelect?.(patient)}
           className="w-8 h-8 rounded-full bg-[#F1F5F9] text-body-gray group-hover:text-teal flex items-center justify-center cursor-pointer"
-          aria-label={`Open ${patient.name}`}
+          aria-label={`View info for ${patient.name}`}
+          title="Patient info"
         >
           <ChevronRight className="w-4 h-4" strokeWidth={1.9} />
         </button>

@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import { FileText, FlaskConical, LayoutGrid, Search } from 'lucide-react'
+import { Eye, FileText, FlaskConical, LayoutGrid, Search } from 'lucide-react'
 import {
   filterHealthRecords,
   filterHealthRecordsByKind,
   isLabHealthRecord,
 } from '../../data/generators/healthRecordsGenerator'
 import { healthRecordRowActionsMock } from '../../data/mocks/healthRecords'
-import HealthRecordCard from './HealthRecordCard'
 import HealthRecordRowActions from './HealthRecordRowActions'
 import { healthRecordFilterStyles } from './healthIcons'
 
@@ -42,60 +41,52 @@ export default function HealthRecordsList({
   }
 
   return (
-    <section className="rounded-[24px] border border-teal/20 bg-white/80 shadow-[0_16px_40px_rgba(14,165,160,0.12)] overflow-hidden flex flex-col min-h-0 max-h-[min(48rem,calc(100dvh-10rem))]">
-      <div className="shrink-0 px-4 sm:px-5 xl:px-6 pt-4 pb-4 bg-gradient-to-r from-[#D8F4F1] via-[#E0F2FE] to-[#EDE9FE] border-b border-white/60">
-        <div className="rounded-full bg-white border border-teal/20 shadow-sm px-4 h-11 flex items-center gap-2.5">
-          <Search className="w-4 h-4 text-teal shrink-0" strokeWidth={1.75} />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search records"
-            className="w-full text-sm text-navy outline-none bg-transparent placeholder:text-body-gray"
-          />
-        </div>
+    <section className="rounded-2xl border border-[#E6EBF1] bg-white shadow-sm overflow-hidden flex flex-col min-h-0 max-h-[min(48rem,calc(100dvh-10rem))]">
+      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-[#F8FAFC]">
+        <div className="flex flex-col md:flex-row md:items-center gap-3">
+          <div className="flex-1 min-w-0 rounded-xl bg-white border border-[#E6EBF1] px-3.5 h-11 flex items-center gap-2.5">
+            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.75} />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search records"
+              className="w-full text-sm text-navy outline-none bg-transparent placeholder:text-body-gray"
+            />
+          </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 px-1 pt-3">
-          <p className="text-[12px] font-semibold text-navy/70">
-            {filtered.length} of {scoped.length} records
-            {activeFilter === 'all' && labCount > 0 ? ` • ${labCount} lab reports saved` : ''}
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2 pt-3">
-          {filters.map((filter) => {
-            const isActive = activeFilter === filter.id
-            const chip = healthRecordFilterStyles[filter.id]
-            const Icon = filter.icon
-            return (
-              <button
-                key={filter.id}
-                type="button"
-                onClick={() => setActiveFilter(filter.id)}
-                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[12px] font-semibold cursor-pointer transition-all ${
-                  isActive ? chip.active : chip.idle
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" strokeWidth={2} />
-                {filter.label}
-                <span
-                  className={`min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold tabular-nums flex items-center justify-center ${
-                    isActive ? 'bg-white/25 text-white' : chip.countIdle
+          <div className="flex flex-wrap md:flex-nowrap items-center gap-2 md:justify-end shrink-0">
+            {filters.map((filter) => {
+              const isActive = activeFilter === filter.id
+              const chip = healthRecordFilterStyles[filter.id]
+              const Icon = filter.icon
+              return (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setActiveFilter(filter.id)}
+                  className={`inline-flex items-center gap-1.5 h-11 px-3 rounded-xl text-[12px] font-semibold cursor-pointer transition-all whitespace-nowrap ${
+                    isActive ? chip.active : chip.idle
                   }`}
                 >
-                  {counts[filter.id]}
-                </span>
-              </button>
-            )
-          })}
+                  <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={2} />
+                  {filter.label}
+                  <span
+                    className={`min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-bold tabular-nums flex items-center justify-center ${
+                      isActive ? 'bg-white/25 text-white' : chip.countIdle
+                    }`}
+                  >
+                    {counts[filter.id]}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain bg-gradient-to-b from-[#F0FDFA] to-[#EEF2FF]">
+      <div className="flex-1 min-h-0 overflow-auto">
         {filtered.length === 0 ? (
           <div className="px-5 py-14 text-center">
-            <span className="w-12 h-12 rounded-2xl bg-teal text-white inline-flex items-center justify-center mb-3 shadow-md shadow-teal/30">
-              <FlaskConical className="w-6 h-6" strokeWidth={1.75} />
-            </span>
             <p className="text-sm font-semibold text-navy">
               {records.length === 0
                 ? emptyText
@@ -105,16 +96,72 @@ export default function HealthRecordsList({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 p-4">
-            {filtered.map((record) => (
-              <HealthRecordCard
-                key={record.id}
-                record={record}
-                onSelect={onSelect}
-                onOpenMenu={openMenu}
-              />
-            ))}
-          </div>
+          <table className="w-full min-w-[640px] border-collapse text-left">
+            <thead className="sticky top-0 z-[1] bg-[#CBD5E1]">
+              <tr>
+                <th className="px-3 sm:px-4 py-3 w-14 text-[11px] font-bold uppercase tracking-[0.08em] text-navy border-b-2 border-r border-[#94A3B8] text-center">
+                  No.
+                </th>
+                <th className="px-4 sm:px-5 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy border-b-2 border-r border-[#94A3B8]">
+                  Record
+                </th>
+                <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy w-[110px] border-b-2 border-r border-[#94A3B8]">
+                  Type
+                </th>
+                <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy hidden sm:table-cell border-b-2 border-r border-[#94A3B8]">
+                  Provider
+                </th>
+                <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy w-[120px] border-b-2 border-r border-[#94A3B8]">
+                  Date
+                </th>
+                <th className="px-4 sm:px-5 py-3 w-16 text-[11px] font-bold uppercase tracking-[0.08em] text-navy border-b-2 border-[#94A3B8] text-center">
+                  View
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((record, index) => {
+                const kindLabel = isLabHealthRecord(record) ? 'Lab' : record.type || 'Record'
+                const provider = [record.doctorName, record.specialty].filter(Boolean).join(' · ')
+
+                return (
+                  <tr
+                    key={record.id}
+                    onClick={() => onSelect?.(record)}
+                    onContextMenu={(event) => {
+                      event.preventDefault()
+                      openMenu(record, event)
+                    }}
+                    className="hover:bg-[#F0FDFA] cursor-pointer transition-colors"
+                  >
+                    <td className="px-3 sm:px-4 py-3 border-b border-r border-[#D5DEE8] text-center">
+                      <span className="text-[13px] font-semibold text-navy tabular-nums">{index + 1}</span>
+                    </td>
+                    <td className="px-4 sm:px-5 py-3 border-b border-r border-[#D5DEE8]">
+                      <p className="text-sm font-semibold text-navy leading-snug">{record.title}</p>
+                      <p className="text-[12px] text-body-gray mt-0.5 sm:hidden truncate">{provider}</p>
+                    </td>
+                    <td className="px-3 py-3 border-b border-r border-[#D5DEE8]">
+                      <span className="text-[12px] font-semibold uppercase tracking-wide text-navy">
+                        {kindLabel}
+                      </span>
+                    </td>
+                    <td className="px-3 py-3 hidden sm:table-cell border-b border-r border-[#D5DEE8]">
+                      <p className="text-[13px] text-body-gray truncate max-w-[280px]">{provider}</p>
+                    </td>
+                    <td className="px-3 py-3 border-b border-r border-[#D5DEE8]">
+                      <p className="text-[13px] font-semibold text-navy tabular-nums whitespace-nowrap">
+                        {record.dateLabel}
+                      </p>
+                    </td>
+                    <td className="px-4 sm:px-5 py-3 text-center border-b border-[#D5DEE8]">
+                      <Eye className="w-4 h-4 text-navy/60 inline-block" strokeWidth={2} />
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
         )}
       </div>
 

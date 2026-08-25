@@ -1,5 +1,5 @@
 import { CalendarDays, CalendarPlus, Clock, MapPin, Phone } from 'lucide-react'
-import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { getPatientAppointmentStatusLabel, getPatientAppointmentStatusStyle } from '../../data/mocks/appointmentActions'
 
 export default function UpcomingAppointmentPanel({
   appointment,
@@ -56,10 +56,10 @@ export default function UpcomingAppointmentPanel({
           <h2 className="font-display text-lg font-bold text-navy">Upcoming appointment</h2>
           <span
             className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
-              appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+              getPatientAppointmentStatusStyle(appointment.status)
             }`}
           >
-            {appointment.status}
+            {getPatientAppointmentStatusLabel(appointment.status)}
           </span>
         </div>
 

@@ -19,6 +19,7 @@ export const PATHS = {
   telemedicine: '/telemedicine',
   pharmacy: '/pharmacy',
   labTests: '/lab-tests',
+  labBookNew: '/lab-tests/book',
   labBookings: '/lab-tests/bookings',
   healthRecords: '/health-records',
   doctors: '/doctors',

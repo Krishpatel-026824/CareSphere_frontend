@@ -11,6 +11,7 @@ export default function AppShell({
   sidebarUser,
   quickActions,
   onQuickAction,
+  pageSurface = 'page-surface',
   children,
 }) {
   return (
@@ -27,10 +28,12 @@ export default function AppShell({
       />
 
       <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
-        <main className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain">
+        <main
+          className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain ${pageSurface}`}
+        >
           <div className="min-h-full h-full flex flex-col">{children}</div>
         </main>
-        <div className="lg:hidden shrink-0 mt-auto">
+        <div className="lg:hidden shrink-0 mt-auto safe-bottom">
           <BottomNav
             activeTab={activeTab}
             onChange={onTabChange}
