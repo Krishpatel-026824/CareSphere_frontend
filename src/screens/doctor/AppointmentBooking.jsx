@@ -16,7 +16,7 @@ export default function AppointmentBooking({ doctor, onBack, onContinue, variant
   }, [doctor.id])
 
   return (
-    <div className={`w-full min-h-full ${variant === 'appointments' ? 'bg-[#E8F1F2]' : 'bg-bg-gray'}`}>
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full max-w-3xl mx-auto page-pad py-4 sm:py-6">
         <BackHomeButton onClick={onBack} iconOnly />
 

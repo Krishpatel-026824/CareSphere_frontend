@@ -11,12 +11,12 @@ export default function LabTestCard({ test, quantity = 0, booked = false, onBook
     <article className="relative overflow-hidden bg-white border border-border-gray rounded-[14px] min-h-[132px]">
 
       <div className="relative z-10 min-h-[132px] flex items-center gap-3 px-3.5 py-3 sm:gap-3.5 sm:px-4">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[10px] overflow-hidden shrink-0 bg-teal-light/40 border border-teal/10 flex items-center justify-center">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-[10px] overflow-hidden shrink-0 bg-teal-light/40 border border-teal/10">
           {showThumb ? (
             <img
               src={test.thumbnail}
               alt={test.name}
-              className="w-9 h-9 sm:w-10 sm:h-10 object-contain"
+              className="w-full h-full object-cover"
               loading="lazy"
               onError={() => setThumbError(true)}
             />

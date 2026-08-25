@@ -9,14 +9,16 @@ const prefStyles = {
 
 export default function ProfilePrefsCard({ prefs = [], onToggle }) {
   return (
-    <section className="rounded-[28px] border border-slate-100/80 bg-white p-6 sm:p-7 shadow-sm shadow-slate-200/50">
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-4 sm:p-5 min-w-0">
       <h2 className="text-base font-bold text-navy flex items-center gap-2">
         <SlidersHorizontal className="w-4 h-4 text-teal" strokeWidth={2} />
         Preferences
       </h2>
-      <p className="text-[12px] text-body-gray mt-1.5">Manage how you receive updates and alerts.</p>
+      <p className="text-xs sm:text-[13px] text-body-gray mt-1">
+        Manage how you receive updates and alerts.
+      </p>
 
-      <ul className="mt-5 flex flex-col gap-3">
+      <ul className="mt-4 flex flex-col gap-2.5">
         {prefs.map((item) => {
           const style = prefStyles[item.icon] || prefStyles.bell
           const Icon = style.Icon
@@ -28,14 +30,14 @@ export default function ProfilePrefsCard({ prefs = [], onToggle }) {
                 aria-checked={item.on}
                 aria-label={item.label}
                 onClick={() => onToggle?.(item.id)}
-                className="w-full flex items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 px-3.5 py-3.5 text-left cursor-pointer transition-all hover:border-teal/20"
+                className="w-full flex items-center gap-3 rounded-xl border border-border-gray bg-[#F8FAFC] px-3 py-3 text-left cursor-pointer transition-colors hover:border-teal/30 hover:bg-white"
               >
-                <span className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${style.icon}`}>
+                <span className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${style.icon}`}>
                   <Icon className="w-4 h-4" strokeWidth={1.75} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-semibold text-navy">{item.label}</p>
-                  <p className="text-[12px] text-body-gray mt-0.5">{item.hint}</p>
+                  <p className="text-[11px] sm:text-xs text-body-gray mt-0.5 leading-snug">{item.hint}</p>
                 </div>
                 <span
                   className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${

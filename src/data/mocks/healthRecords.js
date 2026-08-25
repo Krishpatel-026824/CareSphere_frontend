@@ -54,51 +54,39 @@ export const healthRecordsMock = [
 export const healthRecordsTipsMock = [
   {
     id: 'handy',
-    step: '01',
-    title: 'Handy reports',
-    text: 'Keep your reports handy before doctor visits for faster consultations.',
+    step: '1',
+    title: 'Keep reports ready',
+    text: 'Open past labs and visit notes before your appointment so your doctor has full context.',
     icon: 'folder',
-    tipIcon: 'bulb',
-    tip: 'Stay organized and never miss important details.',
-    stepTone: 'bg-emerald-50 text-emerald-700',
-    labelTone: 'text-emerald-700',
-    iconTone: 'bg-emerald-100 text-emerald-600',
-    tipTone: 'bg-emerald-50 text-emerald-800',
-    cardTone: 'bg-emerald-50/50 border-emerald-100',
+    accent: 'emerald',
   },
   {
     id: 'share',
-    step: '02',
-    title: 'Download and share',
-    text: 'Download and share reports securely from CareSphere Health Records.',
+    step: '2',
+    title: 'Download securely',
+    text: 'Save or share a report in one tap — only from your CareSphere Health Records.',
     icon: 'share',
-    tipIcon: 'lock',
-    tip: 'Your data is private and always protected.',
-    stepTone: 'bg-sky-50 text-sky-700',
-    labelTone: 'text-sky-700',
-    iconTone: 'bg-sky-100 text-sky-600',
-    tipTone: 'bg-sky-50 text-sky-800',
-    cardTone: 'bg-sky-50/50 border-sky-100',
+    accent: 'sky',
   },
   {
     id: 'auto',
-    step: '03',
-    title: 'Automatic appearance',
-    text: 'Lab reports booked on CareSphere appear here automatically after payment.',
+    step: '3',
+    title: 'Labs sync for you',
+    text: 'Tests you book and pay for on CareSphere land here automatically when ready.',
     icon: 'refresh',
-    tipIcon: 'clock',
-    tip: 'No extra steps. We keep it updated for you.',
-    stepTone: 'bg-violet-50 text-violet-700',
-    labelTone: 'text-violet-700',
-    iconTone: 'bg-violet-100 text-violet-600',
-    tipTone: 'bg-violet-50 text-violet-800',
-    cardTone: 'bg-violet-50/50 border-violet-100',
+    accent: 'amber',
   },
 ]
 
 export const healthRecordsGuideMock = {
-  title: 'How to use Health records',
-  subtitle: 'Simple steps to manage your reports with ease.',
+  title: 'Your records, simplified',
+  subtitle: 'Three colorful shortcuts to keep every report ready, shareable, and automatically up to date.',
+}
+
+export const healthRecordsFooterMock = {
+  title: 'Private by design',
+  body: 'Reports stay encrypted in CareSphere. Tap to open · Press & hold to manage.',
+  points: ['Encrypted storage', 'Only you can open', 'Hold to manage'],
 }
 
 export const healthRecordsSummaryMetaMock = [
@@ -127,11 +115,6 @@ export const healthRecordsSummaryMetaMock = [
     previous: 2,
   },
 ]
-
-export const healthRecordsFooterMock = {
-  title: 'Your data is safe with us',
-  body: 'Your reports are securely stored in CareSphere. Tap a record to open it. Press and hold to manage it.',
-}
 
 export const healthRecordRowActionsMock = {
   list: [{ id: 'remove', label: 'Remove', danger: true, icon: 'trash' }],

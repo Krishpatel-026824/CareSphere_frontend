@@ -16,7 +16,7 @@ export default function DoctorCategories({ data, onSelectCategory, onSelectDocto
   } = useDoctorDiscovery(data)
 
   return (
-    <div className="w-full min-h-full bg-white">
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full max-w-[1400px] mx-auto page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6 lg:gap-7">
         <DoctorDiscoveryHeader
           location={location}

@@ -15,14 +15,11 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient, o
   )
 
   const panelTitle = allWorkDone ? 'Patients' : 'Clinic queue'
-  const subtitle = allWorkDone
-    ? `${patients.length} patient${patients.length === 1 ? '' : 's'}`
-    : `${patients.length} in your clinic queue`
 
   return (
-    <div className="w-full h-full min-h-full bg-[#F3F4F6] flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-full bg-bg-gray flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
-        <AppointmentPageHeader title="Patients" subtitle={subtitle} />
+        <AppointmentPageHeader title="Patients" />
 
         <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
           {patients.length === 0 ? (

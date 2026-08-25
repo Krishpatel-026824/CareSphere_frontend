@@ -17,9 +17,9 @@ export const doctorNotificationsMock = [
   },
   {
     id: 'dnotif-3',
-    type: 'video',
-    title: 'Video consult coming up',
-    message: 'Rohan Mehta is confirmed for a video follow-up on 20 Aug at 09:00 AM.',
+    type: 'booking',
+    title: 'Follow-up confirmed',
+    message: 'Rohan Mehta is confirmed for an in-clinic follow-up on 20 Aug at 09:00 AM.',
     timeLabel: 'Today',
     unread: true,
   },

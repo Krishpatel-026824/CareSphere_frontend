@@ -16,7 +16,7 @@ export default function TelemedicineScreen({ doctors = [], onBack, onSelectDocto
   } = useTelemedicine(doctors)
 
   return (
-    <div className="w-full min-h-full bg-white">
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6">
         <header className="flex flex-col gap-5">
           <BackHomeButton onClick={onBack} />

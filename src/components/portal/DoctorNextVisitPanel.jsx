@@ -2,34 +2,38 @@ import {
   Building2,
   CalendarDays,
   CircleCheck,
-  ClipboardList,
-  Clock,
+  Clock3,
   DoorOpen,
-  Heart,
   Info,
-  MapPin,
   Phone,
-  Stethoscope,
-  Video,
 } from 'lucide-react'
 import { generateDoctorNextVisitCard } from '../../data/generators/doctorNextVisitGenerator'
+import { generateDoctorVisitTimeline } from '../../data/generators/doctorVisitTimelineGenerator'
+import { useDoctorVisitTasks } from '../../hooks/useDoctorVisitTasks'
+import DoctorVisitChecklist from './DoctorVisitChecklist'
+import DoctorVisitTimeline from './DoctorVisitTimeline'
 
-function IconTile({ children }) {
-  return (
-    <span className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#E7F6F5] text-teal flex items-center justify-center shrink-0">
-      {children}
-    </span>
-  )
-}
+export default function DoctorNextVisitPanel({
+  visit,
+  onOpen,
+  onAccept,
+  fillHeight = false,
+  quickActions = [],
+  onActionClick,
+}) {
+  const { tasks, toggleTask } = useDoctorVisitTasks(visit)
 
-export default function DoctorNextVisitPanel({ visit, onOpen, onAccept }) {
   if (!visit) {
     return (
-      <section className="bg-white rounded-2xl border border-border-gray shadow-[0_8px_24px_rgba(15,23,42,0.06)] p-5 sm:p-6 flex flex-col items-start justify-center gap-3">
-        <IconTile>
-          <CalendarDays className="w-5 h-5" strokeWidth={1.75} />
-        </IconTile>
-        <h2 className="text-lg font-bold text-navy">No upcoming patients</h2>
+      <section
+        className={`relative overflow-hidden rounded-3xl bg-white/85 backdrop-blur-sm border border-white shadow-[0_18px_40px_-28px_rgba(7,26,47,0.35)] p-6 sm:p-8 flex flex-col gap-3 ${
+          fillHeight ? 'h-full' : ''
+        }`}
+      >
+        <span className="w-12 h-12 rounded-2xl bg-teal-light text-teal flex items-center justify-center">
+          <Clock3 className="w-6 h-6" strokeWidth={1.75} />
+        </span>
+        <h2 className="font-display text-2xl font-bold text-navy">No upcoming patients</h2>
         <p className="text-sm text-body-gray max-w-md">
           New bookings from patients will show up in your clinic queue.
         </p>
@@ -39,115 +43,126 @@ export default function DoctorNextVisitPanel({ visit, onOpen, onAccept }) {
 
   const card = generateDoctorNextVisitCard(visit)
   const canAccept = card.status === 'Upcoming'
-  const statusTone =
-    card.status === 'Confirmed'
-      ? 'bg-emerald-50 text-emerald-700'
-      : 'bg-[#E7F6F5] text-teal'
-
-  const details = [
-    { icon: CalendarDays, label: 'Date', value: card.dateLabel, hint: card.weekday },
-    { icon: Clock, label: 'Time', value: card.timeLabel, hint: card.timeZone },
-    { icon: Stethoscope, label: 'Type', value: card.visitType, hint: card.typeHint },
-    { icon: DoorOpen, label: 'Room', value: card.room, hint: card.roomHint },
-  ]
+  const steps = generateDoctorVisitTimeline(visit, tasks)
 
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-[0_8px_24px_rgba(15,23,42,0.06)] p-4 sm:p-5 flex flex-col gap-3 sm:gap-4">
-      <div className="flex items-start justify-between gap-2 sm:gap-3">
-        <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-          <IconTile>
-            <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.75} />
-          </IconTile>
-          <div className="min-w-0">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-navy leading-tight">Next patient</h2>
-            <p className="text-xs sm:text-sm text-body-gray mt-0.5">Your upcoming appointment</p>
+    <section
+      className={`relative overflow-hidden rounded-3xl bg-white/85 backdrop-blur-sm border border-white shadow-[0_18px_40px_-28px_rgba(7,26,47,0.35)] flex flex-col min-h-0 ${
+        fillHeight ? 'h-full' : ''
+      }`}
+    >
+      <div className="relative shrink-0 bg-gradient-to-br from-[#0EA5A0] via-[#0C948E] to-[#0B6E6A] px-4 sm:px-5 py-4 text-white">
+        <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+
+        <div className="relative flex items-center justify-between gap-3">
+          <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/75">Up next</p>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 border border-white/25 px-2.5 py-1 text-[11px] font-semibold shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-300" />
+            {card.status}
+          </span>
+        </div>
+
+        <div className="relative mt-3 flex items-center justify-between gap-4">
+          <div className="min-w-0 flex items-center gap-3">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden bg-white/20 ring-2 ring-white/35 shrink-0">
+              <img
+                src={card.patientPhoto}
+                alt={card.patientName}
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="font-display text-lg sm:text-xl font-bold leading-tight truncate">
+                {card.patientName}
+              </p>
+              <p className="text-xs sm:text-sm text-white/80 mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                <span className="inline-flex items-center gap-1.5">
+                  <Building2 className="w-3.5 h-3.5" strokeWidth={1.85} />
+                  {card.visitType}
+                </span>
+                <span className="opacity-50">·</span>
+                <span className="truncate">{card.clinic}</span>
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 text-right">
+            <p className="font-display text-[28px] sm:text-[34px] font-bold leading-none tracking-tight">
+              {card.timeLabel}
+            </p>
+            <p className="text-xs font-semibold text-white/80 mt-1">{card.dateLabel}</p>
           </div>
         </div>
-        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 sm:px-3 py-1 text-[11px] sm:text-xs font-semibold shrink-0 ${statusTone}`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-current" />
-          {card.status}
-        </span>
       </div>
 
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden shrink-0 bg-teal-light">
-          <img src={card.patientPhoto} alt={card.patientName} className="w-full h-full object-cover object-top" />
+      <div className={`px-4 sm:px-5 py-3.5 flex flex-col gap-3 min-h-0 ${fillHeight ? 'flex-1' : ''}`}>
+        <div className="shrink-0 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-navy">
+          <span className="inline-flex items-center gap-2 min-w-0">
+            <DoorOpen className="w-4 h-4 text-teal shrink-0" strokeWidth={1.85} />
+            <span className="font-semibold truncate">
+              {card.room}
+              {card.roomHint ? ` · ${card.roomHint}` : ''}
+            </span>
+          </span>
+          <span className="inline-flex items-center gap-2">
+            <Phone className="w-4 h-4 text-teal shrink-0" strokeWidth={1.85} />
+            <span className="font-semibold">{card.phone}</span>
+          </span>
         </div>
-        <div className="min-w-0">
-          <p className="text-base sm:text-lg lg:text-xl font-bold text-navy leading-tight">{card.patientName}</p>
-          <p className="text-xs sm:text-sm text-body-gray mt-1 flex flex-wrap items-center gap-x-2 gap-y-1">
-            <span className="inline-flex items-center gap-1.5">
-              {card.isVideo ? <Video className="w-3.5 h-3.5 text-teal" /> : <Building2 className="w-3.5 h-3.5 text-teal" />}
-              {card.visitType}
-            </span>
-            <span className="w-1 h-1 rounded-full bg-body-gray/50" />
-            <span className="inline-flex items-center gap-1.5 min-w-0">
-              <Heart className="w-3.5 h-3.5 text-teal shrink-0" />
-              <span>{card.clinic}</span>
-            </span>
+
+        {card.prepNote ? (
+          <p className="shrink-0 text-sm text-navy leading-snug bg-[#F4F7FA] rounded-2xl px-3.5 py-2.5">
+            <span className="font-bold text-teal">Reason · </span>
+            {card.prepNote}
           </p>
+        ) : null}
+
+        <div className="shrink-0">
+          <DoctorVisitTimeline steps={steps} />
         </div>
-      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-2 2xl:grid-cols-4 gap-2">
-        {details.map((item) => {
-          const Icon = item.icon
-          return (
-            <div key={item.label} className="rounded-xl bg-[#F4F7FA] p-2.5 sm:p-3 flex items-start gap-2 min-w-0">
-              <IconTile>
-                <Icon className="w-4 h-4" strokeWidth={1.75} />
-              </IconTile>
-              <div className="min-w-0">
-                <p className="text-[11px] text-body-gray">{item.label}</p>
-                <p className="text-xs sm:text-sm font-bold text-navy mt-0.5 leading-snug">{item.value}</p>
-                <p className="text-[11px] text-body-gray mt-0.5 leading-snug">{item.hint}</p>
-              </div>
-            </div>
-          )
-        })}
-      </div>
-
-      <div className="rounded-2xl bg-[#E7F6F5] px-3 py-2.5 sm:px-3.5 sm:py-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-        <div className="inline-flex items-center gap-2 shrink-0">
-          <IconTile>
-            <ClipboardList className="w-4 h-4" strokeWidth={1.75} />
-          </IconTile>
-          <p className="text-sm font-bold text-teal">Visit reason</p>
+        <div className={`min-h-0 ${fillHeight ? 'flex-1 overflow-y-auto scroll-y' : ''}`}>
+          <DoctorVisitChecklist tasks={tasks} onToggleTask={toggleTask} />
         </div>
-        <p className="text-sm text-navy leading-relaxed min-w-0">{card.prepNote}</p>
-      </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 text-sm text-body-gray pt-1 border-t border-dashed border-border-gray">
-        <span className="inline-flex items-center gap-2 min-w-0">
-          <MapPin className="w-4 h-4 text-teal shrink-0" />
-          <span>{card.cityLine}</span>
-        </span>
-        <span className="hidden sm:block w-px h-4 bg-border-gray shrink-0" />
-        <span className="inline-flex items-center gap-2">
-          <Phone className="w-4 h-4 text-teal shrink-0" />
-          {card.phone}
-        </span>
-      </div>
+        {quickActions.length ? (
+          <div className="shrink-0 flex flex-wrap gap-2">
+            {quickActions.map((action) => {
+              const Icon = action.icon || CalendarDays
+              return (
+                <button
+                  key={action.id}
+                  type="button"
+                  onClick={() => onActionClick?.(action.key)}
+                  className={`inline-flex items-center gap-2 min-h-9 rounded-full px-3 text-xs font-semibold cursor-pointer transition-colors hover:brightness-[0.97] ${action.tone}`}
+                >
+                  <Icon className="w-3.5 h-3.5" strokeWidth={1.85} />
+                  {action.label}
+                </button>
+              )
+            })}
+          </div>
+        ) : null}
 
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-        {canAccept ? (
+        <div className="shrink-0 flex flex-col sm:flex-row gap-2.5">
+          {canAccept ? (
+            <button
+              type="button"
+              onClick={() => onAccept?.(visit)}
+              className="flex-1 min-h-11 rounded-2xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2 transition-colors"
+            >
+              <CircleCheck className="w-5 h-5" strokeWidth={1.9} />
+              Accept
+            </button>
+          ) : null}
           <button
             type="button"
-            onClick={() => onAccept?.(visit)}
-            className="flex-1 min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
+            onClick={() => onOpen?.(visit)}
+            className="flex-1 min-h-11 rounded-2xl border border-teal bg-white text-teal text-sm font-semibold cursor-pointer hover:bg-teal-light inline-flex items-center justify-center gap-2 transition-colors"
           >
-            <CircleCheck className="w-5 h-5" strokeWidth={1.9} />
-            Accept Appointment
+            <Info className="w-5 h-5" strokeWidth={1.9} />
+            Open visit
           </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={() => onOpen?.(visit)}
-          className="flex-1 min-h-12 rounded-xl border border-teal bg-white text-teal text-sm font-semibold cursor-pointer hover:bg-teal-light inline-flex items-center justify-center gap-2"
-        >
-          <Info className="w-5 h-5" strokeWidth={1.9} />
-          View Details
-        </button>
+        </div>
       </div>
     </section>
   )

@@ -3,7 +3,7 @@ import Button from '../../components/Button'
 
 export default function AppointmentConfirmation({ booking, onBackHome, actionLabel = 'Back to Home' }) {
   return (
-    <div className="w-full min-h-full page-pad py-4 sm:py-6 lg:py-8 xl:py-10 flex items-center justify-center">
+    <div className="w-full min-h-full bg-bg-gray page-pad py-4 sm:py-6 lg:py-8 xl:py-10 flex items-center justify-center">
       <div className="bg-white border border-border-gray rounded-2xl p-5 sm:p-8 shadow-sm w-full max-w-xl text-center">
         <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-teal-light flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-teal" />

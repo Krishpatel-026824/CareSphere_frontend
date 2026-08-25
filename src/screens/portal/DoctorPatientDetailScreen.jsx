@@ -20,7 +20,7 @@ export default function DoctorPatientDetailScreen({
   const selected = chart.selected
 
   return (
-    <div className="w-full h-full min-h-full bg-[#F3F4F6] flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-full bg-bg-gray flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-3">
         <DoctorPatientHeader
           patient={patient}

@@ -6,7 +6,6 @@ import {
   Languages,
   Phone,
   School,
-  Video,
 } from 'lucide-react'
 
 const icons = {
@@ -16,7 +15,6 @@ const icons = {
   school: School,
   clinic: Building2,
   room: DoorOpen,
-  video: Video,
   phone: Phone,
 }
 

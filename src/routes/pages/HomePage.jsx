@@ -26,7 +26,6 @@ export default function HomePage() {
         onActionClick={(key) => {
           const routes = {
             bookAppointment: PATHS.newAppointment,
-            telemedicine: PATHS.telemedicine,
             pharmacy: PATHS.pharmacy,
             labTests: PATHS.labTests,
             healthRecords: PATHS.healthRecords,

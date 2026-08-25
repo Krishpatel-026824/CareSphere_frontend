@@ -4,23 +4,7 @@ import HealthRecordsScreen from '../../screens/main/HealthRecordsScreen'
 import LabTestsScreen from '../../screens/main/LabTestsScreen'
 import LabBookingsScreen from '../../screens/main/LabBookingsScreen'
 import PharmacyScreen from '../../screens/main/PharmacyScreen'
-import TelemedicineScreen from '../../screens/main/TelemedicineScreen'
-import { PATHS, doctorProfilePath } from '../paths'
-
-export function TelemedicinePage() {
-  const navigate = useNavigate()
-  const { doctorFlowData } = useAppStore()
-
-  return (
-    <TelemedicineScreen
-      doctors={doctorFlowData.doctors}
-      onBack={() => navigate(PATHS.home)}
-      onSelectDoctor={(doctor) =>
-        navigate(doctorProfilePath(doctor.id), { state: { from: PATHS.telemedicine } })
-      }
-    />
-  )
-}
+import { PATHS } from '../paths'
 
 export function PharmacyPage() {
   const navigate = useNavigate()

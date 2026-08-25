@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronLeft, Headphones, MoreVertical, Phone, Trash2, UserRound, Video } from 'lucide-react'
+import { ChevronLeft, Headphones, MoreVertical, Trash2, UserRound } from 'lucide-react'
 
 export default function ChatHeader({ conversation, isTyping, onBack, onDeleteChat, onInfo }) {
   const [menuOpen, setMenuOpen] = useState(false)

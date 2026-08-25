@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
+  clearCatalogFilters,
   setCatalogQuery,
   toggleCatalogBrand,
   toggleCatalogFilter,
@@ -34,6 +35,7 @@ export function usePharmacyCatalog(items = []) {
     setQuery: (value) => dispatch(setCatalogQuery(value)),
     selectedFilters,
     toggleFilter: (id) => dispatch(toggleCatalogFilter(id)),
+    clearFilters: () => dispatch(clearCatalogFilters()),
     selectedBrands,
     toggleBrand: (id) => dispatch(toggleCatalogBrand(id)),
     catalogItems,

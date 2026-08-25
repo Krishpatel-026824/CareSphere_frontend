@@ -1,80 +1,88 @@
-import { CalendarDays, Clock } from 'lucide-react'
+import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
+import { groupVisitsByDate, visitDayHeading } from '../../utils/appointmentFormat'
 
-const statusStyles = {
-  Confirmed: 'bg-[#DDF7E8] text-[#1F7A4D]',
-  Upcoming: 'bg-[#DCEBFF] text-[#1D4ED8]',
-  Completed: 'bg-[#E8E4EE] text-[#5B5670]',
-  Cancelled: 'bg-rose-100 text-rose-700',
+function splitTime(label = '') {
+  const match = String(label).trim().match(/^(\d{1,2}:\d{2})\s*(AM|PM)?/i)
+  return { time: match?.[1] || label, period: (match?.[2] || '').toUpperCase() }
 }
 
 export default function DoctorQueuePanel({ visits = [], nextId, onSelect, fill = false }) {
+  const groups = groupVisitsByDate(visits)
+
   return (
     <section
-      className={`bg-white rounded-[24px] border border-border-gray shadow-[0_8px_24px_rgba(15,23,42,0.06)] pl-4 pt-4 pb-4 pr-2.5 flex flex-col ${
-        fill ? 'xl:h-full xl:min-h-0' : ''
+      className={`bg-white/85 backdrop-blur-sm rounded-3xl border border-white shadow-[0_18px_40px_-28px_rgba(7,26,47,0.35)] p-3.5 sm:p-4 flex flex-col min-h-0 ${
+        fill ? 'h-full' : ''
       }`}
     >
-      <div className="flex items-center justify-between gap-2 shrink-0 mb-3">
-        <h2 className="text-lg font-bold text-navy">Clinic queue</h2>
-        <span className="text-sm text-body-gray">{visits.length} visits</span>
+      <div className="flex items-center justify-between gap-2 shrink-0 px-1 mb-3">
+        <h2 className="text-base sm:text-lg font-bold text-navy">Clinic queue</h2>
+        <span className="text-[11px] font-semibold text-teal bg-[#E8F7F6] px-2.5 py-1 rounded-full shrink-0">
+          {visits.length}
+        </span>
       </div>
 
       {visits.length === 0 ? (
-        <p className="text-sm text-body-gray">No visits in the queue.</p>
+        <p className="text-sm text-body-gray px-1 py-6 text-center rounded-2xl bg-[#F4F7FA]">
+          No visits in the queue.
+        </p>
       ) : (
-        <ul
-          className={`w-full min-w-0 flex flex-col gap-2 overflow-y-auto min-h-0 max-h-[240px] sm:max-h-[320px] ${
-            fill ? 'xl:max-h-none xl:flex-1' : ''
-          }`}
-        >
-          {visits.map((visit) => {
-            const active = visit.id === nextId
-            return (
-              <li key={visit.id} className="w-full min-w-0">
-                <button
-                  type="button"
-                  onClick={() => onSelect?.(visit)}
-                  className={`w-full box-border text-left rounded-xl border px-3 py-2.5 flex items-center gap-2.5 cursor-pointer ${
-                    active
-                      ? 'bg-[#E7F6F5] border-teal'
-                      : 'bg-white border-[#E6EBF1] hover:border-teal/40'
-                  }`}
-                >
-                  <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-[#EEF2F6]">
-                    <img
-                      src={visit.patientPhoto}
-                      alt=""
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-bold text-navy truncate">{visit.patientName}</p>
-                    <p className="text-[11px] text-body-gray mt-1 truncate">
-                      {visit.visitType} • {visit.clinic}
-                    </p>
-                  </div>
-                  <div className="shrink-0 hidden sm:flex flex-col items-end gap-1 text-[11px] text-body-gray">
-                    <span className="inline-flex items-center gap-1">
-                      <CalendarDays className="w-3 h-3" strokeWidth={1.75} />
-                      {visit.dateLabel}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock className="w-3 h-3" strokeWidth={1.75} />
-                      {visit.timeLabel}
-                    </span>
-                  </div>
-                  <span
-                    className={`text-[10px] font-semibold px-2 py-px rounded-full shrink-0 ${
-                      statusStyles[visit.status] || statusStyles.Upcoming
+        <div className={`scroll-y flex flex-col gap-3.5 overflow-y-auto min-h-0 flex-1 pr-1 ${fill ? '' : 'max-h-[340px]'}`}>
+          {groups.map((group) => (
+            <div key={group.id} className="flex flex-col gap-2">
+              <p className="px-1 text-[11px] font-bold uppercase tracking-[0.14em] text-body-gray">
+                {visitDayHeading(group.label)}
+              </p>
+              {group.visits.map((visit) => {
+                const active = visit.id === nextId
+                const { time, period } = splitTime(visit.timeLabel)
+                return (
+                  <button
+                    key={visit.id}
+                    type="button"
+                    onClick={() => onSelect?.(visit)}
+                    className={`w-full text-left rounded-2xl px-2.5 py-2.5 flex items-center gap-2.5 cursor-pointer transition-all ${
+                      active
+                        ? 'bg-[#E8F7F6] shadow-[inset_0_0_0_1.5px_#0EA5A0]'
+                        : 'bg-[#F7FAFC] hover:bg-white hover:shadow-[inset_0_0_0_1px_#D0D9E3]'
                     }`}
                   >
-                    {visit.status}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
-        </ul>
+                    <div
+                      className={`w-[52px] shrink-0 rounded-xl py-1.5 text-center ${
+                        active ? 'bg-teal text-white' : 'bg-white text-navy'
+                      }`}
+                    >
+                      <p className="text-[13px] font-bold leading-none">{time}</p>
+                      {period ? (
+                        <p className="text-[9px] font-semibold mt-1 tracking-wide">{period}</p>
+                      ) : null}
+                    </div>
+                    <div className="w-9 h-9 rounded-full overflow-hidden shrink-0 bg-[#EEF2F6]">
+                      <img
+                        src={visit.patientPhoto}
+                        alt=""
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-bold text-navy truncate">{visit.patientName}</p>
+                      <p className="text-[11px] text-body-gray mt-0.5 truncate">
+                        {visit.room || visit.clinic}
+                      </p>
+                    </div>
+                    <span
+                      className={`text-[9px] font-semibold px-1.5 py-0.5 rounded-full shrink-0 ${
+                        appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
+                      }`}
+                    >
+                      {visit.status}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          ))}
+        </div>
       )}
     </section>
   )

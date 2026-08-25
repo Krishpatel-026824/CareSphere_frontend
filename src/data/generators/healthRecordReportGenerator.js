@@ -30,9 +30,9 @@ function fallbackReport(record) {
       { label: 'Time', value: record.timeLabel || '—', unit: '—', reference: '—', status: 'Normal' },
       { label: 'Status', value: 'Complete', unit: '—', reference: 'Reviewed', status: 'Normal' },
     ],
-    interpretation: `${record.title} is on file from ${record.dateLabel}. Review the image and findings with your care team as needed.`,
+    interpretation: `${record.title} is on file from ${record.dateLabel}. Review the findings with your care team as needed.`,
     recommendations: [
-      'Download the report image for your personal records.',
+      'Download this report for your personal records.',
       'Share this report at your next clinic visit.',
     ],
     visit: {
@@ -49,10 +49,7 @@ export function buildHealthRecordReport(record) {
 
   const existing = record.detail || healthRecordDetailsMock[record.id]
   if (existing?.findings) {
-    return {
-      ...existing,
-      preview: existing.preview || getHealthRecordImage(record),
-    }
+    return { ...existing, preview: undefined }
   }
 
   const template = healthRecordReportsMock[record.id] || {}
@@ -70,7 +67,6 @@ export function buildHealthRecordReport(record) {
     doctorName: record.doctorName,
     specialty: record.specialty,
     hospital: template.hospital || fallback.hospital,
-    preview: getHealthRecordImage(record, template.image),
     visit: template.visit || fallback.visit,
     patient: labPatientMock,
     findings: template.findings || (lab ? mapLabFindings(lab.parameters) : fallback.findings),

@@ -45,16 +45,6 @@ export function generateAppointmentSettings(appointment, doctor) {
         hint: 'Quick reminders on WhatsApp',
         defaultOn: defaults.whatsappAlerts,
       },
-      ...(doctor?.videoConsult
-        ? [
-            {
-              id: 'videoUpdates',
-              label: 'Video consult updates',
-              hint: 'Notify if this visit can switch to video',
-              defaultOn: true,
-            },
-          ]
-        : []),
     ],
     extras: config.extras,
     privacy: [
@@ -88,7 +78,6 @@ export function generateHomeVisitSignals(appointment, doctor, stored) {
   return {
     reminderOn: Boolean(toggles.visitReminders),
     reminderTiming,
-    videoUpdates: Boolean(toggles.videoUpdates),
     shareRecords: Boolean(toggles.shareRecords),
     prepLabels: (settings.extras || []).filter((item) => toggles[item.id]).map((item) => item.label),
   }

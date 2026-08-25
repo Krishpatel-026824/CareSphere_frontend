@@ -1,9 +1,9 @@
 import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import AppShell from '../components/AppShell'
-import { doctorBottomNavTabs, doctorMainNavTabs, doctorProfileNavTab } from '../data/mocks/doctorNav'
-import { doctorProfileDetailsMock } from '../data/mocks/doctorProfile'
 import { AUTH_ROLE_DOCTOR } from '../data/mocks/authRoles'
-import { DOCTOR_TAB_PATHS, PATHS } from '../routes/paths'
+import { doctorBottomNavTabs, doctorMainNavTabs, doctorProfileNavTab, doctorSidebarQuickActions } from '../data/mocks/doctorNav'
+import { doctorProfileDetailsMock } from '../data/mocks/doctorProfile'
+import { DOCTOR_PATHS, DOCTOR_TAB_PATHS, PATHS } from '../routes/paths'
 import { useAppSelector } from '../store/hooks'
 import { DOCTOR_AVATAR_KEY, readStoredAvatar } from '../utils/profileAvatarStorage'
 
@@ -34,6 +34,11 @@ export default function DoctorLayout() {
     navigate(DOCTOR_TAB_PATHS[tabId] || DOCTOR_TAB_PATHS.home)
   }
 
+  function handleQuickAction(key) {
+    const path = DOCTOR_PATHS[key]
+    if (path) navigate(path)
+  }
+
   return (
     <AppShell
       activeTab={activeTab}
@@ -42,6 +47,8 @@ export default function DoctorLayout() {
       tabs={doctorMainNavTabs}
       bottomTabs={doctorBottomNavTabs}
       profileTab={doctorProfileNavTab}
+      quickActions={doctorSidebarQuickActions}
+      onQuickAction={handleQuickAction}
       sidebarUser={{
         name: user.name,
         role: user.role,

@@ -4,6 +4,7 @@ import { useAppSelector } from '../../store/hooks'
 import { selectProfileDetails } from '../../store/slices/profileSlice'
 import SidebarFooterCard from './SidebarFooterCard'
 import SidebarNavItem from './SidebarNavItem'
+import SidebarQuickActions from './SidebarQuickActions'
 
 export default function AppSidebar({
   activeTab,
@@ -12,6 +13,8 @@ export default function AppSidebar({
   tabs,
   profileTab,
   sidebarUser,
+  quickActions,
+  onQuickAction,
 }) {
   const profile = useAppSelector(selectProfileDetails)
   const navTabs = tabs || mainNavTabs
@@ -42,6 +45,13 @@ export default function AppSidebar({
             onSelect={onTabChange}
           />
         ))}
+
+        {quickActions?.length ? (
+          <>
+            <div className="my-3 border-t border-white/10" />
+            <SidebarQuickActions actions={quickActions} onActionClick={onQuickAction} />
+          </>
+        ) : null}
 
         <div className="my-3 border-t border-white/10" />
 

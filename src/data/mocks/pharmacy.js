@@ -5,6 +5,7 @@ export const pharmacyFilterOptionsMock = [
   { id: 'cetirizines', label: 'Cetirizines' },
   { id: 'metformins', label: 'Diabetes' },
   { id: 'fluids', label: 'Fluids & ORS' },
+  { id: 'syrups', label: 'Syrups' },
   { id: 'others', label: 'Others' },
 ]
 

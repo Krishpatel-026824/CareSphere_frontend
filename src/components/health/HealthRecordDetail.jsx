@@ -1,5 +1,5 @@
-import { Download, ImageDown } from 'lucide-react'
-import { downloadHealthReport, downloadReportImage } from '../../utils/downloadRecord'
+import { Download } from 'lucide-react'
+import { downloadHealthReport } from '../../utils/downloadRecord'
 
 function statusTone(status) {
   if (status === 'High' || status === 'Low') return 'text-rose-600 bg-rose-50'
@@ -26,22 +26,6 @@ export default function HealthRecordDetail({ record }) {
           </span>
         </div>
       </div>
-
-      {record.preview ? (
-        <div className="border-b border-border-gray bg-bg-gray/20">
-          <div className="relative h-48 sm:h-64 lg:h-72 overflow-hidden">
-            <img src={record.preview} alt={record.title} className="w-full h-full object-cover" />
-            <button
-              type="button"
-              onClick={() => downloadReportImage(record.preview, record.title)}
-              className="absolute bottom-3 right-3 min-h-9 px-3 rounded-lg bg-white/95 text-navy text-xs font-semibold cursor-pointer hover:bg-white inline-flex items-center gap-1.5 shadow-sm"
-            >
-              <ImageDown className="w-3.5 h-3.5" strokeWidth={1.75} />
-              Download image
-            </button>
-          </div>
-        </div>
-      ) : null}
 
       <div className="p-4 sm:p-6 lg:p-8 flex flex-col gap-5 lg:gap-6">
         <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 text-sm">
@@ -166,16 +150,6 @@ export default function HealthRecordDetail({ record }) {
             Verified by: <span className="font-medium text-navy">{record.verifiedBy}</span>
           </p>
           <div className="flex flex-wrap items-center gap-2">
-            {record.preview ? (
-              <button
-                type="button"
-                onClick={() => downloadReportImage(record.preview, record.title)}
-                className="min-h-10 px-4 rounded-xl border border-border-gray bg-white text-navy text-sm font-semibold cursor-pointer hover:bg-bg-gray inline-flex items-center justify-center gap-2"
-              >
-                <ImageDown className="w-4 h-4" strokeWidth={1.75} />
-                Download image
-              </button>
-            ) : null}
             <button
               type="button"
               onClick={() => downloadHealthReport(record)}

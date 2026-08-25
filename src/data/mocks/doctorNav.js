@@ -1,8 +1,11 @@
 import {
   CalendarDays,
   CircleUserRound,
+  FileText,
+  FlaskConical,
   House,
   MessageCircleMore,
+  Stethoscope,
   Users,
 } from 'lucide-react'
 
@@ -14,6 +17,12 @@ export const doctorMainNavTabs = [
 ]
 
 export const doctorProfileNavTab = { id: 'profile', label: 'Profile', icon: CircleUserRound }
+
+export const doctorSidebarQuickActions = [
+  { id: 'pharmacy', key: 'prescribe', label: 'Write Rx', icon: FileText },
+  { id: 'labReports', key: 'labReports', label: 'Lab reports', icon: FlaskConical },
+  { id: 'records', key: 'notes', label: 'Add note', icon: Stethoscope },
+]
 
 export const doctorBottomNavTabs = [
   { id: 'home', label: 'Home', icon: House },

@@ -30,9 +30,13 @@ export function generateConversationFromDoctor(doctor, index) {
 
 export function mergeDoctorConversations(seedConversations = [], doctors = []) {
   const existingIds = new Set(seedConversations.map((item) => item.doctorId).filter(Boolean))
-  const extra = doctors
-    .filter((doctor) => !existingIds.has(doctor.id))
-    .map((doctor, index) => generateConversationFromDoctor(doctor, index))
+  const extra = []
+
+  doctors.forEach((doctor) => {
+    if (!doctor?.id || existingIds.has(doctor.id)) return
+    existingIds.add(doctor.id)
+    extra.push(generateConversationFromDoctor(doctor, extra.length))
+  })
 
   return [...seedConversations, ...extra]
 }

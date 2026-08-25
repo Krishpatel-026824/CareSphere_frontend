@@ -91,7 +91,7 @@ export const doctorMessagesMock = [
     doctorId: 'pat-rohan',
     doctorName: 'Rohan Mehta',
     specialty: 'Care member',
-    clinic: 'Video follow-up',
+    clinic: 'In-clinic follow-up',
     phone: '+91 98980 22011',
     avatar: patientImages.rohanMehta,
     lastMessage: 'Lipid report is uploaded in records.',
@@ -109,7 +109,7 @@ export const doctorMessagesMock = [
       {
         id: 'dr-2',
         from: 'me',
-        text: 'Thank you. We will review it on the video consult.',
+        text: 'Thank you. We will review it at your next clinic visit.',
         time: 'Mon',
         read: true,
       },

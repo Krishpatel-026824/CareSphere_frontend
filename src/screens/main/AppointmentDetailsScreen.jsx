@@ -1,4 +1,4 @@
-import { ArrowLeft, CalendarDays, Check, Clock3, MapPin, Video } from 'lucide-react'
+import { ArrowLeft, Building2, CalendarDays, Check, Clock3, MapPin } from 'lucide-react'
 
 const statusStyles = {
   Confirmed: 'bg-emerald-100 text-emerald-700',
@@ -8,8 +8,6 @@ const statusStyles = {
 
 export default function AppointmentDetailsScreen({ appointment, onBack, onReschedule }) {
   if (!appointment) return null
-
-  const isVideo = appointment.visitType.toLowerCase().includes('video')
 
   return (
     <div className="w-full min-h-full bg-bg-gray">
@@ -49,7 +47,7 @@ export default function AppointmentDetailsScreen({ appointment, onBack, onResche
             {[
               { label: 'Date', value: appointment.dateLabel, icon: CalendarDays },
               { label: 'Time', value: appointment.timeLabel, icon: Clock3 },
-              { label: 'Type', value: appointment.visitType, icon: Video },
+              { label: 'Type', value: appointment.visitType || 'In-clinic', icon: Building2 },
               { label: 'City', value: appointment.location, icon: MapPin },
             ].map((item) => (
               <div key={item.label}>
@@ -96,8 +94,8 @@ export default function AppointmentDetailsScreen({ appointment, onBack, onResche
                 type="button"
                 className="flex-[1.35] min-h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer shadow-sm hover:bg-teal-dark inline-flex items-center justify-center gap-2"
               >
-                <Video className="w-4 h-4" strokeWidth={1.75} />
-                {isVideo ? 'Join video call' : 'Clinic directions'}
+                <MapPin className="w-4 h-4" strokeWidth={1.75} />
+                Clinic directions
               </button>
             </div>
           ) : null}

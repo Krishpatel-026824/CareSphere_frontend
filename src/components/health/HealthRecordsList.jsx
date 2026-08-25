@@ -24,7 +24,7 @@ export default function HealthRecordsList({
   onAction,
 }) {
   const [query, setQuery] = useState('')
-  const [activeFilter, setActiveFilter] = useState('lab')
+  const [activeFilter, setActiveFilter] = useState('all')
   const [menu, setMenu] = useState(null)
   const scoped = filterHealthRecordsByKind(records, activeFilter)
   const filtered = filterHealthRecords(scoped, query)

@@ -1,10 +1,9 @@
-import { BadgeCheck, Building2, Star, Video } from 'lucide-react'
+import { BadgeCheck, Building2, Star } from 'lucide-react'
 
 const badgeStyles = {
   rating: 'bg-[#FFF7E8] text-[#1E2124]',
   available: 'bg-[#E8F7EE] text-[#16794A]',
   booked: 'bg-[#F3F4F6] text-[#6B7280]',
-  video: 'bg-[#E8F4FF] text-[#1B6AA5]',
   clinic: 'bg-[#EEF2F6] text-[#374151]',
 }
 
@@ -45,7 +44,6 @@ export default function DoctorProfileHero({ profile }) {
                 {badge.kind === 'rating' ? (
                   <Star className="h-3 w-3 fill-amber text-amber" strokeWidth={1.5} />
                 ) : null}
-                {badge.kind === 'video' ? <Video className="h-3 w-3" strokeWidth={1.7} /> : null}
                 {badge.kind === 'clinic' ? <Building2 className="h-3 w-3" strokeWidth={1.7} /> : null}
                 {badge.label}
               </span>

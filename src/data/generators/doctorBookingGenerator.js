@@ -9,7 +9,6 @@ function withDoctorDefaults(doctor) {
   const merged = {
     languages: ['English', 'Spanish'],
     availableToday: true,
-    videoConsult: true,
     patientsCount: '800+',
     ...doctor,
     avatar: extraDoctorAvatars[doctor.id] || doctor.avatar,
@@ -24,11 +23,20 @@ function withDoctorDefaults(doctor) {
   }
 }
 
+function uniqueByDoctorId(doctors = []) {
+  const seen = new Set()
+  return doctors.filter((doctor) => {
+    if (!doctor?.id || seen.has(doctor.id)) return false
+    seen.add(doctor.id)
+    return true
+  })
+}
+
 export function generateDoctorBookingData() {
   return {
     location: 'Ahmedabad',
     categories: doctorCategoriesMock,
-    doctors: [...doctorBookingMock, ...extraDoctorsMock].map(withDoctorDefaults),
+    doctors: uniqueByDoctorId([...doctorBookingMock, ...extraDoctorsMock]).map(withDoctorDefaults),
   }
 }
 

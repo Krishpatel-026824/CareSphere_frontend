@@ -21,8 +21,7 @@ export function generateDoctorProfile(appointment, doctor) {
     expertise: generateExpertiseChips(doctor?.expertise || []),
     languages: doctor?.languages || [],
     availableToday: Boolean(doctor?.availableToday),
-    videoConsult: Boolean(doctor?.videoConsult),
-    visitType: appointment?.visitType || (doctor?.videoConsult ? 'Video' : 'In-clinic'),
+    visitType: appointment?.visitType || 'In-clinic',
     location: appointment?.location || '',
     badges: [
       {
@@ -37,8 +36,8 @@ export function generateDoctorProfile(appointment, doctor) {
       },
       {
         id: 'visit',
-        kind: doctor?.videoConsult ? 'video' : 'clinic',
-        label: doctor?.videoConsult ? 'Video' : 'In-clinic',
+        kind: 'clinic',
+        label: 'In-clinic',
       },
     ],
     nextVisit: nextDate && nextTime ? `${nextDate} · ${nextTime}` : '',
@@ -73,9 +72,9 @@ export function generateDoctorProfile(appointment, doctor) {
         : null,
       {
         id: 'consult',
-        icon: doctor?.videoConsult ? 'video' : 'clinic',
+        icon: 'clinic',
         label: 'Consult',
-        value: doctor?.videoConsult ? 'Video + In-clinic' : 'In-clinic',
+        value: 'In-clinic',
       },
       appointment?.phone
         ? { id: 'phone', icon: 'phone', label: 'Contact', value: appointment.phone }

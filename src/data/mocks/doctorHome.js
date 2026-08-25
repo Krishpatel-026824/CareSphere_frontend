@@ -1,9 +1,12 @@
+import { CalendarDays, FileText, FlaskConical, Stethoscope } from 'lucide-react'
+
 export const doctorQuickActionsMock = [
   {
-    id: 'telemedicine',
-    key: 'consult',
-    label: 'Start consult',
-    hint: 'Join the next patient',
+    id: 'schedule',
+    key: 'schedule',
+    label: 'Open schedule',
+    hint: 'Today’s clinic visits',
+    icon: CalendarDays,
     tone: 'bg-teal-light text-teal-dark',
   },
   {
@@ -11,6 +14,7 @@ export const doctorQuickActionsMock = [
     key: 'prescribe',
     label: 'Write Rx',
     hint: 'Pending prescriptions',
+    icon: FileText,
     tone: 'bg-orange-100 text-orange-600',
   },
   {
@@ -18,6 +22,7 @@ export const doctorQuickActionsMock = [
     key: 'labs',
     label: 'Order labs',
     hint: 'Tests awaiting sign-off',
+    icon: FlaskConical,
     tone: 'bg-amber-100 text-amber-600',
   },
   {
@@ -25,6 +30,7 @@ export const doctorQuickActionsMock = [
     key: 'notes',
     label: 'Add note',
     hint: 'Unsigned clinic notes',
+    icon: Stethoscope,
     tone: 'bg-sky-100 text-sky-600',
   },
 ]

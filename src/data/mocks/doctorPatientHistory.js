@@ -35,8 +35,8 @@ export const doctorPatientHistoryMock = {
     {
       dateLabel: '22 Mar 2026',
       timeLabel: '09:30 AM',
-      room: 'Video consult',
-      visitType: 'Video',
+      room: 'Consultation Room 3',
+      visitType: 'In-clinic',
       prepNote: 'Lipid follow-up. Diet and statin plan reviewed.',
       prepItems: ['Latest lipid report'],
     },
@@ -116,8 +116,8 @@ export const doctorPatientHistoryMock = {
     {
       dateLabel: '07 Apr 2026',
       timeLabel: '11:00 AM',
-      room: 'Video consult',
-      visitType: 'Video',
+      room: 'Consultation Room 3',
+      visitType: 'In-clinic',
       prepNote: 'Post-stent check. Exercise plan progressing well.',
       prepItems: ['Discharge summary'],
     },
@@ -165,8 +165,8 @@ export const doctorPatientHistoryMock = {
     {
       dateLabel: '18 May 2026',
       timeLabel: '05:15 PM',
-      room: 'Video consult',
-      visitType: 'Video',
+      room: 'Consultation Room 3',
+      visitType: 'In-clinic',
       prepNote: 'Cholesterol follow-up. Diet advice reinforced.',
       prepItems: ['Lipid report'],
     },

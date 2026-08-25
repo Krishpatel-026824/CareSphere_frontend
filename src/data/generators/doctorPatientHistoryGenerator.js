@@ -32,7 +32,7 @@ export function generatePatientChartVisits(visits = [], patient) {
         ...row,
         id: `${patient.id}-hist-${index}`,
         linkedAppointmentId: undefined,
-        visitType: row.visitType || (row.room === 'Video consult' ? 'Video' : 'In-clinic'),
+        visitType: row.visitType || 'In-clinic',
         status: 'Completed',
         patientId: patient.id,
         patientName: patient.name,

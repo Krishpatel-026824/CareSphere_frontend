@@ -6,10 +6,12 @@ import ProfileScreen from '../../screens/main/ProfileScreen'
 import DoctorClinicToolScreen from '../../screens/portal/DoctorClinicToolScreen'
 import DoctorConsultScreen from '../../screens/portal/DoctorConsultScreen'
 import DoctorHomeScreen from '../../screens/portal/DoctorHomeScreen'
+import DoctorLabReportsScreen from '../../screens/portal/DoctorLabReportsScreen'
 import DoctorPatientDetailScreen from '../../screens/portal/DoctorPatientDetailScreen'
 import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
 import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
+import { generateDoctorPatientLabReports } from '../../data/generators/doctorLabReportsGenerator'
 import { doctorHomeStatFilters, filterDoctorHomeQueue } from '../../data/generators/doctorHomeGenerator'
 import { generatePatientChartVisits } from '../../data/generators/doctorPatientHistoryGenerator'
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
@@ -132,6 +134,22 @@ export function DoctorConsultPage() {
       visit={schedule.nextVisit}
       onBack={() => navigate(DOCTOR_PATHS.home)}
       onJoin={() => navigate(DOCTOR_PATHS.home)}
+    />
+  )
+}
+
+export function DoctorLabReportsPage() {
+  const navigate = useNavigate()
+  const data = generateDoctorPatientLabReports()
+
+  return (
+    <DoctorLabReportsScreen
+      title={data.title}
+      subtitle={data.subtitle}
+      listTitle={data.listTitle}
+      empty={data.empty}
+      reports={data.reports}
+      onBack={() => navigate(DOCTOR_PATHS.home)}
     />
   )
 }

@@ -1,8 +1,7 @@
-import { CalendarDays, CircleUserRound, FileText, FlaskConical, MessageCircleMore, Pill, Users, Video } from 'lucide-react'
+import { CalendarDays, CircleUserRound, FileText, FlaskConical, MessageCircleMore, Pill, Users } from 'lucide-react'
 
 const icons = {
   book: CalendarDays,
-  telemedicine: Video,
   pharmacy: Pill,
   lab: FlaskConical,
   records: FileText,

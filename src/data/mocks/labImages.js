@@ -1,24 +1,45 @@
+import allergy from '../../assets/lab/allergy.jpg'
+import calcium from '../../assets/lab/calcium.jpg'
+import cbc from '../../assets/lab/cbc.jpg'
+import coagulation from '../../assets/lab/coagulation.jpg'
+import diabetes from '../../assets/lab/diabetes.jpg'
+import ecg from '../../assets/lab/ecg.jpg'
+import electrolyte from '../../assets/lab/electrolyte.jpg'
+import hba1c from '../../assets/lab/hba1c.jpg'
+import hormone from '../../assets/lab/hormone.jpg'
+import inflammation from '../../assets/lab/inflammation.jpg'
+import iron from '../../assets/lab/iron.jpg'
+import kidney from '../../assets/lab/kidney.jpg'
+import lipid from '../../assets/lab/lipid.jpg'
+import liver from '../../assets/lab/liver.jpg'
+import stool from '../../assets/lab/stool.jpg'
+import testosterone from '../../assets/lab/testosterone.jpg'
+import thyroid from '../../assets/lab/thyroid.jpg'
+import urine from '../../assets/lab/urine.jpg'
+import vitaminB12 from '../../assets/lab/vitamin-b12.jpg'
+import vitaminD from '../../assets/lab/vitamin-d.jpg'
+
 export const labImages = {
-  cbcReport: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
-  lipidReport: 'https://cdn-icons-png.flaticon.com/128/3004/3004458.png',
-  thyroidReport: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
-  hba1cReport: 'https://cdn-icons-png.flaticon.com/128/2966/2966327.png',
-  lft: 'https://cdn-icons-png.flaticon.com/128/3004/3004613.png',
-  kft: 'https://cdn-icons-png.flaticon.com/128/3004/3004561.png',
-  vitamind: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
-  iron: 'https://cdn-icons-png.flaticon.com/128/2913/2913491.png',
-  crp: 'https://cdn-icons-png.flaticon.com/128/2913/2913474.png',
-  allergy: 'https://cdn-icons-png.flaticon.com/128/2913/2913506.png',
-  urine: 'https://cdn-icons-png.flaticon.com/128/3004/3004625.png',
-  blood: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
-  diabetes: 'https://cdn-icons-png.flaticon.com/128/2966/2966327.png',
-  hormone: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
-  xray: 'https://cdn-icons-png.flaticon.com/128/3004/3004592.png',
-  ecg: 'https://cdn-icons-png.flaticon.com/128/3004/3004470.png',
-  stool: 'https://cdn-icons-png.flaticon.com/128/3004/3004625.png',
-  calcium: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
-  vitaminb12: 'https://cdn-icons-png.flaticon.com/128/2913/2913520.png',
-  electrolyte: 'https://cdn-icons-png.flaticon.com/128/2913/2913491.png',
-  coagulation: 'https://cdn-icons-png.flaticon.com/128/2913/2913461.png',
-  testosterone: 'https://cdn-icons-png.flaticon.com/128/3004/3004443.png',
+  cbcReport: cbc,
+  lipidReport: lipid,
+  thyroidReport: thyroid,
+  hba1cReport: hba1c,
+  lft: liver,
+  kft: kidney,
+  vitamind: vitaminD,
+  iron,
+  crp: inflammation,
+  allergy,
+  urine,
+  blood: cbc,
+  diabetes,
+  hormone,
+  xray: kidney,
+  ecg,
+  stool,
+  calcium,
+  vitaminb12: vitaminB12,
+  electrolyte,
+  coagulation,
+  testosterone,
 }

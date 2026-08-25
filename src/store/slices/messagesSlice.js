@@ -241,34 +241,37 @@ const messagesSlice = createSlice({
       state.pinNotice = false
     },
     addIncomingMessage(state, action) {
-      const { doctorId, doctorName, message, avatar } = action.payload
+      const { doctorId, doctorName, message, avatar, specialty, clinic } = action.payload
       if (!doctorId || !message) return
       if (state._lastIncomingMsgText === message.text && state._lastIncomingDoctorId === doctorId) return
       state._lastIncomingMsgText = message.text
       state._lastIncomingDoctorId = doctorId
       const key = listKey(state)
-      const existing = state[key].find((c) => c.doctorId === doctorId)
+      const index = state[key].findIndex((c) => c.doctorId === doctorId)
       const now = Date.now()
-      if (existing) {
-        state[key] = state[key].map((c) => {
-          if (c.id !== existing.id) return c
-          return {
-            ...c,
-            lastMessage: message.text,
-            timeLabel: message.time,
-            lastMessageAt: now,
-            unread: true,
-            unreadCount: (c.unreadCount || 0) + 1,
-            messages: [...c.messages, message],
-          }
-        })
+      if (index >= 0) {
+        const current = state[key][index]
+        state[key][index] = {
+          ...current,
+          doctorName: doctorName || current.doctorName,
+          specialty: specialty || current.specialty,
+          clinic: clinic || current.clinic,
+          avatar: avatar || current.avatar,
+          lastMessage: message.text,
+          timeLabel: message.time,
+          lastMessageAt: now,
+          unread: true,
+          unreadCount: (current.unreadCount || 0) + 1,
+          messages: [...current.messages, message],
+        }
       } else {
         const newConversation = {
-          id: `conv-${Date.now()}`,
+          id: `conv-${doctorId}-${now}`,
           doctorId,
           doctorName: doctorName || 'Doctor',
           avatar: avatar || '',
-          specialty: '',
+          specialty: specialty || '',
+          clinic: clinic || '',
           online: false,
           unread: true,
           unreadCount: 1,

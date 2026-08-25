@@ -85,3 +85,10 @@ export const doctorLabFacilityMock = {
   address: 'SG Highway, Ahmedabad – 380015',
   pathologist: 'Dr. Helen Brooks, MD (Pathology)',
 }
+
+export const doctorLabReportsPageMock = {
+  title: 'Patient lab reports',
+  subtitle: 'Review completed test results from your patients',
+  listTitle: 'Lab reports',
+  empty: 'No lab reports are available yet.',
+}

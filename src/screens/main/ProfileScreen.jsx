@@ -20,11 +20,11 @@ export default function ProfileScreen({
   onAvatarChange,
 }) {
   return (
-    <div className="w-full min-h-full bg-gradient-to-br from-[#E8F7F5] via-[#F3F0FF] to-[#EAF4FE]">
-      <div className="w-full min-h-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6 max-w-[1180px] mx-auto">
+    <div className="w-full min-h-full bg-bg-gray">
+      <div className="w-full min-h-full page-pad py-4 sm:py-5 lg:py-6 flex flex-col gap-4 sm:gap-5 max-w-[1440px] mx-auto">
         <ProfileHeader onEdit={onStartEdit} isEditing={isEditing} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1.55fr_0.9fr] gap-5 min-w-0 lg:items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.9fr)] gap-4 sm:gap-5 min-w-0 xl:items-start">
           <ProfileHero
             details={details}
             stats={stats}
@@ -38,12 +38,12 @@ export default function ProfileScreen({
             onAvatarChange={onAvatarChange}
           />
 
-          <div className="min-w-0 flex flex-col gap-4">
+          <div className="min-w-0 flex flex-col gap-3 sm:gap-4">
             <ProfilePrefsCard prefs={prefs} onToggle={onTogglePref} />
             <button
               type="button"
               onClick={onLogout}
-              className="min-h-12 rounded-2xl border border-red-200 bg-red-50 text-red-600 text-sm font-semibold cursor-pointer hover:bg-red-100/70 hover:border-red-300 transition-all inline-flex items-center justify-center gap-2"
+              className="min-h-11 sm:min-h-12 rounded-xl border border-rose-200 bg-rose-50 text-rose-600 text-sm font-semibold cursor-pointer hover:bg-rose-100/80 hover:border-rose-300 transition-colors inline-flex items-center justify-center gap-2"
             >
               <LogOut className="w-4 h-4" strokeWidth={2} />
               Sign out

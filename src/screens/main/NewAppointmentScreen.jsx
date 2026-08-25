@@ -13,7 +13,7 @@ export default function NewAppointmentScreen({
   const chips = ['All', ...categories]
 
   return (
-    <div className="w-full min-h-full bg-[#E8F1F2]">
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full max-w-[1100px] mx-auto page-pad py-4 sm:py-5 flex flex-col gap-4">
         <header>
           <BackHomeButton onClick={onBack} iconOnly />

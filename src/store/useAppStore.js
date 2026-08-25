@@ -64,9 +64,11 @@ export function useAppStore() {
       dispatch(addIncomingMessage({
         doctorId: booking.doctor.id,
         doctorName,
-        avatar: booking.doctor.photo || '',
+        specialty: booking.doctor.specialty || '',
+        clinic: booking.doctor.hospital || '',
+        avatar: booking.doctor.photo || booking.doctor.avatar || '',
         message: {
-          id: `msg-appt-${Date.now()}`,
+          id: `msg-appt-${booking.doctor.id}-${Date.now()}`,
           from: 'them',
           text: `Hello ${patientName}, your appointment with me on ${date} at ${time} has been confirmed. Please arrive 10 minutes early and bring any recent reports. Looking forward to seeing you! 😊`,
           time: timeLabel,

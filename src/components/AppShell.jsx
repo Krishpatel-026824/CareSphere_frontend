@@ -9,6 +9,8 @@ export default function AppShell({
   bottomTabs,
   profileTab,
   sidebarUser,
+  quickActions,
+  onQuickAction,
   children,
 }) {
   return (
@@ -20,6 +22,8 @@ export default function AppShell({
         tabs={tabs}
         profileTab={profileTab}
         sidebarUser={sidebarUser}
+        quickActions={quickActions}
+        onQuickAction={onQuickAction}
       />
 
       <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">

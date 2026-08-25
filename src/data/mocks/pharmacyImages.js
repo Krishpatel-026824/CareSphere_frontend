@@ -5,6 +5,7 @@ import cetirizine from '../../assets/medicines/cetirizine.jpg'
 import fabiflu from '../../assets/medicines/fabiflu.jpg'
 import amoxicillin from '../../assets/medicines/amoxicillin.jpg'
 import metformin from '../../assets/medicines/metformin.jpg'
+import metformin1000 from '../../assets/medicines/metformin-1000.jpg'
 import prednisone from '../../assets/medicines/prednisone.jpg'
 import ibuprofen from '../../assets/medicines/ibuprofen.jpg'
 import lisinopril from '../../assets/medicines/lisinopril.jpg'
@@ -39,6 +40,7 @@ import volini from '../../assets/medicines/volini.jpg'
 import moov from '../../assets/medicines/moov.jpg'
 import burnol from '../../assets/medicines/burnol.jpg'
 import ors from '../../assets/medicines/ors.jpg'
+import electral from '../../assets/medicines/electral.jpg'
 import benadryl from '../../assets/medicines/benadryl.jpg'
 import strepsils from '../../assets/medicines/strepsils.jpg'
 import otrivin from '../../assets/medicines/otrivin.jpg'
@@ -51,6 +53,16 @@ import pan_d from '../../assets/medicines/pan-d.jpg'
 import ranitidine from '../../assets/medicines/ranitidine.jpg'
 import domperidone from '../../assets/medicines/domperidone.jpg'
 import ondansetron from '../../assets/medicines/ondansetron.jpg'
+import ascorilSyrup from '../../assets/medicines/ascoril-syrup.jpg'
+import alexSyrup from '../../assets/medicines/alex-syrup.jpg'
+import calpolSyrup from '../../assets/medicines/calpol-syrup.jpg'
+import crocinSyrup from '../../assets/medicines/crocin-syrup.jpg'
+import meftalSyrup from '../../assets/medicines/meftal-syrup.jpg'
+import asthalinSyrup from '../../assets/medicines/asthalin-syrup.jpg'
+import cetirizineSyrup from '../../assets/medicines/cetirizine-syrup.jpg'
+import zincovitSyrup from '../../assets/medicines/zincovit-syrup.jpg'
+import honitusSyrup from '../../assets/medicines/honitus-syrup.jpg'
+import ambroliteSyrup from '../../assets/medicines/ambrolite-syrup.jpg'
 
 export const pharmacyImages = {
   dolo,
@@ -60,6 +72,7 @@ export const pharmacyImages = {
   fabiflu,
   amoxicillin,
   metformin,
+  metformin1000,
   prednisone,
   ibuprofen,
   lisinopril,
@@ -94,6 +107,7 @@ export const pharmacyImages = {
   moov,
   burnol,
   ors,
+  electral,
   benadryl,
   strepsils,
   otrivin,
@@ -106,4 +120,14 @@ export const pharmacyImages = {
   ranitidine,
   domperidone,
   ondansetron,
+  ascorilSyrup,
+  alexSyrup,
+  calpolSyrup,
+  crocinSyrup,
+  meftalSyrup,
+  asthalinSyrup,
+  cetirizineSyrup,
+  zincovitSyrup,
+  honitusSyrup,
+  ambroliteSyrup,
 }

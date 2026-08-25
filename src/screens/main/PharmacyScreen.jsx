@@ -15,14 +15,14 @@ export default function PharmacyScreen({ onBack }) {
   const [selectedMedicine, setSelectedMedicine] = useState(null)
 
   return (
-    <div className="w-full min-h-full bg-gradient-to-b from-[#F0F9F8] to-[#F4F7F8]">
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full page-pad py-5 sm:py-6 lg:py-8 flex flex-col gap-6">
         <header>
           <ServicePageHeading
             icon={Pill}
             tone="bg-orange-100 text-orange-600"
             title="Pharmacy"
-            subtitle="Browse medicines and refills from CareSphere Pharmacy"
+            subtitle="Browse medicine information from CareSphere Pharmacy"
           />
         </header>
 

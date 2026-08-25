@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CalendarCheck, Video, Pill, FlaskConical, ChevronRight, Heart } from 'lucide-react'
+import { CalendarCheck, Pill, FlaskConical, ChevronRight, Heart, FileText } from 'lucide-react'
 import Button from '../../components/Button'
 
 const slides = [
@@ -9,9 +9,9 @@ const slides = [
     desc: 'Schedule visits with top doctors across specialties in just a few taps.',
   },
   {
-    icon: Video,
-    title: 'Telemedicine',
-    desc: 'Consult doctors from home with secure, high-quality video calls.',
+    icon: FileText,
+    title: 'Health Records',
+    desc: 'Keep reports, prescriptions, and visit history in one secure place.',
   },
   {
     icon: Pill,
@@ -54,7 +54,7 @@ export default function Onboarding({ onNext }) {
             Your complete health companion
           </h2>
           <p className="text-white/70 text-lg leading-relaxed">
-            Appointments, telemedicine, pharmacy, and lab tests — connected in one platform.
+            Appointments, pharmacy, lab tests, and health records — connected in one platform.
           </p>
         </div>
       </aside>

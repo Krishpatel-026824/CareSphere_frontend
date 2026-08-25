@@ -32,6 +32,19 @@ export const doctorAppointmentImageMap = {
   'doc-125': { doctorPhoto: 'https://randomuser.me/api/portraits/men/47.jpg' },
   'doc-126': { doctorPhoto: 'https://randomuser.me/api/portraits/women/45.jpg' },
   'doc-127': { doctorPhoto: 'https://randomuser.me/api/portraits/men/25.jpg' },
+  'doc-210': { doctorPhoto: 'https://randomuser.me/api/portraits/men/36.jpg' },
+  'doc-211': { doctorPhoto: 'https://randomuser.me/api/portraits/women/55.jpg' },
+  'doc-212': { doctorPhoto: 'https://randomuser.me/api/portraits/men/41.jpg' },
+  'doc-213': { doctorPhoto: 'https://randomuser.me/api/portraits/women/62.jpg' },
+  'doc-214': { doctorPhoto: 'https://randomuser.me/api/portraits/women/70.jpg' },
+  'doc-215': { doctorPhoto: 'https://randomuser.me/api/portraits/men/58.jpg' },
+  'doc-216': { doctorPhoto: 'https://randomuser.me/api/portraits/women/42.jpg' },
+  'doc-217': { doctorPhoto: 'https://randomuser.me/api/portraits/men/29.jpg' },
+  'doc-218': { doctorPhoto: 'https://randomuser.me/api/portraits/women/38.jpg' },
+  'doc-219': { doctorPhoto: 'https://randomuser.me/api/portraits/women/48.jpg' },
+  'doc-220': { doctorPhoto: 'https://randomuser.me/api/portraits/women/53.jpg' },
+  'doc-221': { doctorPhoto: 'https://randomuser.me/api/portraits/women/60.jpg' },
+  'doc-222': { doctorPhoto: 'https://randomuser.me/api/portraits/men/66.jpg' },
 }
 
 export const appointmentImageMap = {

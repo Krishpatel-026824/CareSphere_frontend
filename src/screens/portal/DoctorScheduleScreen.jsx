@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CalendarDays } from 'lucide-react'
+import { CalendarCheck, CalendarDays } from 'lucide-react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
 import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
 import DoctorScheduleVisitList from '../../components/portal/DoctorScheduleVisitList'
@@ -39,15 +39,19 @@ export default function DoctorScheduleScreen({
   ]
 
   return (
-    <div className="w-full h-full min-h-full bg-gradient-to-br from-[#E8F7F5] via-[#F3F0FF] to-[#EAF4FE] flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-full bg-bg-gray flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
-        <header className="shrink-0 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-teal">Clinic day</p>
-            <h1 className="font-display text-[28px] sm:text-[34px] font-bold text-navy tracking-tight leading-none mt-1">
-              Schedule
-            </h1>
-            <p className="text-sm text-body-gray mt-2">{summary.dateLine}</p>
+        <header className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="min-w-0 flex items-center gap-3">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-teal text-white flex items-center justify-center shrink-0 shadow-sm">
+              <CalendarCheck className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />
+            </div>
+            <div className="min-w-0">
+              <h1 className="font-display text-[28px] sm:text-[34px] font-bold text-navy tracking-tight leading-none">
+                Schedule
+              </h1>
+              <p className="text-sm text-body-gray mt-1.5">{summary.dateLine}</p>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {stats.map((stat) => (

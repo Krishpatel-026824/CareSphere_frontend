@@ -55,7 +55,7 @@ export default function LabTestsScreen({ onBack, onReportsGenerated, onNavigateB
   }
 
   return (
-    <div className="w-full min-h-full bg-[#F4F7F8]">
+    <div className="w-full min-h-full bg-bg-gray">
       <div className="w-full page-pad py-5 sm:py-6 lg:py-7 flex flex-col gap-5">
         <header>
           <ServicePageHeading

@@ -20,7 +20,7 @@ export function generateRescheduleDoctors(doctors = [], appointments = [], curre
       dateLabel: appointment?.dateLabel,
       timeLabel: appointment?.timeLabel,
       status: appointment?.status || 'Available',
-      visitType: appointment?.visitType || (doctor.videoConsult ? 'Video / In-clinic' : 'In-clinic'),
+      visitType: appointment?.visitType || 'In-clinic',
       nextDate: doctor.slots?.dates?.[0],
       nextTime: doctor.slots?.times?.[0],
     }

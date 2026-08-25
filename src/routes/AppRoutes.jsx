@@ -26,8 +26,8 @@ import {
 } from './pages/DoctorPages'
 import {
   DoctorClinicToolPage,
-  DoctorConsultPage,
   DoctorHomePage,
+  DoctorLabReportsPage,
   DoctorMessagesPage,
   DoctorNotificationsPage,
   DoctorPatientPage,
@@ -42,7 +42,6 @@ import {
   LabTestsPage,
   LabBookingsPage,
   PharmacyPage,
-  TelemedicinePage,
 } from './pages/ServicePages'
 import { DOCTOR_PATHS, PATHS, homePathForRole } from './paths'
 
@@ -136,7 +135,7 @@ export default function AppRoutes() {
         <Route path={PATHS.newAppointmentBook} element={<NewAppointmentBookPage />} />
         <Route path={PATHS.appointmentDetails} element={<AppointmentDetailsPage />} />
         <Route path={PATHS.reschedule} element={<RescheduleDoctorPage />} />
-        <Route path={PATHS.telemedicine} element={<TelemedicinePage />} />
+        <Route path={PATHS.telemedicine} element={<Navigate to={PATHS.home} replace />} />
         <Route path={PATHS.pharmacy} element={<PharmacyPage />} />
         <Route path={PATHS.labTests} element={<LabTestsPage />} />
         <Route path={PATHS.labBookings} element={<LabBookingsPage />} />
@@ -158,7 +157,8 @@ export default function AppRoutes() {
         <Route path={DOCTOR_PATHS.messages} element={<DoctorMessagesPage />} />
         <Route path={DOCTOR_PATHS.profile} element={<DoctorPortalProfilePage />} />
         <Route path={DOCTOR_PATHS.notifications} element={<DoctorNotificationsPage />} />
-        <Route path={DOCTOR_PATHS.consult} element={<DoctorConsultPage />} />
+        <Route path={DOCTOR_PATHS.consult} element={<Navigate to={DOCTOR_PATHS.home} replace />} />
+        <Route path={DOCTOR_PATHS.labReports} element={<DoctorLabReportsPage />} />
         <Route path={DOCTOR_PATHS.clinicTool} element={<DoctorClinicToolPage />} />
       </Route>
 

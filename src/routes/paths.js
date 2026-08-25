@@ -51,6 +51,7 @@ export const DOCTOR_PATHS = {
   consult: '/doctor/consult',
   prescribe: '/doctor/tools/prescribe',
   labs: '/doctor/tools/labs',
+  labReports: '/doctor/lab-reports',
   notes: '/doctor/tools/notes',
   clinicTool: '/doctor/tools/:tool',
 }

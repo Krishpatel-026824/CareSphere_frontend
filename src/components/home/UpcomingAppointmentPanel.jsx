@@ -1,4 +1,4 @@
-import { CalendarDays, CalendarPlus, Clock, MapPin, Phone, Video } from 'lucide-react'
+import { CalendarDays, CalendarPlus, Clock, MapPin, Phone } from 'lucide-react'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
 export default function UpcomingAppointmentPanel({
@@ -39,98 +39,111 @@ export default function UpcomingAppointmentPanel({
     )
   }
 
-  const isVideo = String(appointment.visitType || '').toLowerCase().includes('video')
   const photo = appointment.doctorPhoto || appointment.photo
   const dateLabel = appointment.dateLabel || appointment.date || ''
   const timeLabel = appointment.timeLabel || appointment.time || ''
   const clinic = appointment.clinic || appointment.hospital || ''
-  const address = appointment.address || clinic
   const location = appointment.location || ''
-  const placeLine = [address, location].filter(Boolean).join(', ')
+  const placeLine = buildPlaceLine(clinic, location, appointment.address)
   const prepLabels = visitSignals?.prepLabels || []
 
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-sm px-5 py-4 flex flex-col gap-3.5 h-full justify-between">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="font-display text-lg font-bold text-navy">Upcoming appointment</h2>
-        <span
-          className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
-            appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
-          }`}
-        >
-          {appointment.status}
-        </span>
-      </div>
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm overflow-hidden flex flex-col h-full">
+      <div className="h-1.5 bg-gradient-to-r from-teal to-[#14B8A6]" />
 
-      <div className="flex items-center gap-3.5">
-        <div className="w-14 h-14 rounded-xl overflow-hidden ring-2 ring-teal-light shadow-sm shrink-0 bg-teal-light">
-          {photo ? (
-            <img src={photo} alt={appointment.doctorName} className="w-full h-full object-cover object-top" />
+      <div className="px-5 py-4 flex flex-col gap-4 h-full justify-between">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-display text-lg font-bold text-navy">Upcoming appointment</h2>
+          <span
+            className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full shrink-0 ${
+              appointmentStatusStyles[appointment.status] || appointmentStatusStyles.Upcoming
+            }`}
+          >
+            {appointment.status}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-3.5">
+          <div className="w-14 h-14 rounded-xl overflow-hidden ring-2 ring-teal-light shadow-sm shrink-0 bg-teal-light">
+            {photo ? (
+              <img src={photo} alt={appointment.doctorName} className="w-full h-full object-cover object-top" />
+            ) : null}
+          </div>
+          <div className="min-w-0">
+            <p className="font-display text-[17px] font-bold text-navy leading-tight truncate">
+              {appointment.doctorName}
+            </p>
+            <p className="text-[14px] text-body-gray truncate mt-0.5">
+              {appointment.specialty}
+              {clinic ? ` • ${clinic}` : ''}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2.5">
+          <InfoChip icon={CalendarDays} label="Date" value={dateLabel || '—'} />
+          <InfoChip icon={Clock} label="Time" value={timeLabel || '—'} />
+        </div>
+
+        <div className="rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] px-3.5 py-3 space-y-2.5">
+          {placeLine ? (
+            <p className="flex items-start gap-2.5 text-[13px] text-navy">
+              <MapPin className="w-4 h-4 text-teal shrink-0 mt-0.5" strokeWidth={1.75} />
+              <span className="min-w-0 leading-snug">{placeLine}</span>
+            </p>
+          ) : null}
+          {appointment.phone ? (
+            <p className="flex items-center gap-2.5 text-[13px] font-semibold text-navy">
+              <Phone className="w-4 h-4 text-teal shrink-0" strokeWidth={1.75} />
+              {appointment.phone}
+            </p>
           ) : null}
         </div>
-        <div className="min-w-0">
-          <p className="font-display text-[17px] font-bold text-navy leading-tight truncate">
-            {appointment.doctorName}
-          </p>
-          <p className="text-[14px] text-body-gray truncate mt-0.5">
-            {appointment.specialty}
-            {clinic ? ` • ${clinic}` : ''}
-          </p>
-        </div>
-      </div>
 
-      <div className="text-[15px] text-navy space-y-2">
-        <p className="flex items-center gap-2.5 font-semibold">
-          <CalendarDays className="w-[18px] h-[18px] text-teal shrink-0" strokeWidth={1.75} />
-          <span className="min-w-0 truncate">
-            {[dateLabel, timeLabel, appointment.visitType].filter(Boolean).join(' • ')}
-          </span>
-        </p>
-        {placeLine ? (
-          <p className="flex items-start gap-2.5">
-            <MapPin className="w-[18px] h-[18px] text-teal shrink-0 mt-0.5" strokeWidth={1.75} />
-            <span className="min-w-0 leading-snug">{placeLine}</span>
-          </p>
+        {prepLabels.length ? (
+          <p className="text-xs text-body-gray">Prep: {prepLabels.slice(0, 2).join(' · ')}</p>
         ) : null}
-        {appointment.room ? (
-          <p className="flex items-center gap-2.5">
-            <Clock className="w-[18px] h-[18px] text-teal shrink-0" strokeWidth={1.75} />
-            {appointment.room}
-          </p>
-        ) : null}
-        {appointment.phone ? (
-          <p className="flex items-center gap-2.5 font-semibold">
-            <Phone className="w-[18px] h-[18px] text-teal shrink-0" strokeWidth={1.75} />
-            {appointment.phone}
-          </p>
-        ) : null}
-      </div>
 
-      {prepLabels.length ? (
-        <p className="text-xs text-body-gray">Prep: {prepLabels.slice(0, 2).join(' · ')}</p>
-      ) : null}
-
-      <div className="flex gap-3 pt-1">
-        <button
-          type="button"
-          onClick={onReschedule}
-          className="flex-1 h-11 rounded-xl border border-border-gray bg-white text-navy text-sm font-semibold cursor-pointer hover:bg-bg-gray"
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          onClick={onJoinDetails}
-          className="flex-[1.2] h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
-        >
-          {isVideo ? (
-            <Video className="w-3.5 h-3.5" strokeWidth={1.75} />
-          ) : (
+        <div className="flex gap-3 pt-0.5">
+          <button
+            type="button"
+            onClick={onReschedule}
+            className="flex-1 h-11 rounded-xl border border-border-gray bg-white text-navy text-sm font-semibold cursor-pointer hover:bg-bg-gray transition-colors"
+          >
+            Reschedule
+          </button>
+          <button
+            type="button"
+            onClick={onJoinDetails}
+            className="flex-[1.2] h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2 transition-colors"
+          >
             <CalendarDays className="w-3.5 h-3.5" strokeWidth={1.75} />
-          )}
-          {isVideo ? 'Join video call' : 'View details'}
-        </button>
+            View details
+          </button>
+        </div>
       </div>
     </section>
   )
+}
+
+function InfoChip({ icon: Icon, label, value }) {
+  return (
+    <div className="rounded-xl bg-[#F0FDFA] border border-[#CCFBF1] px-3 py-2.5">
+      <p className="text-[10px] font-semibold uppercase tracking-wide text-[#64748B] mb-1">{label}</p>
+      <p className="text-[13px] font-semibold text-navy inline-flex items-center gap-1.5 min-w-0">
+        <Icon className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={2} />
+        <span className="truncate">{value}</span>
+      </p>
+    </div>
+  )
+}
+
+function buildPlaceLine(clinic, location, address) {
+  const parts = []
+  if (clinic) parts.push(clinic)
+  if (location && !clinic?.toLowerCase().includes(location.toLowerCase())) {
+    parts.push(location)
+  }
+  if (!parts.length && address) return address
+  return parts.join(', ')
 }

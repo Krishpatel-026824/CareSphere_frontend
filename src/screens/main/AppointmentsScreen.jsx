@@ -148,7 +148,7 @@ export default function AppointmentsScreen({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-[#E8F1F2] flex flex-col overflow-x-hidden lg:overflow-hidden">
+      <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-bg-gray flex flex-col overflow-x-hidden lg:overflow-hidden">
         <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
         <AppointmentPageHeader
           count={appointments.length}

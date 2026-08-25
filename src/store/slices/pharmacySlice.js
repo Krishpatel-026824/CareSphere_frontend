@@ -51,6 +51,9 @@ const pharmacySlice = createSlice({
         ? state.selectedFilters.filter((item) => item !== id)
         : [...state.selectedFilters, id]
     },
+    clearCatalogFilters(state) {
+      state.selectedFilters = []
+    },
     toggleCatalogBrand(state, action) {
       const id = action.payload
       state.selectedBrands = state.selectedBrands.includes(id)
@@ -69,6 +72,7 @@ export const {
   payBill,
   setCatalogQuery,
   toggleCatalogFilter,
+  clearCatalogFilters,
   toggleCatalogBrand,
 } = pharmacySlice.actions
 

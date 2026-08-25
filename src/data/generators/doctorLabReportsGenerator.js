@@ -1,4 +1,6 @@
-import { doctorLabFacilityMock, doctorLabReportTemplatesMock } from '../mocks/doctorLabReports'
+import { doctorLabFacilityMock, doctorLabReportTemplatesMock, doctorLabReportsPageMock } from '../mocks/doctorLabReports'
+import { doctorLabTasksMock } from '../mocks/doctorClinicTools'
+import { doctorPatientsMock } from '../mocks/doctorPatients'
 
 function parseAge(ageLabel = '') {
   const match = String(ageLabel).match(/\d+/)
@@ -48,5 +50,34 @@ export function generateDoctorLabReport(task, patient) {
       paidOn: `${reportDate} · 08:45 AM`,
     },
     preview: template.preview,
+  }
+}
+
+export function generateDoctorPatientLabReports() {
+  const reports = doctorLabTasksMock
+    .map((task) => {
+      const patient = doctorPatientsMock.find((item) => item.id === task.patientId)
+      const report = generateDoctorLabReport(task, patient)
+      if (!report) return null
+
+      return {
+        id: report.id,
+        taskId: task.id,
+        patientId: task.patientId,
+        patientName: patient?.name || 'Patient',
+        avatar: patient?.avatar || '',
+        badge: task.badge,
+        title: task.title,
+        subtitle: task.subtitle,
+        dateLabel: report.dateLabel,
+        status: report.status,
+        report,
+      }
+    })
+    .filter(Boolean)
+
+  return {
+    ...doctorLabReportsPageMock,
+    reports,
   }
 }

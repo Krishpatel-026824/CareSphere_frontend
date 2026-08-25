@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Dialog from '@mui/material/Dialog'
 import Avatar from '@mui/material/Avatar'
-import { ArrowLeft, Award, Briefcase, Clock, Heart, Hospital, IndianRupee, Languages, MapPin, Star, Stethoscope, Users, Video, X } from 'lucide-react'
+import { ArrowLeft, Award, Briefcase, Clock, Heart, Hospital, IndianRupee, Languages, MapPin, Star, Stethoscope, Users, X } from 'lucide-react'
 
 export default function DoctorProfileModal({ open, appointment, doctor, onClose }) {
   const [showPhoto, setShowPhoto] = useState(false)
@@ -72,7 +72,7 @@ export default function DoctorProfileModal({ open, appointment, doctor, onClose 
             <DetailRow icon={Briefcase} label="Experience" value={`${doc.experience || '--'} years of practice`} />
             <DetailRow icon={Star} label="Rating" value={`${doc.rating || '--'} (${doc.reviewCount || 0} patient reviews)`} />
             <DetailRow icon={IndianRupee} label="Consultation Fee" value={`₹${doc.fee || '--'} per visit`} />
-            <DetailRow icon={Video} label="Consult Type" value={doc.videoConsult ? 'Video Consultation + In-clinic' : 'In-clinic only'} />
+            <DetailRow icon={Stethoscope} label="Consult Type" value="In-clinic only" />
             {doc.languages?.length ? (
               <DetailRow icon={Languages} label="Languages" value={doc.languages.join(', ')} />
             ) : null}
