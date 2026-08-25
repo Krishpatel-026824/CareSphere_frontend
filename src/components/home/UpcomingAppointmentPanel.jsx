@@ -10,7 +10,7 @@ export default function UpcomingAppointmentPanel({
 }) {
   if (!appointment) {
     return (
-      <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col h-full">
+      <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col h-full min-h-[280px]">
         <div className="flex items-center justify-between gap-3 mb-4">
           <h2 className="font-display text-lg font-bold text-navy">Upcoming appointment</h2>
           <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600">
@@ -48,7 +48,7 @@ export default function UpcomingAppointmentPanel({
   const prepLabels = visitSignals?.prepLabels || []
 
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-sm overflow-hidden flex flex-col h-full">
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm overflow-hidden flex flex-col h-full min-h-[280px]">
       <div className="h-1.5 bg-gradient-to-r from-teal to-[#14B8A6]" />
 
       <div className="px-5 py-4 flex flex-col gap-4 h-full justify-between">

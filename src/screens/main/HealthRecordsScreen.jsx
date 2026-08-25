@@ -3,7 +3,6 @@ import { ArrowLeft, FileHeart } from 'lucide-react'
 import ServicePageHeading from '../../components/ServicePageHeading'
 import HealthRecordConfirm from '../../components/health/HealthRecordConfirm'
 import HealthRecordDetail from '../../components/health/HealthRecordDetail'
-import HealthRecordsExtras from '../../components/health/HealthRecordsExtras'
 import HealthRecordsList from '../../components/health/HealthRecordsList'
 import LabReportDetail from '../../components/lab/LabReportDetail'
 import {
@@ -89,8 +88,6 @@ export default function HealthRecordsScreen({ onBack }) {
             if (actionId === 'destroy') setPending({ type: 'destroy', record: item })
           }}
         />
-
-        <HealthRecordsExtras />
       </div>
 
       <HealthRecordConfirm

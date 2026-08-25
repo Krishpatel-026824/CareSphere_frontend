@@ -20,7 +20,7 @@ export default function MedicineReminderCard() {
   const canMarkTaken = !takenToday && remainingCount > 0
 
   return (
-    <section className="bg-white rounded-[24px] shadow-[0_8px_30px_rgba(7,26,47,0.06)] p-5 sm:p-6 flex flex-col gap-4 shrink-0 w-full">
+    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col gap-4 h-full min-h-[280px] w-full">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>

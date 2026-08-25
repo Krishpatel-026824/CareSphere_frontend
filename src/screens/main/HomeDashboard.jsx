@@ -1,5 +1,6 @@
 import { Bell, HeartPulse } from 'lucide-react'
 import HealthTipCard from '../../components/home/HealthTipCard'
+import LabBookingPanel from '../../components/home/LabBookingPanel'
 import MedicineReminderCard from '../../components/home/MedicineReminderCard'
 import UpcomingAppointmentPanel from '../../components/home/UpcomingAppointmentPanel'
 import { generateHomeData } from '../../data/generators/homeGenerator'
@@ -11,7 +12,10 @@ export default function HomeDashboard({
   onRescheduleAppointment,
   onAppointmentDetails,
   onBookAppointment,
+  onBookLabTest,
+  onViewLabBookings,
   upcomingAppointment,
+  latestLabBooking,
   visitSignals,
 }) {
   const homeData = generateHomeData()
@@ -51,7 +55,7 @@ export default function HomeDashboard({
           </button>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 items-stretch">
           <UpcomingAppointmentPanel
             key={
               appointment
@@ -65,10 +69,13 @@ export default function HomeDashboard({
             onBook={onBookAppointment}
           />
           <MedicineReminderCard />
+          <LabBookingPanel
+            booking={latestLabBooking}
+            onBook={() => onBookLabTest?.() || onActionClick?.('labTests')}
+            onViewBookings={() => onViewLabBookings?.() || onActionClick?.('labTests')}
+          />
+          <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
         </div>
-
-        <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
-
       </div>
     </div>
   )
