@@ -17,8 +17,8 @@ export default function DoctorVisitActions({
   if (!hasActions) return null
 
   const base = `${
-    compact ? 'min-h-10 text-[13px]' : 'min-h-11 text-sm'
-  } w-full rounded-xl font-semibold cursor-pointer inline-flex items-center justify-center gap-2 transition-colors`
+    compact ? 'min-h-11 text-[14px]' : 'min-h-11 text-[14px]'
+  } w-full rounded-xl font-semibold tracking-tight cursor-pointer inline-flex items-center justify-center gap-2 transition-colors`
 
   return (
     <div

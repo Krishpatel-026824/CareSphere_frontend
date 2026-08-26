@@ -8,6 +8,7 @@ import SidebarQuickActions from './SidebarQuickActions'
 
 export default function AppSidebar({
   activeTab,
+  activeQuickAction = '',
   onTabChange,
   messagesBadge = 0,
   tabs,
@@ -41,7 +42,11 @@ export default function AppSidebar({
         {quickActions?.length ? (
           <>
             <div className="my-3 border-t border-white/10" />
-            <SidebarQuickActions actions={quickActions} onActionClick={onQuickAction} />
+            <SidebarQuickActions
+              actions={quickActions}
+              activeKey={activeQuickAction}
+              onActionClick={onQuickAction}
+            />
           </>
         ) : null}
 

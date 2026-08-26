@@ -1,3 +1,6 @@
+import { doctorPatientsMock } from '../mocks/doctorPatients'
+import { generateDoctorPatientProfile } from './doctorPatientProfileGenerator'
+import { generateDoctorLabReport } from './doctorLabReportsGenerator'
 import {
   clinicToolStatCopy,
   doctorClinicToolPagesMock,
@@ -5,8 +8,6 @@ import {
   doctorNoteTasksMock,
   doctorPrescribeTasksMock,
 } from '../mocks/doctorClinicTools'
-import { doctorPatientsMock } from '../mocks/doctorPatients'
-import { generateDoctorLabReport } from './doctorLabReportsGenerator'
 
 const taskLists = {
   prescribe: doctorPrescribeTasksMock,
@@ -16,11 +17,16 @@ const taskLists = {
 
 function withPatient(task, page, tool) {
   const patient = doctorPatientsMock.find((item) => item.id === task.patientId)
-  const details = [
-    ...(page.detailKeys || []).map((key) => ({
+  const profile = generateDoctorPatientProfile(patient)
+  const medicineDetails = (page.detailKeys || [])
+    .map((key) => ({
       label: page.fieldLabels[key],
       value: task[key],
-    })),
+    }))
+    .filter((item) => item.label && item.value)
+
+  const details = [
+    ...medicineDetails,
     { label: 'Phone', value: patient?.phone },
     { label: 'City', value: patient?.city },
   ].filter((item) => item.label && item.value)
@@ -31,7 +37,14 @@ function withPatient(task, page, tool) {
     avatar: patient?.avatar || '',
     ageLabel: patient?.ageLabel || '',
     gender: patient?.gender || '',
+    phone: patient?.phone || '',
+    city: patient?.city || '',
+    bloodGroup: profile?.bloodGroup || '',
+    allergies: profile?.allergies || '',
+    primaryConcern: profile?.primaryConcern || '',
+    email: profile?.email || '',
     details,
+    medicineDetails,
     planItems: task.planItems?.length ? task.planItems : page.defaultPlan || [],
     labReport: tool === 'labs' ? generateDoctorLabReport(task, patient) : null,
   }

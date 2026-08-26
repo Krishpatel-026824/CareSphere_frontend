@@ -5,7 +5,12 @@ import { formatDateLabel, parseAppointmentDate, visitDayHeading } from '../../ut
 
 export function generateDoctorExtraVisits(now = new Date()) {
   return doctorPatientsMock.map((patient, index) => {
-    const dayOffset = Math.floor(index / 3)
+    const statusCycle = ['Upcoming', 'Confirmed', 'Completed', 'Cancelled']
+    const status = statusCycle[index % statusCycle.length]
+    const dayOffset =
+      status === 'Completed' || status === 'Cancelled'
+        ? -(Math.floor(index / 4) + 1)
+        : Math.floor(index / 3)
     const date = new Date(now)
     date.setHours(0, 0, 0, 0)
     date.setDate(date.getDate() + dayOffset)
@@ -18,7 +23,7 @@ export function generateDoctorExtraVisits(now = new Date()) {
       patientPhoto: patient.avatar,
       dateLabel: formatDateLabel(date),
       timeLabel: doctorVisitTimeSlotsMock[index % doctorVisitTimeSlotsMock.length],
-      status: index % 4 === 0 ? 'Upcoming' : 'Confirmed',
+      status,
       ...doctorClinicDefaultsMock,
       room: `Consultation Room ${(index % 5) + 1}`,
       prepNote: `Consult for ${patient.name}. Review latest notes and vitals.`,

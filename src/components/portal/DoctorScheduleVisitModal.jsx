@@ -17,12 +17,14 @@ export default function DoctorScheduleVisitModal({
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       PaperProps={{
         sx: {
           borderRadius: '20px',
           overflow: 'hidden',
-          maxHeight: '90vh',
+          width: '100%',
+          maxWidth: 720,
+          maxHeight: '92vh',
         },
       }}
     >

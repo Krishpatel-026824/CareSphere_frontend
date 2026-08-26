@@ -34,6 +34,7 @@ import {
   DoctorPatientsPage,
   DoctorProfilePage as DoctorPortalProfilePage,
   DoctorSchedulePage,
+  DoctorSignedRxPage,
 } from './pages/DoctorPortalPages'
 import HomePage from './pages/HomePage'
 import ProfilePage from './pages/ProfilePage'
@@ -161,6 +162,10 @@ export default function AppRoutes() {
         <Route path={DOCTOR_PATHS.notifications} element={<DoctorNotificationsPage />} />
         <Route path={DOCTOR_PATHS.consult} element={<Navigate to={DOCTOR_PATHS.home} replace />} />
         <Route path={DOCTOR_PATHS.labReports} element={<DoctorLabReportsPage />} />
+        <Route path={DOCTOR_PATHS.signedRx} element={<DoctorSignedRxPage />} />
+        <Route path={DOCTOR_PATHS.prescribe} element={<DoctorClinicToolPage />} />
+        <Route path={DOCTOR_PATHS.labs} element={<DoctorClinicToolPage />} />
+        <Route path={DOCTOR_PATHS.notes} element={<DoctorClinicToolPage />} />
         <Route path={DOCTOR_PATHS.clinicTool} element={<DoctorClinicToolPage />} />
       </Route>
 

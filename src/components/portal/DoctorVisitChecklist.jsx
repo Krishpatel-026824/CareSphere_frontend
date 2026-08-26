@@ -6,15 +6,13 @@ export default function DoctorVisitChecklist({ tasks = [], title = 'Visit checkl
 
   return (
     <div className="flex flex-col">
-      <div className={`flex items-center justify-between gap-2 shrink-0 ${compact ? 'mb-1.5' : 'mb-2'}`}>
-        <h3 className={`${compact ? 'text-sm' : 'text-sm'} font-bold text-navy`}>{title}</h3>
-        <span
-          className={`${compact ? 'text-[11px] px-2.5' : 'text-[11px] px-2.5'} font-semibold text-teal bg-[#E8F7F6] py-0.5 rounded-full shrink-0`}
-        >
+      <div className={`flex items-center justify-between gap-2 shrink-0 ${compact ? 'mb-2' : 'mb-2.5'}`}>
+        <h3 className="text-[15px] font-bold text-navy tracking-tight">{title}</h3>
+        <span className="text-[11px] font-semibold tracking-tight text-teal bg-[#E8F7F6] px-2.5 py-1 rounded-full shrink-0">
           {doneCount}/{tasks.length} done
         </span>
       </div>
-      <ul className={`flex flex-col ${compact ? 'gap-1' : 'gap-1.5'}`}>
+      <ul className={`flex flex-col ${compact ? 'gap-1.5' : 'gap-2'}`}>
         {tasks.map((task) => {
           const content = (
             <>
@@ -26,16 +24,20 @@ export default function DoctorVisitChecklist({ tasks = [], title = 'Visit checkl
                 {task.done ? <Check className={compact ? 'w-2.5 h-2.5' : 'w-3 h-3'} strokeWidth={3} /> : null}
               </span>
               <span
-                className={`${compact ? 'text-[13px]' : 'text-sm'} break-words ${task.done ? 'font-medium text-navy line-through decoration-teal/40' : 'text-navy/80'}`}
+                className={`text-[14px] tracking-tight break-words ${
+                  task.done
+                    ? 'font-medium text-navy line-through decoration-teal/40'
+                    : 'font-medium text-navy/85'
+                }`}
               >
                 {task.label}
               </span>
             </>
           )
 
-          const itemClass = `${
-            compact ? 'gap-2.5 rounded-xl px-3 py-2 text-[13px] leading-snug' : 'gap-2.5 rounded-xl px-3 py-2 text-sm leading-snug'
-          } ${task.done ? 'bg-[#E8F7F6] text-navy' : 'bg-[#F7FAFC] text-body-gray'}`
+          const itemClass = `gap-2.5 rounded-xl px-3 py-2.5 leading-snug ${
+            task.done ? 'bg-[#E8F7F6] text-navy' : 'bg-[#F7FAFC] text-body-gray'
+          }`
 
           if (!interactive) {
             return (

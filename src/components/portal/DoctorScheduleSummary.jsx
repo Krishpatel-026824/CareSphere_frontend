@@ -14,8 +14,12 @@ function InfoTile({ icon: Icon, label, value }) {
         <Icon className="w-4 h-4 text-teal" strokeWidth={1.85} />
       </span>
       <div className="min-w-0">
-        <p className="text-[11px] font-medium text-body-gray leading-none">{label}</p>
-        <p className="text-sm font-bold text-navy mt-1 truncate">{value}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.06em] text-body-gray leading-none">
+          {label}
+        </p>
+        <p className="text-[14px] font-semibold text-navy mt-1 truncate leading-snug tracking-tight">
+          {value}
+        </p>
       </div>
     </div>
   )
@@ -57,13 +61,13 @@ export default function DoctorScheduleSummary({
               />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/75">
                 Selected visit
               </p>
-              <p className="font-display text-lg font-bold leading-tight truncate mt-0.5">
+              <p className="font-display text-[22px] font-bold leading-[1.15] tracking-tight truncate mt-1">
                 {visit.patientName}
               </p>
-              <p className="text-xs text-white/85 truncate mt-0.5">
+              <p className="text-[13px] font-medium text-white/90 truncate mt-1 tracking-tight">
                 {visit.timeLabel} · {visit.dateLabel}
               </p>
             </div>
@@ -79,14 +83,14 @@ export default function DoctorScheduleSummary({
             </button>
           ) : null}
         </div>
-        <div className="mt-2.5 inline-flex items-center rounded-full bg-white/15 border border-white/20 px-2.5 py-0.5 text-[11px] font-semibold">
+        <div className="mt-3 inline-flex items-center rounded-full bg-white/15 border border-white/20 px-3 py-1 text-[12px] font-semibold tracking-tight">
           {appointmentStatusLabels[visit.status] || visit.status}
         </div>
       </div>
 
       <div className={`p-4 flex flex-col gap-3 ${asModal ? 'overflow-y-auto scroll-y flex-1 min-h-0' : ''}`}>
         {visit.prepNote ? (
-          <p className="text-[13px] text-navy leading-snug bg-[#F4F7FA] rounded-xl px-3 py-2.5">
+          <p className="text-[14px] font-medium text-navy leading-relaxed tracking-tight bg-[#F4F7FA] rounded-xl px-3.5 py-3">
             <span className="font-bold text-teal">Reason · </span>
             {visit.prepNote}
           </p>

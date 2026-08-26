@@ -1,15 +1,12 @@
-import { useMemo } from 'react'
 import { Bell, HeartPulse } from 'lucide-react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
-import DoctorHomeTriagePanel from '../../components/portal/DoctorHomeTriagePanel'
-import DoctorNextVisitPanel from '../../components/portal/DoctorNextVisitPanel'
+import DoctorHomeAppointmentsTable from '../../components/portal/DoctorHomeAppointmentsTable'
 import DoctorScheduleVisitModal from '../../components/portal/DoctorScheduleVisitModal'
 import DoctorHomeStatusScreen from './DoctorHomeStatusScreen'
 import { generateDoctorHomeData } from '../../data/generators/doctorHomeGenerator'
 import { useAppSelector } from '../../store/hooks'
 import { selectActiveNotifications } from '../../store/slices/notificationsSlice'
 import { formatTodayLabel, getTimeGreeting } from '../../utils/greeting'
-import { sortAppointmentsForList } from '../../utils/appointmentFormat'
 
 export default function DoctorHomeScreen({
   visits,
@@ -33,18 +30,6 @@ export default function DoctorHomeScreen({
   const todayLabel = formatTodayLabel(now)
   const unreadNotices = useAppSelector(selectActiveNotifications).filter((item) => item.unread)
     .length
-
-  const decisionVisits = useMemo(
-    () => sortAppointmentsForList(visits.filter((visit) => visit.status === 'Upcoming')),
-    [visits],
-  )
-
-  const confirmedNext = useMemo(() => {
-    const confirmed = sortAppointmentsForList(
-      visits.filter((visit) => visit.status === 'Confirmed'),
-    )
-    return confirmed[0] || null
-  }, [visits])
 
   const modalVisit = !homeStat ? selectedVisit : null
 
@@ -85,7 +70,7 @@ export default function DoctorHomeScreen({
                   </span>
                 </div>
                 <p className="text-xs sm:text-sm text-body-gray mt-1 truncate">
-                  Decide on new bookings, then see your next confirmed patient
+                  Review patient bookings, accept requests, and open past records
                 </p>
               </div>
             </div>
@@ -105,13 +90,12 @@ export default function DoctorHomeScreen({
             </button>
           </header>
 
-          <DoctorHomeTriagePanel
-            visits={decisionVisits}
+          <DoctorHomeAppointmentsTable
+            visits={visits}
             onAccept={onAcceptVisit}
             onDecline={onDeclineVisit}
+            onView={onOpenVisit}
           />
-
-          <DoctorNextVisitPanel visit={confirmedNext} onOpen={onOpenVisit} />
         </div>
       )}
 

@@ -3,6 +3,7 @@ import AppSidebar from './sidebar/AppSidebar'
 
 export default function AppShell({
   activeTab,
+  activeQuickAction = '',
   onTabChange,
   messagesBadge = 0,
   tabs,
@@ -18,6 +19,7 @@ export default function AppShell({
     <div className="app-viewport bg-bg-gray flex overflow-hidden">
       <AppSidebar
         activeTab={activeTab}
+        activeQuickAction={activeQuickAction}
         onTabChange={onTabChange}
         messagesBadge={messagesBadge}
         tabs={tabs}

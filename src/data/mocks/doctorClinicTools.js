@@ -26,8 +26,8 @@ export const clinicTaskBadgeStyles = {
 export const doctorClinicToolPagesMock = {
   prescribe: {
     title: 'Write Rx',
-    subtitle: 'Pending prescriptions for today’s visits',
-    listTitle: 'Pending Rx',
+    subtitle: 'Pick a queue → select Rx → review → sign. Next item opens automatically.',
+    listTitle: 'Prescriptions',
     actionLabel: 'Open patient chart',
     instructionsLabel: 'Instructions',
     planLabel: 'Counseling',

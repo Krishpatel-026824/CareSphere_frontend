@@ -13,7 +13,22 @@ function getActiveTab(pathname) {
   if (pathname.startsWith('/doctor/patients')) return 'patients'
   if (pathname.startsWith('/doctor/messages')) return 'messages'
   if (pathname.startsWith('/doctor/profile')) return 'profile'
+  if (
+    pathname.startsWith('/doctor/tools') ||
+    pathname.startsWith('/doctor/lab-reports') ||
+    pathname.startsWith('/doctor/notifications')
+  ) {
+    return ''
+  }
   return 'home'
+}
+
+function getActiveQuickAction(pathname) {
+  if (pathname.startsWith('/doctor/tools/prescribe')) return 'prescribe'
+  if (pathname.startsWith('/doctor/lab-reports')) return 'labReports'
+  if (pathname.startsWith('/doctor/tools/labs')) return 'labs'
+  if (pathname.startsWith('/doctor/tools/notes')) return 'notes'
+  return ''
 }
 
 export default function DoctorLayout() {
@@ -30,19 +45,29 @@ export default function DoctorLayout() {
   }
 
   const activeTab = getActiveTab(location.pathname)
+  const activeQuickAction = getActiveQuickAction(location.pathname)
 
   function handleTabChange(tabId) {
     navigate(DOCTOR_TAB_PATHS[tabId] || DOCTOR_TAB_PATHS.home)
   }
 
   function handleQuickAction(key) {
+    if (key === 'prescribe') {
+      navigate(DOCTOR_PATHS.prescribe)
+      return
+    }
+    if (key === 'labReports') {
+      navigate(DOCTOR_PATHS.labReports)
+      return
+    }
     const path = DOCTOR_PATHS[key]
-    if (path) navigate(path)
+    if (path && !String(path).includes(':')) navigate(path)
   }
 
   return (
     <AppShell
       activeTab={activeTab}
+      activeQuickAction={activeQuickAction}
       onTabChange={handleTabChange}
       messagesBadge={messagesBadge}
       tabs={doctorMainNavTabs}

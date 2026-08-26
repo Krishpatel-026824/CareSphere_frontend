@@ -30,16 +30,20 @@ export default function DoctorVisitTimeline({ steps = [], tasks = [], compact = 
                 }`}
               />
             )}
-            <span
-              className={`${compact ? 'text-[10px]' : 'text-[10px] sm:text-[11px]'} font-semibold text-center leading-tight truncate w-full`}
-            >
+            <span className="text-[11px] font-semibold tracking-tight text-center leading-tight truncate w-full">
               {step.label}
             </span>
           </div>
         ))}
       </div>
       {hint ? (
-        <p className={`text-body-gray px-0.5 ${compact ? 'text-xs mt-1.5' : 'text-[12px] mt-2'}`}>{hint}</p>
+        <p
+          className={`text-body-gray px-0.5 font-medium tracking-tight ${
+            compact ? 'text-[13px] mt-2' : 'text-[13px] mt-2.5'
+          }`}
+        >
+          {hint}
+        </p>
       ) : null}
     </div>
   )

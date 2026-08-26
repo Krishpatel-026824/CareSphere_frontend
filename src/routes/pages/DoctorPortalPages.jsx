@@ -1,5 +1,5 @@
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useMemo, useState } from 'react'
 import NotificationsScreen from '../../screens/main/NotificationsScreen'
 import MessagesScreen from '../../screens/main/MessagesScreen'
 import ProfileScreen from '../../screens/main/ProfileScreen'
@@ -10,6 +10,7 @@ import DoctorLabReportsScreen from '../../screens/portal/DoctorLabReportsScreen'
 import DoctorPatientDetailScreen from '../../screens/portal/DoctorPatientDetailScreen'
 import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
+import DoctorSignedRxScreen from '../../screens/portal/DoctorSignedRxScreen'
 import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
 import { generateDoctorPatientLabReports } from '../../data/generators/doctorLabReportsGenerator'
 import { doctorHomeStatFilters, filterDoctorHomeQueue } from '../../data/generators/doctorHomeGenerator'
@@ -17,6 +18,11 @@ import { generatePatientChartVisits } from '../../data/generators/doctorPatientH
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
 import { useDoctorProfile } from '../../hooks/useDoctorProfile'
 import { useDoctorSchedule } from '../../hooks/useDoctorSchedule'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import {
+  addSignedRx,
+  selectSignedRxIds,
+} from '../../store/slices/doctorSignedRxSlice'
 import {
   DOCTOR_PATHS,
   PATHS,
@@ -149,18 +155,63 @@ export function DoctorLabReportsPage() {
   )
 }
 
+export function DoctorSignedRxPage() {
+  const navigate = useNavigate()
+
+  return (
+    <DoctorSignedRxScreen
+      onBack={() => navigate(DOCTOR_PATHS.prescribe)}
+      onContinue={() => navigate(DOCTOR_PATHS.prescribe, { state: { startProcess: true } })}
+      onOpenPatient={(item) => {
+        if (item?.patientId) navigate(doctorPortalPatientPath(item.patientId))
+      }}
+    />
+  )
+}
+
 export function DoctorClinicToolPage() {
   const navigate = useNavigate()
-  const { tool } = useParams()
-  const data = generateDoctorClinicTool(tool)
+  const dispatch = useAppDispatch()
+  const location = useLocation()
+  const signedIds = useAppSelector(selectSignedRxIds)
+  const { tool: toolParam } = useParams()
+  const tool =
+    toolParam ||
+    (location.pathname.startsWith('/doctor/tools/')
+      ? location.pathname.split('/').filter(Boolean).pop()
+      : null)
+  const data = useMemo(() => generateDoctorClinicTool(tool), [tool])
+  const waitingTasks = useMemo(() => {
+    if (!data) return []
+    if (tool !== 'prescribe') return data.tasks
+    return data.tasks.filter((task) => !signedIds.includes(task.id))
+  }, [data, signedIds, tool])
 
   if (!data) {
     return <Navigate to={DOCTOR_PATHS.home} replace />
   }
 
+  function handleSignComplete(task) {
+    const now = new Date()
+    dispatch(
+      addSignedRx({
+        ...task,
+        signedAt: now.getTime(),
+        signedAtLabel: now.toLocaleString('en-IN', {
+          day: '2-digit',
+          month: 'short',
+          hour: '2-digit',
+          minute: '2-digit',
+        }),
+      }),
+    )
+    navigate(DOCTOR_PATHS.signedRx)
+  }
+
   return (
     <DoctorClinicToolScreen
-      key={tool}
+      key={`${tool}-${autoStartKey(location.state)}`}
+      tool={tool}
       title={data.title}
       subtitle={data.subtitle}
       listTitle={data.listTitle}
@@ -170,12 +221,18 @@ export function DoctorClinicToolPage() {
       viewReportLabel={data.viewReportLabel}
       backToOrderLabel={data.backToOrderLabel}
       empty={data.empty}
-      stats={data.stats}
-      tasks={data.tasks}
+      tasks={waitingTasks}
+      autoStart={Boolean(location.state?.startProcess)}
       onBack={() => navigate(DOCTOR_PATHS.home)}
       onSelectTask={(task) => navigate(doctorPortalPatientPath(task.patientId))}
+      onSignComplete={tool === 'prescribe' ? handleSignComplete : undefined}
+      onOpenSigned={tool === 'prescribe' ? () => navigate(DOCTOR_PATHS.signedRx) : undefined}
     />
   )
+}
+
+function autoStartKey(state) {
+  return state?.startProcess ? 'start' : 'idle'
 }
 
 export function DoctorMessagesPage() {

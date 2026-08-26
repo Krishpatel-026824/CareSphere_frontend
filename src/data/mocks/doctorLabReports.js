@@ -87,8 +87,8 @@ export const doctorLabFacilityMock = {
 }
 
 export const doctorLabReportsPageMock = {
-  title: 'Patient lab reports',
-  subtitle: 'Review completed test results from your patients',
-  listTitle: 'Lab reports',
-  empty: 'No lab reports are available yet.',
+  title: 'Lab reports',
+  subtitle: 'Open a patient to review their completed test results',
+  listTitle: 'Patient reports',
+  empty: 'No patient lab reports are available yet.',
 }

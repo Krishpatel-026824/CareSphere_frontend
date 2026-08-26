@@ -51,6 +51,7 @@ export const DOCTOR_PATHS = {
   notifications: '/doctor/notifications',
   consult: '/doctor/consult',
   prescribe: '/doctor/tools/prescribe',
+  signedRx: '/doctor/tools/prescribe/signed',
   labs: '/doctor/tools/labs',
   labReports: '/doctor/lab-reports',
   notes: '/doctor/tools/notes',
