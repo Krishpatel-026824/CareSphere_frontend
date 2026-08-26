@@ -5,7 +5,7 @@ export default function AppointmentActionDialog({ open, copy, onClose, onConfirm
   if (!open || !copy) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/40">
+    <div className="fixed inset-0 z-[1600] flex items-center justify-center p-4 bg-navy/40">
       <div
         role="dialog"
         aria-modal="true"

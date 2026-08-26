@@ -4,7 +4,7 @@ export default function AppointmentActionMenu({ open, x, y, options = [], onSele
   if (!open || options.length === 0) return null
 
   return (
-    <div className="fixed inset-0 z-40" onClick={onClose}>
+    <div className="fixed inset-0 z-[1500]" onClick={onClose}>
       <div
         role="menu"
         aria-label="Appointment options"

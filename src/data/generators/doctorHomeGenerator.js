@@ -9,7 +9,7 @@ export function generateDoctorHomeData(visits = [], nextVisit = null) {
 
   return {
     greetingName: 'Dr. Carter',
-    subtitle: "Here's today's clinic queue",
+    subtitle: "Here's your clinic snapshot for today",
     stats: [
       {
         id: 'waiting',

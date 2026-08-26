@@ -14,44 +14,51 @@ const statusDot = {
   Cancelled: 'bg-rose-500',
 }
 
-export default function DoctorPatientVisitCard({ visit, selected, onSelect, displayOnly = false }) {
+export default function DoctorPatientVisitCard({
+  visit,
+  selected,
+  onSelect,
+  displayOnly = false,
+}) {
   const statusClass = statusStyles[visit.status] || statusStyles.Upcoming
   const dotClass = statusDot[visit.status] || statusDot.Upcoming
 
   const content = (
     <>
-      <div className="flex flex-col items-center gap-1 shrink-0 w-5">
-        <span className={`w-2.5 h-2.5 rounded-full ring-4 ring-white ${dotClass}`} />
-        <span className="w-px flex-1 min-h-[28px] bg-[#E2E8F0]" />
+      <div className="flex flex-col items-center gap-1 shrink-0 w-4 self-stretch pt-1">
+        <span className={`w-2 h-2 rounded-full ring-4 ring-white ${dotClass}`} />
+        <span className="w-px flex-1 min-h-[16px] bg-[#E2E8F0]" />
       </div>
 
-      <div className="flex-1 min-w-0 rounded-2xl border border-[#EAF0F5] bg-gradient-to-br from-[#F8FBFC] to-white px-3.5 py-3.5">
-        <div className="flex items-start justify-between gap-2">
-          <div className="min-w-0">
-            <p className="font-display text-[15px] font-bold text-navy leading-tight">{visit.timeLabel}</p>
-            <p className="text-[12px] font-semibold text-body-gray mt-1 inline-flex items-center gap-1.5">
-              <CalendarDays className="w-3.5 h-3.5 text-teal" strokeWidth={1.9} />
+      <div className="flex-1 min-w-0 rounded-xl border border-[#EAF0F5] bg-gradient-to-br from-[#F8FBFC] to-white px-2.5 py-2">
+        <div className="flex items-center justify-between gap-2">
+          <div className="min-w-0 flex items-center gap-2 flex-wrap">
+            <p className="font-display text-[13px] font-bold text-navy leading-none">
+              {visit.timeLabel}
+            </p>
+            <p className="text-[11px] font-semibold text-body-gray inline-flex items-center gap-1">
+              <CalendarDays className="w-3 h-3 text-teal" strokeWidth={1.9} />
               {visit.dateLabel}
             </p>
           </div>
-          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${statusClass}`}>
+          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${statusClass}`}>
             {visit.status}
           </span>
         </div>
 
-        <p className="text-sm font-bold text-navy mt-2.5">{visit.visitType}</p>
+        <p className="text-[12px] font-bold text-navy mt-1.5">{visit.visitType}</p>
 
-        <div className="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-          <p className="text-[12px] text-body-gray inline-flex items-center gap-1.5 min-w-0">
-            <DoorOpen className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={1.9} />
+        <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
+          <p className="text-[11px] text-body-gray inline-flex items-center gap-1 min-w-0">
+            <DoorOpen className="w-3 h-3 text-teal shrink-0" strokeWidth={1.9} />
             <span className="truncate">{visit.room}</span>
           </p>
-          <p className="text-[12px] text-body-gray inline-flex items-center gap-1.5 min-w-0">
-            <Building2 className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={1.9} />
+          <p className="text-[11px] text-body-gray inline-flex items-center gap-1 min-w-0">
+            <Building2 className="w-3 h-3 text-teal shrink-0" strokeWidth={1.9} />
             <span className="truncate">{visit.clinic}</span>
           </p>
-          <p className="text-[12px] text-body-gray inline-flex items-center gap-1.5 min-w-0 sm:col-span-2">
-            <Clock3 className="w-3.5 h-3.5 text-teal shrink-0" strokeWidth={1.9} />
+          <p className="text-[11px] text-body-gray inline-flex items-center gap-1 min-w-0">
+            <Clock3 className="w-3 h-3 text-teal shrink-0" strokeWidth={1.9} />
             <span className="truncate">30 min consult</span>
           </p>
         </div>
@@ -60,14 +67,14 @@ export default function DoctorPatientVisitCard({ visit, selected, onSelect, disp
   )
 
   if (displayOnly) {
-    return <div className="w-full shrink-0 flex items-stretch gap-2.5">{content}</div>
+    return <div className="w-full flex items-stretch gap-2">{content}</div>
   }
 
   return (
     <button
       type="button"
       onClick={() => onSelect?.(visit)}
-      className={`w-full shrink-0 text-left flex items-stretch gap-2.5 cursor-pointer transition-opacity ${
+      className={`w-full text-left flex items-stretch gap-2 cursor-pointer transition-opacity ${
         selected ? 'opacity-100' : 'hover:opacity-95'
       }`}
     >

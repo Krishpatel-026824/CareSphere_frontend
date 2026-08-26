@@ -29,18 +29,23 @@ export default function DoctorScheduleSummary({
   onAccept,
   onDecline,
   onComplete,
-  onMessage,
   onClose,
+  asModal = false,
 }) {
   const { tasks, toggleTask } = useDoctorVisitTasks(visit)
   if (!visit) return null
 
   const detail = generateDoctorVisitDetail(visit)
   const steps = generateDoctorVisitTimeline(visit, tasks)
-  const showMessage = visit.status !== 'Completed' && Boolean(onMessage)
 
   return (
-    <aside className="w-full xl:w-[42%] shrink-0 self-start max-h-full overflow-y-auto scroll-y bg-white/85 backdrop-blur-sm rounded-3xl border border-white shadow-[0_18px_40px_-28px_rgba(7,26,47,0.35)] flex flex-col">
+    <aside
+      className={
+        asModal
+          ? 'w-full bg-white flex flex-col max-h-[90vh]'
+          : 'w-full xl:w-[42%] shrink-0 self-start max-h-full overflow-y-auto scroll-y bg-white/85 backdrop-blur-sm rounded-3xl border border-white shadow-[0_18px_40px_-28px_rgba(7,26,47,0.35)] flex flex-col'
+      }
+    >
       <div className="shrink-0 bg-gradient-to-br from-[#0EA5A0] via-[#0C948E] to-[#0B6E6A] px-4 py-3.5 text-white">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0 flex items-center gap-3">
@@ -52,8 +57,12 @@ export default function DoctorScheduleSummary({
               />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">Selected visit</p>
-              <p className="font-display text-lg font-bold leading-tight truncate mt-0.5">{visit.patientName}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-white/70">
+                Selected visit
+              </p>
+              <p className="font-display text-lg font-bold leading-tight truncate mt-0.5">
+                {visit.patientName}
+              </p>
               <p className="text-xs text-white/85 truncate mt-0.5">
                 {visit.timeLabel} · {visit.dateLabel}
               </p>
@@ -75,7 +84,7 @@ export default function DoctorScheduleSummary({
         </div>
       </div>
 
-      <div className="p-4 flex flex-col gap-3">
+      <div className={`p-4 flex flex-col gap-3 ${asModal ? 'overflow-y-auto scroll-y flex-1 min-h-0' : ''}`}>
         {visit.prepNote ? (
           <p className="text-[13px] text-navy leading-snug bg-[#F4F7FA] rounded-xl px-3 py-2.5">
             <span className="font-bold text-teal">Reason · </span>
@@ -103,11 +112,10 @@ export default function DoctorScheduleSummary({
           canAccept={canAccept}
           canDecline={canDecline}
           canComplete={canComplete}
-          showMessage={showMessage}
+          showMessage={false}
           onAccept={onAccept}
           onDecline={onDecline}
           onComplete={onComplete}
-          onMessage={onMessage}
           stacked
           compact
         />

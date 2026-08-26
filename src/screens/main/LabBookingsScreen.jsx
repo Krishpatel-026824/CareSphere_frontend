@@ -4,7 +4,7 @@ import { useAppStore } from '../../store/useAppStore'
 import LabBookingFormModal from '../../components/lab/LabBookingFormModal'
 import LabMyBookings from '../../components/lab/LabMyBookings'
 import { addLabReportFromBooking } from '../../store/slices/healthSlice'
-import { addLabBooking, removeLabBooking, selectLabBookings } from '../../store/slices/labSlice'
+import { addLabBooking, selectLabBookings } from '../../store/slices/labSlice'
 
 export default function LabBookingsScreen() {
   const dispatch = useAppDispatch()
@@ -26,7 +26,6 @@ export default function LabBookingsScreen() {
         bookings={bookings}
         tests={tests}
         onBookNew={() => setShowBookingForm(true)}
-        onRemove={(id) => dispatch(removeLabBooking(id))}
       />
 
       <LabBookingFormModal

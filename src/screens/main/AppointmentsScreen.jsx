@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, Clock, Pencil, Search, Star, Trash2 } from 'lucide-react'
+import { Eye, Search, Trash2 } from 'lucide-react'
 import Avatar from '@mui/material/Avatar'
 import Dialog from '@mui/material/Dialog'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -148,8 +148,8 @@ export default function AppointmentsScreen({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-bg-gray flex flex-col overflow-x-hidden lg:overflow-hidden">
-        <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
+      <div className="w-full min-h-full bg-bg-gray">
+        <div className="page-pad py-4 sm:py-5 flex flex-col gap-4 max-w-[1440px] mx-auto">
         <AppointmentPageHeader
           count={appointments.length}
           upcomingCount={countUpcomingAppointments(appointments)}
@@ -158,8 +158,8 @@ export default function AppointmentsScreen({
           recycleBinCount={recycleBin.length}
         />
 
-        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
-          <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1]">
+        <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden">
+          <div className="px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC]">
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] gap-2.5 items-end">
               <div>
                 <span className="text-[11px] font-semibold text-[#374151] mb-1 block">Search</span>
@@ -221,80 +221,94 @@ export default function AppointmentsScreen({
             </div>
           </div>
 
-          <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-5 py-4">
+          <div className="overflow-x-auto">
             {filtered.length === 0 ? (
-              <p className="rounded-xl border border-border-gray bg-[#F8FAFC] p-4 text-sm text-body-gray">
+              <p className="m-4 sm:m-5 rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-sm text-body-gray text-center">
                 No appointments found for this filter.
               </p>
             ) : (
-              <div className="flex flex-col gap-2.5">
-                {filtered.map((appointment) => (
-                  <article
-                    key={appointment.id}
-                    onClick={() => setSelectedAppointmentDetail(appointment)}
-                    className="rounded-xl border border-[#E6EBF1] bg-[#FAFBFC] hover:bg-white px-4 py-3 flex items-start justify-between gap-3 cursor-pointer"
-                  >
-                    <div className="min-w-0 flex items-start gap-3">
-                      <Avatar
-                        src={appointment.doctorPhoto}
-                        alt={appointment.doctorName}
-                        sx={{ width: 44, height: 44, mt: 0.3 }}
-                      />
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-bold text-navy truncate">{appointment.doctorName}</h3>
-                        <p className="text-xs text-body-gray mt-0.5 truncate">
-                        {appointment.specialty} • {appointment.clinic}
-                        </p>
-                        <p className="text-xs text-body-gray mt-1.5 flex items-center gap-3">
-                          <span className="inline-flex items-center gap-1">
-                            <CalendarDays className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
-                            {appointment.dateLabel}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
-                            {appointment.timeLabel}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 flex flex-col items-end gap-1.5">
-                      <div className="flex items-center gap-1.5">
+              <table className="w-full min-w-[780px] border-collapse text-left">
+                <thead className="bg-[#CBD5E1]">
+                  <tr>
+                    <th className="px-3 py-4 w-14 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      No.
+                    </th>
+                    <th className="px-4 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      Doctor
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle hidden md:table-cell">
+                      Specialty
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle hidden lg:table-cell">
+                      Clinic
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                      Date
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                      Time
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      Status
+                    </th>
+                    <th className="px-3 py-4 w-16 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 text-center align-middle">
+                      View
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((appointment, index) => (
+                    <tr key={appointment.id} className="hover:bg-[#F0FDFA] transition-colors">
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
+                        <span className="text-[13px] font-semibold text-navy tabular-nums">{index + 1}</span>
+                      </td>
+                      <td className="px-4 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
+                        <div className="flex items-center gap-3 min-w-0">
+                          <Avatar
+                            src={appointment.doctorPhoto}
+                            alt={appointment.doctorName}
+                            sx={{ width: 40, height: 40, flexShrink: 0 }}
+                          />
+                          <p className="text-sm font-semibold text-navy truncate leading-snug">
+                            {appointment.doctorName}
+                          </p>
+                        </div>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle hidden md:table-cell">
+                        <p className="text-[13px] text-body-gray truncate">{appointment.specialty}</p>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle hidden lg:table-cell">
+                        <p className="text-[13px] text-body-gray truncate">{appointment.clinic}</p>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
+                        <p className="text-[13px] font-semibold text-navy whitespace-nowrap">{appointment.dateLabel}</p>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
+                        <p className="text-[13px] font-semibold text-navy whitespace-nowrap">{appointment.timeLabel}</p>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
                         <span
-                          className={`text-[10px] font-semibold px-2 py-1 rounded-full ${
+                          className={`inline-flex text-[10px] font-semibold px-2.5 py-1 rounded-full ${
                             getPatientAppointmentStatusStyle(appointment.status)
                           }`}
                         >
                           {getPatientAppointmentStatusLabel(appointment.status)}
                         </span>
+                      </td>
+                      <td className="px-3 py-3.5 border-b border-[#D5DEE8] text-center align-middle">
                         <button
                           type="button"
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setEditingAppointment(appointment)
-                          }}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-teal hover:bg-teal-light cursor-pointer transition-colors"
-                          aria-label="Edit appointment"
+                          onClick={() => setSelectedAppointmentDetail(appointment)}
+                          className="inline-flex items-center justify-center w-9 h-9 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 cursor-pointer transition-colors"
+                          aria-label="View appointment"
                         >
-                          <Pencil className="w-3.5 h-3.5" strokeWidth={1.75} />
+                          <Eye className="w-5 h-5" strokeWidth={2} />
                         </button>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); setDeleteConfirmId(appointment.id) }}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors"
-                          aria-label="Delete appointment"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} />
-                        </button>
-                      </div>
-                      <span className="text-[11px] text-body-gray inline-flex items-center gap-1">
-                        <Star className="w-3 h-3 text-amber-500" strokeWidth={1.9} />
-                        {doctors.find((item) => item.id === appointment.doctorId)?.rating || '--'}
-                      </span>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             )}
           </div>
         </section>

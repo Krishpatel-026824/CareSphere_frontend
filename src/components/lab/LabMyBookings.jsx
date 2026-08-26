@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { CalendarDays, Clock, FlaskConical, MapPin, Search, Trash2 } from 'lucide-react'
+import { FlaskConical, Search } from 'lucide-react'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 import AppointmentPageHeader from '../appointments/AppointmentPageHeader'
@@ -9,6 +9,17 @@ const muiFieldSx = {
   '& .MuiOutlinedInput-root': {
     borderRadius: '0.75rem',
     backgroundColor: '#F8FAFC',
+    minHeight: '48px',
+    fontSize: '0.95rem',
+  },
+  '& .MuiOutlinedInput-input': {
+    fontSize: '0.95rem',
+    paddingTop: '12px',
+    paddingBottom: '12px',
+  },
+  '& .MuiInputBase-input::placeholder': {
+    fontSize: '0.95rem',
+    opacity: 0.75,
   },
 }
 
@@ -16,7 +27,6 @@ export default function LabMyBookings({
   bookings = [],
   tests = [],
   onBookNew,
-  onRemove,
 }) {
   const safeBookings = Array.isArray(bookings) ? bookings : []
   const [query, setQuery] = useState('')
@@ -31,7 +41,6 @@ export default function LabMyBookings({
         item.mobile,
         item.collectionType,
         item.address,
-        item.status,
       ]
         .filter(Boolean)
         .join(' ')
@@ -48,8 +57,8 @@ export default function LabMyBookings({
   }
 
   return (
-    <div className="w-full min-h-full lg:h-[100dvh] lg:max-h-[100dvh] bg-bg-gray flex flex-col overflow-x-hidden lg:overflow-hidden">
-      <div className="flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4">
+    <div className="w-full min-h-full bg-bg-gray">
+      <div className="page-pad py-4 sm:py-5 flex flex-col gap-4 max-w-[1440px] mx-auto">
         <AppointmentPageHeader
           icon={FlaskConical}
           iconTone="bg-amber-100 text-amber-600"
@@ -65,109 +74,113 @@ export default function LabMyBookings({
           onNewAppointment={onBookNew}
         />
 
-        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm flex flex-col overflow-hidden">
-          <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1]">
-            <span className="text-[11px] font-semibold text-[#374151] mb-1 block">Search</span>
+        <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden">
+          <div className="px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC]">
+            <span className="text-[13px] font-semibold text-[#374151] mb-1.5 block">Search</span>
             <TextField
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Test name, patient, collection..."
-              size="small"
+              size="medium"
               fullWidth
               sx={muiFieldSx}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.8} />
+                    <Search className="w-5 h-5 text-body-gray shrink-0" strokeWidth={1.8} />
                   </InputAdornment>
                 ),
               }}
             />
           </div>
 
-          <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-5 py-4">
+          <div className="overflow-x-auto">
             {filtered.length === 0 ? (
-              <div className="rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-center">
-                <p className="text-sm text-body-gray">
-                  {safeBookings.length === 0
-                    ? 'No lab bookings yet. Tap “Book new lab test” to get started.'
-                    : 'No bookings match your search.'}
-                </p>
-                {safeBookings.length === 0 && onBookNew ? (
-                  <button
-                    type="button"
-                    onClick={onBookNew}
-                    className="mt-3 h-10 px-4 rounded-full bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark"
-                  >
-                    Book new lab test
-                  </button>
-                ) : null}
-              </div>
+              <p className="m-4 sm:m-5 rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-sm text-body-gray text-center">
+                {safeBookings.length === 0
+                  ? 'No lab bookings yet. Tap “Book new lab test” to get started.'
+                  : 'No bookings match your search.'}
+              </p>
             ) : (
-              <div className="flex flex-col gap-2.5">
-                {filtered.map((booking) => {
-                  const thumb = resolveThumb(booking)
-                  return (
-                  <article
-                    key={booking.id}
-                    className="rounded-xl border border-[#E6EBF1] bg-[#FAFBFC] hover:bg-white px-4 py-3 flex items-start justify-between gap-3"
-                  >
-                    <div className="min-w-0 flex items-start gap-3">
-                      <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 bg-amber-50 border border-[#E6EBF1]">
-                        {thumb ? (
-                          <img
-                            src={thumb}
-                            alt=""
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-amber-50 text-amber-600 flex items-center justify-center">
-                            <FlaskConical className="w-5 h-5" strokeWidth={1.75} />
+              <table className="w-full min-w-[780px] border-collapse text-left">
+                <thead className="bg-[#CBD5E1]">
+                  <tr>
+                    <th className="px-3 py-4 w-14 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      No.
+                    </th>
+                    <th className="px-4 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      Test
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                      Patient
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                      Date
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                      Time
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle hidden md:table-cell">
+                      Collection
+                    </th>
+                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 text-center align-middle">
+                      Price
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {filtered.map((booking, index) => {
+                    const thumb = resolveThumb(booking)
+                    return (
+                      <tr key={booking.id} className="hover:bg-[#F0FDFA] transition-colors">
+                        <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
+                          <span className="text-[13px] font-semibold text-navy tabular-nums">{index + 1}</span>
+                        </td>
+                        <td className="px-4 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 bg-amber-50 border border-[#E6EBF1]">
+                              {thumb ? (
+                                <img src={thumb} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-amber-600">
+                                  <FlaskConical className="w-5 h-5" strokeWidth={1.75} />
+                                </div>
+                              )}
+                            </div>
+                            <p className="text-sm font-semibold text-navy truncate leading-snug">
+                              {booking.test?.name || 'Lab test'}
+                            </p>
                           </div>
-                        )}
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-bold text-navy truncate">{booking.test?.name}</h3>
-                        <p className="text-xs text-body-gray mt-0.5 truncate">
-                          {booking.name} • {booking.mobile || 'No mobile'}
-                        </p>
-                        <p className="text-xs text-body-gray mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-                          <span className="inline-flex items-center gap-1">
-                            <CalendarDays className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
+                        </td>
+                        <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
+                          <p className="text-[13px] font-semibold text-navy truncate">{booking.name}</p>
+                          <p className="text-[12px] text-body-gray mt-0.5 truncate">{booking.mobile || '—'}</p>
+                        </td>
+                        <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
+                          <p className="text-[13px] font-semibold text-navy whitespace-nowrap">
                             {formatLabBookingDate(booking.date) || booking.date || '—'}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Clock className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
+                          </p>
+                        </td>
+                        <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
+                          <p className="text-[13px] font-semibold text-navy whitespace-nowrap">
                             {booking.timeSlot || '—'}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5 text-teal" strokeWidth={1.75} />
-                            {booking.collectionType}
-                            {booking.address ? ` · ${booking.address}` : ''}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 flex flex-col items-end gap-1.5">
-                      <div className="flex items-center gap-1.5">
-                        {onRemove ? (
-                          <button
-                            type="button"
-                            onClick={() => onRemove(booking.id)}
-                            className="w-7 h-7 rounded-lg flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-600 cursor-pointer transition-colors"
-                            aria-label="Remove booking"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" strokeWidth={1.75} />
-                          </button>
-                        ) : null}
-                      </div>
-                      <span className="text-[12px] font-bold text-navy">₹{booking.test?.price ?? '—'}</span>
-                    </div>
-                  </article>
-                  )
-                })}
-              </div>
+                          </p>
+                        </td>
+                        <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center hidden md:table-cell">
+                          <p className="text-[13px] text-body-gray truncate">
+                            {booking.collectionType || '—'}
+                          </p>
+                        </td>
+                        <td className="px-3 py-3.5 border-b border-[#D5DEE8] align-middle text-center">
+                          <p className="text-[13px] font-bold text-navy">
+                            ₹{booking.test?.price ?? '—'}
+                          </p>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
             )}
           </div>
         </section>

@@ -9,7 +9,6 @@ export default function DoctorHomeStatusScreen({
   selectedVisit,
   onBack,
   onSelectVisit,
-  onMessage,
   actions,
 }) {
   const page = generateDoctorHomeStatPage(statId, visits)
@@ -48,7 +47,6 @@ export default function DoctorHomeStatusScreen({
                   onAccept={() => actions.requestAction('accept', selected)}
                   onDecline={() => actions.requestAction('decline', selected)}
                   onComplete={() => actions.requestAction('complete', selected)}
-                  onMessage={() => onMessage?.(selected)}
                 />
               </div>
             ) : null}

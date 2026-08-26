@@ -106,6 +106,7 @@ export function generateDoctorScheduleSummary(visits = [], now = new Date()) {
 
 export function generateDoctorScheduleDays(visits = [], now = new Date()) {
   const todayLabel = formatDateLabel(now)
+  const activeStatuses = new Set(['Upcoming', 'Confirmed'])
   const labels = [...new Set(visits.map((visit) => visit.dateLabel).filter(Boolean))]
 
   if (!labels.includes(todayLabel)) labels.unshift(todayLabel)
@@ -113,7 +114,10 @@ export function generateDoctorScheduleDays(visits = [], now = new Date()) {
   return labels
     .map((dateLabel) => {
       const parsed = parseAppointmentDate(dateLabel, '12:00 AM', now)
-      const dayVisits = visits.filter((visit) => visit.dateLabel === dateLabel)
+      const dayVisits = visits.filter(
+        (visit) =>
+          visit.dateLabel === dateLabel && activeStatuses.has(visit.status),
+      )
       return {
         id: dateLabel,
         dateLabel,

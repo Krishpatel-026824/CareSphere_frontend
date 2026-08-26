@@ -49,6 +49,15 @@ export function doctorVisitDialogCopy(type, visit) {
     }
   }
 
+  if (type === 'message') {
+    return {
+      title: 'Message this patient?',
+      body: `Open chat with ${name} about their visit on ${date} at ${time}.`,
+      confirm: 'Open chat',
+      danger: false,
+    }
+  }
+
   return {
     title: 'Decline this visit?',
     body: `${name} on ${date} at ${time} will be cancelled.`,
