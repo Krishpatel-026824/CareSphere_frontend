@@ -9,22 +9,31 @@ export default function CareSphereMark({ className = '', tone = 'solid' }) {
       className={className}
       aria-hidden="true"
     >
-      <circle cx="24" cy="24" r="22" className={isSoft ? 'fill-teal/15' : 'fill-teal'} />
-      {isSoft ? (
-        <circle cx="24" cy="24" r="21.25" className="stroke-teal/40" strokeWidth="1.5" />
-      ) : null}
-
-      {/* Open sphere = “C” */}
-      <path
-        d="M33.4 15.2a13 13 0 1 0 0 17.6"
-        className={isSoft ? 'stroke-teal' : 'stroke-white'}
-        strokeWidth="4"
-        strokeLinecap="round"
+      <rect
+        x="1"
+        y="1"
+        width="46"
+        height="46"
+        rx="14"
+        className={isSoft ? 'fill-teal/15 stroke-teal/40' : 'fill-teal'}
+        strokeWidth={isSoft ? 1.5 : 0}
       />
-
-      {/* Care heart in the sphere opening */}
+      <circle
+        cx="24"
+        cy="24"
+        r="16"
+        className={isSoft ? 'stroke-teal/50' : 'stroke-white/55'}
+        strokeWidth="1.75"
+      />
+      <circle
+        cx="24"
+        cy="24"
+        r="11.5"
+        className={isSoft ? 'stroke-teal/30' : 'stroke-white/30'}
+        strokeWidth="1.4"
+      />
       <path
-        d="M34.1 20.35c-1.05-1.2-2.95-1.3-4.05-.2l-.55.6-.55-.6c-1.1-1.1-3-.995-4.05.2-1.25 1.4-1.05 3.5.45 4.7l3.7 3c.25.2.65.2.9 0l3.7-3c1.5-1.2 1.7-3.3.45-4.7Z"
+        d="M24 34.2c-.4-.35-7.6-5.55-10.45-9.5-2.05-2.85-1.7-6.45.9-8.55 2.2-1.8 5.25-1.5 6.95.7L24 20.4l2.6-3.55c1.7-2.2 4.75-2.5 6.95-.7 2.6 2.1 2.95 5.7.9 8.55-2.85 3.95-10.05 9.15-10.45 9.5Z"
         className={isSoft ? 'fill-teal' : 'fill-white'}
       />
     </svg>
