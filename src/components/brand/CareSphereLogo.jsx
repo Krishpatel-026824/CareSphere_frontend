@@ -1,57 +1,79 @@
-import { Heart } from 'lucide-react'
+import CareSphereMark from './CareSphereMark'
+
+const SIZES = {
+  sm: {
+    mark: 'w-9 h-9',
+    name: 'text-[17px]',
+    caption: 'text-[9px]',
+    stackGap: 'mt-2',
+    rowGap: 'gap-2.5',
+  },
+  md: {
+    mark: 'w-11 h-11',
+    name: 'text-[20px]',
+    caption: 'text-[10px]',
+    stackGap: 'mt-2.5',
+    rowGap: 'gap-3',
+  },
+  lg: {
+    mark: 'w-14 h-14',
+    name: 'text-[24px]',
+    caption: 'text-[11px]',
+    stackGap: 'mt-3',
+    rowGap: 'gap-3',
+  },
+  xl: {
+    mark: 'w-[88px] h-[88px] sm:w-28 sm:h-28',
+    name: 'text-[34px] sm:text-5xl',
+    caption: 'text-xs sm:text-sm',
+    stackGap: 'mt-4 sm:mt-5',
+    rowGap: 'gap-4',
+  },
+}
 
 export default function CareSphereLogo({
   variant = 'light',
   size = 'md',
+  layout = 'stack',
   showName = true,
   caption,
   className = '',
 }) {
   const isDark = variant === 'dark'
-  const sizes = {
-    sm: { wrap: 'w-10 h-10', heart: 'w-5 h-5', glow: 'w-12 h-12', name: 'text-lg', gap: 'mt-2.5' },
-    md: { wrap: 'w-14 h-14', heart: 'w-7 h-7', glow: 'w-16 h-16', name: 'text-[22px]', gap: 'mt-3' },
-    lg: { wrap: 'w-16 h-16', heart: 'w-8 h-8', glow: 'w-[72px] h-[72px]', name: 'text-2xl', gap: 'mt-3.5' },
-  }
-  const s = sizes[size] || sizes.md
+  const isRow = layout === 'row'
+  const s = SIZES[size] || SIZES.md
 
   return (
-    <div className={`flex flex-col items-center text-center ${className}`}>
-      <div className="relative flex items-center justify-center">
-        <span
-          className={`absolute ${s.glow} rounded-full blur-xl ${isDark ? 'bg-teal/25' : 'bg-teal/30'}`}
-          aria-hidden="true"
-        />
-        <span
-          className={`relative ${s.wrap} rounded-2xl flex items-center justify-center ${
-            isDark
-              ? 'bg-teal/15 ring-1 ring-teal/30'
-              : 'bg-gradient-to-br from-teal to-teal-dark shadow-[0_10px_24px_-8px_rgba(14,165,160,0.55)]'
-          }`}
-        >
-          <Heart
-            className={`${s.heart} ${isDark ? 'text-teal fill-teal' : 'text-white fill-white'}`}
-            strokeWidth={1.5}
-          />
-        </span>
-      </div>
-      {showName ? (
-        <p
-          className={`font-display ${s.name} font-bold tracking-tight leading-none ${s.gap} ${
-            isDark ? 'text-white' : 'text-navy'
-          }`}
-        >
-          CareSphere
-        </p>
-      ) : null}
-      {caption ? (
-        <p
-          className={`mt-2 text-[10px] tracking-[0.2em] uppercase font-bold ${
-            isDark ? 'text-teal-light/90' : 'text-teal'
-          }`}
-        >
-          {caption}
-        </p>
+    <div
+      className={`${
+        isRow ? `flex items-center ${s.rowGap} text-left` : 'flex flex-col items-center text-center'
+      } ${className}`}
+    >
+      <span className={`${s.mark} shrink-0`}>
+        <CareSphereMark className="w-full h-full" tone="solid" />
+      </span>
+
+      {showName || caption ? (
+        <div className={isRow ? 'min-w-0' : undefined}>
+          {showName ? (
+            <p
+              className={`font-display ${s.name} font-bold tracking-[-0.03em] leading-none ${
+                !isRow ? s.stackGap : ''
+              } ${isDark ? 'text-white' : 'text-navy'}`}
+            >
+              Care<span className={isDark ? 'text-teal-light' : 'text-teal'}>Sphere</span>
+            </p>
+          ) : null}
+          {caption ? (
+            <p
+              className={`${showName ? 'mt-1.5' : ''} ${s.caption} tracking-[0.16em] uppercase font-semibold ${
+                isDark ? 'text-white/55' : 'text-body-gray'
+              }`}
+            >
+              {caption}
+            </p>
+          ) : null}
+        </div>
       ) : null}
     </div>
   )

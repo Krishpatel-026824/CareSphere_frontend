@@ -25,7 +25,7 @@ export default function AppSidebar({
   return (
     <aside className="hidden lg:flex w-[220px] xl:w-[252px] shrink-0 flex-col h-full bg-[#1E2124]">
       <div className="p-4 shrink-0">
-        <CareSphereLogo variant="dark" size="md" />
+        <CareSphereLogo variant="dark" size="md" layout="row" />
       </div>
 
       <nav className="p-3 flex flex-col gap-1 overflow-y-auto">

@@ -103,7 +103,6 @@ export default function DoctorScheduleScreen({
           query={query}
           onQueryChange={setQuery}
           onSelect={handleSelect}
-          onOpenMenu={actions.openMenu}
         />
       </div>
 

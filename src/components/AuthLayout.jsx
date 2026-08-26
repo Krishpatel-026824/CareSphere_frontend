@@ -1,4 +1,4 @@
-import { Heart } from 'lucide-react'
+import CareSphereLogo from './brand/CareSphereLogo'
 
 export default function AuthLayout({
   title,
@@ -17,12 +17,7 @@ export default function AuthLayout({
         </div>
 
         <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-teal rounded-xl flex items-center justify-center shrink-0">
-              <Heart className="w-5 h-5 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-[22px] font-bold tracking-tight">CareSphere</span>
-          </div>
+          <CareSphereLogo variant="dark" size="md" layout="row" />
         </div>
 
         <div className="relative z-10 max-w-lg">
@@ -40,11 +35,8 @@ export default function AuthLayout({
               ← Back
             </button>
           ) : null}
-          <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 bg-teal rounded-lg flex items-center justify-center">
-              <Heart className="w-4 h-4 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-white font-bold text-lg tracking-tight">CareSphere</span>
+          <div className="mb-3">
+            <CareSphereLogo variant="dark" size="sm" layout="row" />
           </div>
           <h1 className="text-white text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
           <p className="text-white/60 text-sm mt-1">{subtitle}</p>

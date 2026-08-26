@@ -1,4 +1,4 @@
-import { Eye, MoreVertical, Search } from 'lucide-react'
+import { Search } from 'lucide-react'
 import {
   appointmentStatusLabels,
   appointmentStatusStyles,
@@ -10,7 +10,6 @@ export default function DoctorScheduleAgenda({
   query,
   onQueryChange,
   onSelect,
-  onOpenMenu,
 }) {
   return (
     <section className="flex-1 min-h-0 min-w-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col">
@@ -49,7 +48,7 @@ export default function DoctorScheduleAgenda({
               <col className="w-[16%]" />
               <col className="w-[14%]" />
               <col className="w-[14%]" />
-              <col className="w-28" />
+              <col className="w-32" />
             </colgroup>
             <thead className="bg-[#CBD5E1] sticky top-0 z-10">
               <tr>
@@ -133,24 +132,13 @@ export default function DoctorScheduleAgenda({
                       </span>
                     </td>
                     <td className="px-3 py-3.5 border-b border-[#D5DEE8] text-center align-middle">
-                      <div className="inline-flex items-center justify-center gap-1">
-                        <button
-                          type="button"
-                          onClick={() => onSelect?.(visit)}
-                          className="w-10 h-10 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 inline-flex items-center justify-center cursor-pointer transition-colors"
-                          aria-label={`View ${visit.patientName}`}
-                        >
-                          <Eye className="w-5 h-5" strokeWidth={2} />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={(event) => onOpenMenu?.(visit, event)}
-                          className="w-10 h-10 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 inline-flex items-center justify-center cursor-pointer transition-colors"
-                          aria-label={`More actions for ${visit.patientName}`}
-                        >
-                          <MoreVertical className="w-5 h-5" strokeWidth={2} />
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => onSelect?.(visit)}
+                        className="inline-flex items-center justify-center min-h-9 px-3.5 rounded-xl bg-teal text-white text-[13px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors"
+                      >
+                        View
+                      </button>
                     </td>
                   </tr>
                 )
