@@ -7,6 +7,15 @@ function parseAge(ageLabel = '') {
   return match ? Number(match[0]) : ''
 }
 
+function countAbnormal(parameters = []) {
+  return parameters.filter((row) => row.status === 'High' || row.status === 'Low').length
+}
+
+function reportStatusForBadge(badge) {
+  if (badge === 'Review' || badge === 'Urgent') return 'Ready for review'
+  return 'Verified'
+}
+
 export function generateDoctorLabReport(task, patient) {
   const template = doctorLabReportTemplatesMock[task.id]
   if (!template || !task || !patient) return null
@@ -14,6 +23,7 @@ export function generateDoctorLabReport(task, patient) {
   const reportDate = task.visitLabel?.includes('·')
     ? task.visitLabel.split('·')[0].trim()
     : '18 Aug 2026'
+  const status = reportStatusForBadge(task.badge)
 
   return {
     id: `DLR-${task.id}`,
@@ -21,7 +31,7 @@ export function generateDoctorLabReport(task, patient) {
     title: `${task.title} Report`,
     testName: task.title,
     testCode: template.testCode,
-    status: task.badge === 'Review' ? 'Ready for review' : 'Verified',
+    status,
     type: 'Lab',
     dateLabel: reportDate,
     doctorName: doctorLabFacilityMock.pathologist,
@@ -71,6 +81,8 @@ export function generateDoctorPatientLabReports() {
         subtitle: task.subtitle,
         dateLabel: report.dateLabel,
         status: report.status,
+        abnormalCount: countAbnormal(report.parameters),
+        doctorNote: '',
         report,
       }
     })

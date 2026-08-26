@@ -140,7 +140,6 @@ export function DoctorConsultPage() {
 }
 
 export function DoctorLabReportsPage() {
-  const navigate = useNavigate()
   const data = generateDoctorPatientLabReports()
 
   return (
@@ -149,8 +148,8 @@ export function DoctorLabReportsPage() {
       subtitle={data.subtitle}
       listTitle={data.listTitle}
       empty={data.empty}
+      caughtUp={data.caughtUp}
       reports={data.reports}
-      onBack={() => navigate(DOCTOR_PATHS.home)}
     />
   )
 }

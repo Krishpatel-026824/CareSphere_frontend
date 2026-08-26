@@ -2,6 +2,7 @@ import { clinicTaskBadgeStyles } from '../../data/mocks/doctorClinicTools'
 
 export default function DoctorLabReportCard({ item, selected, onSelect }) {
   const badgeClass = clinicTaskBadgeStyles[item.badge] || clinicTaskBadgeStyles.Review
+  const abnormalCount = item.abnormalCount || 0
 
   return (
     <button
@@ -28,9 +29,16 @@ export default function DoctorLabReportCard({ item, selected, onSelect }) {
           ) : null}
         </div>
         <p className="text-[13px] font-semibold text-navy truncate mt-0.5">{item.title}</p>
-        <p className="text-[12px] text-body-gray truncate">
-          {item.dateLabel} · {item.status}
-        </p>
+        <div className="flex items-center gap-2 mt-0.5 min-w-0">
+          <p className="text-[12px] text-body-gray truncate">
+            {item.dateLabel} · {item.status}
+          </p>
+          {abnormalCount > 0 ? (
+            <span className="shrink-0 text-[10px] font-bold px-1.5 py-px rounded-full bg-rose-50 text-rose-700">
+              {abnormalCount} abnormal
+            </span>
+          ) : null}
+        </div>
       </div>
     </button>
   )

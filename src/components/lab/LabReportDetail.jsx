@@ -6,6 +6,11 @@ function statusTone(status) {
   return 'text-emerald-700 bg-emerald-50'
 }
 
+function reportStatusTone(status) {
+  if (status === 'Ready for review') return 'bg-amber-400/20 text-amber-50'
+  return 'bg-white/15 text-emerald-100'
+}
+
 function InfoCard({ title, children }) {
   return (
     <div className="rounded-xl border border-border-gray bg-[#F8FBFC] p-4 sm:p-5">
@@ -41,7 +46,7 @@ function reportNumber(report) {
   return report.testCode || 'CS-RPT'
 }
 
-export default function LabReportDetail({ report }) {
+export default function LabReportDetail({ report, hideDownload = false }) {
   if (!report) return null
 
   function handleDownload() {
@@ -72,7 +77,9 @@ export default function LabReportDetail({ report }) {
             </p>
           </div>
           <div className="shrink-0 text-right">
-            <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-semibold text-emerald-100">
+            <span
+              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${reportStatusTone(report.status)}`}
+            >
               {report.status}
             </span>
             <p className="text-[10px] text-white/70 mt-2">Report No.</p>
@@ -121,19 +128,29 @@ export default function LabReportDetail({ report }) {
                 </tr>
               </thead>
               <tbody>
-                {report.parameters.map((row) => (
-                  <tr key={row.name} className="border-t border-border-gray">
-                    <td className="px-3 py-2.5 text-body-gray">{row.name}</td>
-                    <td className="px-3 py-2.5 font-mono text-sm font-semibold tabular-nums text-navy">{row.value}</td>
-                    <td className="px-3 py-2.5 text-body-gray">{row.unit}</td>
-                    <td className="px-3 py-2.5 text-body-gray">{row.reference}</td>
-                    <td className="px-3 py-2.5">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${statusTone(row.status)}`}>
-                        {row.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {report.parameters.map((row) => {
+                  const abnormal = row.status === 'High' || row.status === 'Low'
+                  return (
+                    <tr
+                      key={row.name}
+                      className={`border-t border-border-gray ${abnormal ? 'bg-rose-50/40' : ''}`}
+                    >
+                      <td className="px-3 py-2.5 text-body-gray">{row.name}</td>
+                      <td className="px-3 py-2.5 font-mono text-sm font-semibold tabular-nums text-navy">
+                        {row.value}
+                      </td>
+                      <td className="px-3 py-2.5 text-body-gray">{row.unit}</td>
+                      <td className="px-3 py-2.5 text-body-gray">{row.reference}</td>
+                      <td className="px-3 py-2.5">
+                        <span
+                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${statusTone(row.status)}`}
+                        >
+                          {row.status}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -155,14 +172,16 @@ export default function LabReportDetail({ report }) {
           </section>
         ) : null}
 
-        <button
-          type="button"
-          onClick={handleDownload}
-          className="w-full min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
-        >
-          <Download className="w-5 h-5" strokeWidth={1.8} />
-          Download report
-        </button>
+        {hideDownload ? null : (
+          <button
+            type="button"
+            onClick={handleDownload}
+            className="w-full min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
+          >
+            <Download className="w-5 h-5" strokeWidth={1.8} />
+            Download report
+          </button>
+        )}
       </div>
     </article>
   )

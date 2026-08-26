@@ -1,4 +1,13 @@
-import { CheckCircle2, Pencil, Plus, RefreshCw } from 'lucide-react'
+import {
+  CheckCircle2,
+  ClipboardCheck,
+  Layers,
+  Pencil,
+  PenLine,
+  Pill,
+  Plus,
+  RefreshCw,
+} from 'lucide-react'
 import Button from '../Button'
 
 const ORDER = [
@@ -35,10 +44,30 @@ const ORDER = [
 ]
 
 const WORK_STEPS = [
-  { n: '1', title: 'Open a queue', body: 'Start with New, then Update, then Refill.' },
-  { n: '2', title: 'Select patient Rx', body: 'Pick one prescription card from the left list.' },
-  { n: '3', title: 'Review details', body: 'Check allergies, dose, frequency, and instructions.' },
-  { n: '4', title: 'Sign and store', body: 'Sign moves the patient into the signed table.' },
+  {
+    n: '1',
+    title: 'Open a queue',
+    body: 'Start with New, then Update, then Refill.',
+    icon: Layers,
+  },
+  {
+    n: '2',
+    title: 'Select patient Rx',
+    body: 'Pick one prescription card from the left list.',
+    icon: Pill,
+  },
+  {
+    n: '3',
+    title: 'Review details',
+    body: 'Check allergies, dose, frequency, and instructions.',
+    icon: ClipboardCheck,
+  },
+  {
+    n: '4',
+    title: 'Sign and store',
+    body: 'Sign moves the patient into the signed table.',
+    icon: PenLine,
+  },
 ]
 
 export default function DoctorPrescribeStart({
@@ -124,27 +153,33 @@ export default function DoctorPrescribeStart({
           </div>
         </div>
 
-        <div className="shrink-0 rounded-2xl border border-[#E6EBF1] bg-[#F8FAFC] p-4">
+        <div className="shrink-0 rounded-2xl border border-[#E6EBF1] bg-[#F8FAFC] p-4 sm:p-5">
           <p className="text-[14px] font-bold text-navy tracking-tight">How to work this page</p>
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2.5">
-            {WORK_STEPS.map((step) => (
-              <div
-                key={step.n}
-                className="rounded-xl bg-white border border-[#E6EBF1] px-3 py-2.5 flex items-start gap-2.5"
-              >
-                <span className="w-6 h-6 rounded-full bg-teal text-white text-[11px] font-bold inline-flex items-center justify-center shrink-0">
-                  {step.n}
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[13px] font-bold text-navy tracking-tight leading-tight">
-                    {step.title}
-                  </p>
-                  <p className="text-[12px] text-body-gray mt-0.5 leading-snug">{step.body}</p>
+          <div className="mt-3.5 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+            {WORK_STEPS.map((step) => {
+              const Icon = step.icon
+              return (
+                <div
+                  key={step.n}
+                  className="rounded-xl bg-white border border-[#E6EBF1] px-3.5 py-3 flex items-start gap-3"
+                >
+                  <span className="relative w-9 h-9 rounded-xl bg-[#E8F7F6] text-teal inline-flex items-center justify-center shrink-0">
+                    <Icon className="w-4 h-4" strokeWidth={2} />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-teal text-white text-[9px] font-bold inline-flex items-center justify-center leading-none shadow-sm">
+                      {step.n}
+                    </span>
+                  </span>
+                  <div className="min-w-0 pt-0.5">
+                    <p className="text-[13px] font-bold text-navy tracking-tight leading-tight">
+                      {step.title}
+                    </p>
+                    <p className="text-[12px] text-body-gray mt-1 leading-snug">{step.body}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-          <div className="mt-3 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3.5 py-2.5 flex items-start gap-2.5">
+          <div className="mt-3.5 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3.5 py-2.5 flex items-start gap-2.5">
             <CheckCircle2 className="w-4 h-4 text-teal shrink-0 mt-0.5" strokeWidth={2} />
             <p className="text-[12px] font-medium text-navy leading-relaxed">
               Tip: start with <span className="font-bold">New</span>, then finish{' '}

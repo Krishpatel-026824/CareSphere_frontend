@@ -88,7 +88,8 @@ export const doctorLabFacilityMock = {
 
 export const doctorLabReportsPageMock = {
   title: 'Lab reports',
-  subtitle: 'Open a patient to review their completed test results',
+  subtitle: 'Triage the queue, review results, then verify and move on.',
   listTitle: 'Patient reports',
   empty: 'No patient lab reports are available yet.',
+  caughtUp: 'You’re caught up — no reports left in this queue.',
 }

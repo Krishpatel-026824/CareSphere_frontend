@@ -1,77 +1,136 @@
-import { useMemo, useState } from 'react'
-import { Search } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
 import QuickActionHeader from '../../components/home/QuickActionHeader'
 import DoctorClinicLabReportView from '../../components/portal/DoctorClinicLabReportView'
-import DoctorLabReportCard from '../../components/portal/DoctorLabReportCard'
+import DoctorLabReportActions from '../../components/portal/DoctorLabReportActions'
+import DoctorLabReportsListPanel from '../../components/portal/DoctorLabReportsListPanel'
+import { downloadHealthReport } from '../../utils/downloadRecord'
+import {
+  labReportFilterCounts,
+  matchesLabReportFilter,
+  matchesLabReportQuery,
+  nextLabReportAfterVerify,
+  sortLabReportQueue,
+} from '../../utils/doctorLabReportQueue'
 
 export default function DoctorLabReportsScreen({
   title,
   subtitle,
   listTitle,
   empty,
+  caughtUp = 'You’re caught up — no reports left in this queue.',
   reports = [],
-  onBack,
 }) {
+  const [items, setItems] = useState(reports)
   const [query, setQuery] = useState('')
-  const [selectedId, setSelectedId] = useState(reports[0]?.id || null)
-
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return reports
-    return reports.filter((item) =>
-      [item.patientName, item.title, item.status, item.dateLabel]
-        .filter(Boolean)
-        .some((value) => String(value).toLowerCase().includes(q)),
+  const [filter, setFilter] = useState('needs')
+  const [feedback, setFeedback] = useState('')
+  const [selectedId, setSelectedId] = useState(() => {
+    const sorted = sortLabReportQueue(
+      reports.filter((item) => item.status === 'Ready for review'),
     )
-  }, [query, reports])
+    return sorted[0]?.id || reports[0]?.id || null
+  })
+
+  useEffect(() => {
+    setItems(reports)
+  }, [reports])
+
+  useEffect(() => {
+    if (!feedback) return undefined
+    const timer = window.setTimeout(() => setFeedback(''), 2800)
+    return () => window.clearTimeout(timer)
+  }, [feedback])
+
+  const filterCounts = useMemo(() => labReportFilterCounts(items), [items])
+  const filtered = useMemo(() => {
+    const next = items.filter(
+      (item) => matchesLabReportFilter(item, filter) && matchesLabReportQuery(item, query),
+    )
+    return sortLabReportQueue(next)
+  }, [items, filter, query])
 
   const selected =
-    filtered.find((item) => item.id === selectedId) || filtered[0] || null
+    filtered.find((item) => item.id === selectedId) ||
+    items.find((item) => item.id === selectedId) ||
+    filtered[0] ||
+    null
+
+  useEffect(() => {
+    if (!selectedId) return
+    if (filtered.some((item) => item.id === selectedId)) return
+    setSelectedId(filtered[0]?.id || null)
+  }, [filtered, selectedId])
+
+  function updateSelected(patch) {
+    if (!selected) return
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id !== selected.id) return item
+        const next = { ...item, ...patch }
+        if (patch.status) {
+          next.report = { ...item.report, status: patch.status }
+        }
+        return next
+      }),
+    )
+  }
+
+  function handleVerify() {
+    if (!selected || selected.status !== 'Ready for review') return
+    const nextId = nextLabReportAfterVerify(items, selected.id)
+    updateSelected({ status: 'Verified' })
+    setFeedback(
+      nextId
+        ? `Verified ${selected.patientName}. Opening next report.`
+        : `Verified ${selected.patientName}. Queue is clear.`,
+    )
+    setFilter('needs')
+    setSelectedId(nextId)
+  }
+
+  function handleDownload() {
+    if (!selected?.report) return
+    const report = selected.report
+    downloadHealthReport({
+      title: report.testName,
+      reportId: report.bookingRef || report.id,
+      dateLabel: report.sample?.reportDate,
+      timeLabel: report.sample?.reportTime,
+      doctorName: report.doctorName,
+      hospital: report.lab?.name,
+      interpretation: report.interpretation,
+      parameters: report.parameters,
+      verifiedBy: report.doctorName,
+    })
+    setFeedback('Report download started.')
+  }
 
   return (
     <div className="w-full h-full min-h-full bg-transparent flex flex-col">
       <div className="w-full flex-1 min-h-0 page-pad py-4 sm:py-5 flex flex-col gap-4 max-w-[1440px] mx-auto">
         <QuickActionHeader title={title} subtitle={subtitle} />
 
-        {reports.length === 0 ? (
+        {items.length === 0 ? (
           <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] p-6 flex flex-col justify-center">
             <p className="text-sm text-body-gray">{empty}</p>
           </section>
         ) : (
           <div className="flex-1 min-h-0 flex flex-col xl:flex-row items-stretch gap-4">
-            <section className="xl:w-[380px] 2xl:w-[420px] shrink-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm p-4 flex flex-col min-h-0">
-              <div className="flex items-center justify-between gap-2 shrink-0 mb-3">
-                <h2 className="text-lg font-bold text-navy">{listTitle}</h2>
-                <span className="text-sm text-body-gray">{filtered.length}</span>
-              </div>
-
-              <label className="shrink-0 mb-3 flex items-center gap-2.5 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1] px-3 min-h-11">
-                <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.85} />
-                <input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search patient or test"
-                  className="w-full bg-transparent text-sm text-navy outline-none placeholder:text-body-gray/70"
-                />
-              </label>
-
-              <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2 max-h-[240px] xl:max-h-none">
-                {filtered.length === 0 ? (
-                  <p className="rounded-xl border border-dashed border-[#D0D9E3] bg-[#F8FAFC] p-4 text-sm text-body-gray text-center">
-                    No reports match your search.
-                  </p>
-                ) : (
-                  filtered.map((item) => (
-                    <DoctorLabReportCard
-                      key={item.id}
-                      item={item}
-                      selected={selected?.id === item.id}
-                      onSelect={(report) => setSelectedId(report.id)}
-                    />
-                  ))
-                )}
-              </div>
-            </section>
+            <DoctorLabReportsListPanel
+              listTitle={listTitle}
+              filtered={filtered}
+              filter={filter}
+              filterCounts={filterCounts}
+              query={query}
+              selectedId={selected?.id}
+              caughtUp={caughtUp}
+              onFilterChange={setFilter}
+              onQueryChange={setQuery}
+              onSelect={(report) => {
+                setSelectedId(report.id)
+                setFeedback('')
+              }}
+            />
 
             <div className="flex-1 min-w-0 min-h-0 flex flex-col gap-3">
               {selected ? (
@@ -97,11 +156,27 @@ export default function DoctorLabReportsScreen({
                     </p>
                   </div>
                 </div>
-              ) : null}
+              ) : (
+                <div className="rounded-2xl border border-dashed border-[#D0D9E3] bg-white p-6 text-sm text-body-gray">
+                  {caughtUp}
+                </div>
+              )}
 
               {selected?.report ? (
                 <div className="flex-1 min-h-0">
-                  <DoctorClinicLabReportView report={selected.report} showBack={false} />
+                  <DoctorClinicLabReportView
+                    report={selected.report}
+                    showBack={false}
+                    hideDownload
+                    footerSlot={
+                      <DoctorLabReportActions
+                        status={selected.status}
+                        feedback={feedback}
+                        onVerify={handleVerify}
+                        onDownload={handleDownload}
+                      />
+                    }
+                  />
                 </div>
               ) : null}
             </div>

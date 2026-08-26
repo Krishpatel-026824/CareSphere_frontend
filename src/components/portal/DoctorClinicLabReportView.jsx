@@ -1,7 +1,15 @@
 import { ArrowLeft } from 'lucide-react'
 import LabReportDetail from '../lab/LabReportDetail'
 
-export default function DoctorClinicLabReportView({ report, backLabel, onBack, showBack = true }) {
+export default function DoctorClinicLabReportView({
+  report,
+  backLabel,
+  onBack,
+  showBack = true,
+  hideDownload = false,
+  headerSlot = null,
+  footerSlot = null,
+}) {
   if (!report) return null
 
   return (
@@ -18,9 +26,11 @@ export default function DoctorClinicLabReportView({ report, backLabel, onBack, s
           </button>
         </div>
       ) : null}
+      {headerSlot}
       <div className="flex-1 min-h-0 overflow-y-auto p-4 sm:p-5">
-        <LabReportDetail report={report} />
+        <LabReportDetail report={report} hideDownload={hideDownload} />
       </div>
+      {footerSlot}
     </section>
   )
 }
