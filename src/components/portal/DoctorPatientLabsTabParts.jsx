@@ -1,17 +1,17 @@
 import { FlaskConical } from 'lucide-react'
 
 const MODES = [
+  { id: 'previous', label: 'Previous reports' },
   { id: 'order', label: 'Order tests' },
   { id: 'selected', label: 'Selected list' },
-  { id: 'previous', label: 'Previous reports' },
 ]
 
 export const ORDER_COLUMNS = [
-  { key: 'select', label: '', center: true, width: '7%' },
+  { key: 'pick', label: '', center: true, width: '8%' },
   { key: 'no', label: 'No.', center: true, width: '7%' },
-  { key: 'test', label: 'Lab test', center: false, width: '46%' },
+  { key: 'test', label: 'Lab test', center: false, width: '47%' },
   { key: 'turnaround', label: 'Ready in', center: true, width: '18%' },
-  { key: 'status', label: 'Status', center: true, width: '22%' },
+  { key: 'status', label: 'Status', center: true, width: '20%' },
 ]
 
 export function matchesLabQuery(item, query) {

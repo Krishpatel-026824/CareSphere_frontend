@@ -53,8 +53,8 @@ export default function DoctorHomeAppointmentsTable({
   const shouldScroll = filtered.length > SCROLL_ROW_THRESHOLD
 
   return (
-    <section className="rounded-2xl bg-white border border-[#E6EBF1] shadow-sm overflow-hidden">
-      <div className="px-4 sm:px-5 pt-4 pb-3.5 border-b border-[#E6EBF1] bg-[#F8FAFC] flex flex-col gap-3.5">
+    <section className="rounded-2xl bg-white border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col flex-1 min-h-0">
+      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-3.5 border-b border-[#E6EBF1] bg-[#F8FAFC] flex flex-col gap-3.5">
         <div className="min-w-0">
           <h2 className="text-xl sm:text-2xl font-bold text-navy tracking-tight leading-none">
             Appointment records
@@ -114,11 +114,7 @@ export default function DoctorHomeAppointmentsTable({
         </p>
       ) : (
         <>
-          <div
-            className={`overflow-x-auto ${
-              shouldScroll ? 'max-h-[min(520px,calc(100dvh-280px))] overflow-y-auto' : ''
-            }`}
-          >
+          <div className="flex-1 min-h-0 overflow-auto">
             <table className="w-full min-w-[760px] border-collapse text-left">
               <thead className="bg-[#E8F7F6] sticky top-0 z-10">
                 <tr>
@@ -221,7 +217,7 @@ export default function DoctorHomeAppointmentsTable({
             </table>
           </div>
 
-          <div className="px-4 sm:px-5 py-2.5 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
+          <div className="shrink-0 px-4 sm:px-5 py-2 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
             <p className="text-[12px] text-body-gray">
               Showing <span className="font-semibold text-navy">{filtered.length}</span> of{' '}
               <span className="font-semibold text-navy">{sorted.length}</span> records

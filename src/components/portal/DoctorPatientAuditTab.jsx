@@ -11,6 +11,7 @@ const TYPE_STYLE = {
   rx: 'bg-teal-light text-teal-dark',
   lab: 'bg-amber-100 text-amber-800',
   note: 'bg-violet-100 text-violet-800',
+  edit: 'bg-slate-100 text-slate-700',
 }
 
 export default function DoctorPatientAuditTab({ items = [] }) {
@@ -19,7 +20,7 @@ export default function DoctorPatientAuditTab({ items = [] }) {
       {!items.length ? (
         <PatientChartEmpty text="No audit activity recorded for this patient yet." />
       ) : (
-        <PatientChartTable minWidth="680px" fill>
+        <PatientChartTable minWidth="720px" fill>
           <thead className="bg-[#E8F7F6] sticky top-0 z-10">
             <tr>
               {['No.', 'When', 'Action', 'Detail', 'By'].map((label, index) => (
@@ -46,7 +47,9 @@ export default function DoctorPatientAuditTab({ items = [] }) {
                   </span>
                 </PatientChartTd>
                 <PatientChartTd>
-                  <p className="text-navy truncate max-w-[280px]">{item.detail}</p>
+                  <p className="text-navy truncate max-w-[320px]" title={item.detail}>
+                    {item.detail}
+                  </p>
                 </PatientChartTd>
                 <PatientChartTd>
                   <p className="text-body-gray truncate">{item.actor}</p>

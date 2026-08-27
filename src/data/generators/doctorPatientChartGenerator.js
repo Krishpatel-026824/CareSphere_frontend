@@ -36,20 +36,45 @@ function parseUseFor(subtitle = '', category = '') {
 }
 
 export function generatePatientPrescriptions(patientId) {
-  return doctorPrescribeTasksMock
+  const fromTasks = doctorPrescribeTasksMock
     .filter((item) => item.patientId === patientId)
     .map((item) => ({
       id: item.id,
       name: item.title,
-      badge: item.badge,
+      badge: item.badge || 'Previous',
       dose: item.dose,
       frequency: item.frequency,
       duration: item.duration,
       visitLabel: item.visitLabel,
       instructions: item.instructions,
       subtitle: item.subtitle,
+      useFor: item.subtitle,
       image: resolveMedicineImage(item.title),
     }))
+
+  if (fromTasks.length) return fromTasks
+
+  const seedIds = ['med-1', 'med-8', 'med-14']
+  return seedIds
+    .map((id, index) => {
+      const item = pharmacyItemsMock.find((med) => med.id === id)
+      if (!item) return null
+      const dose = parseDoseFromName(item.name)
+      return {
+        id: `prev-rx-${patientId}-${id}`,
+        name: item.name,
+        badge: 'Previous',
+        dose: dose === '—' ? '1 tablet' : dose,
+        frequency: index === 0 ? 'As needed' : 'Once daily',
+        duration: index === 2 ? 'Ongoing' : '7 days',
+        visitLabel: index === 0 ? '12 Mar 2026' : '08 Nov 2025',
+        instructions: `Continue ${item.name} as previously advised.`,
+        subtitle: parseUseFor(item.subtitle, item.category),
+        useFor: parseUseFor(item.subtitle, item.category),
+        image: item.image || resolveMedicineImage(item.name, item.id),
+      }
+    })
+    .filter(Boolean)
 }
 
 export function generatePatientMedicines() {

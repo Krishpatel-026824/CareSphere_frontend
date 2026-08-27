@@ -8,6 +8,7 @@ import DoctorPatientLabsTab from '../../components/portal/DoctorPatientLabsTab'
 import DoctorPatientMedicineTab from '../../components/portal/DoctorPatientMedicineTab'
 import DoctorPatientPrescriptionsTab from '../../components/portal/DoctorPatientPrescriptionsTab'
 import { generateDoctorPatientChart } from '../../data/generators/doctorPatientChartGenerator'
+import { selectPatientAudit } from '../../store/slices/doctorPatientAuditSlice'
 import { selectOrderedLabsForPatient } from '../../store/slices/doctorPatientLabsSlice'
 import { selectPatientRoutine } from '../../store/slices/doctorPatientRxSlice'
 
@@ -15,10 +16,18 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
   const [tab, setTab] = useState('prescription')
   const orderedLabs = useSelector((state) => selectOrderedLabsForPatient(state, patient?.id))
   const routine = useSelector((state) => selectPatientRoutine(state, patient?.id))
+  const liveAudit = useSelector((state) => selectPatientAudit(state, patient?.id))
   const chart = useMemo(
     () => generateDoctorPatientChart(patient, visits),
     [patient, visits],
   )
+
+  const auditItems = useMemo(() => {
+    const base = chart.audit || []
+    const liveIds = new Set(liveAudit.map((item) => item.id))
+    const merged = [...liveAudit, ...base.filter((item) => !liveIds.has(item.id))]
+    return merged
+  }, [liveAudit, chart.audit])
 
   if (!patient) return null
 
@@ -32,7 +41,7 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
     appointments: chart.visits.length,
     labs: orderedLabs.length + chart.labs.length,
     medicine: chart.medicines.length,
-    audit: chart.audit.length,
+    audit: auditItems.length,
   }
 
   return (
@@ -62,7 +71,7 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
             />
           ) : null}
           {tab === 'medicine' ? <DoctorPatientMedicineTab items={chart.medicines} /> : null}
-          {tab === 'audit' ? <DoctorPatientAuditTab items={chart.audit} /> : null}
+          {tab === 'audit' ? <DoctorPatientAuditTab items={auditItems} /> : null}
         </div>
       </div>
     </div>

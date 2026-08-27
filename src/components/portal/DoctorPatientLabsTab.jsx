@@ -6,6 +6,8 @@ import {
   orderPatientLabs,
   selectOrderedLabsForPatient,
 } from '../../store/slices/doctorPatientLabsSlice'
+import { addPatientAuditEvent } from '../../store/slices/doctorPatientAuditSlice'
+import ChartSelectMark from './ChartSelectMark'
 import DoctorPatientLabReportViewer from './DoctorPatientLabReportViewer'
 import {
   LabModeTabs,
@@ -28,7 +30,7 @@ export default function DoctorPatientLabsTab({
 }) {
   const dispatch = useDispatch()
   const ordered = useSelector((state) => selectOrderedLabsForPatient(state, patientId))
-  const [mode, setMode] = useState('order')
+  const [mode, setMode] = useState('previous')
   const [query, setQuery] = useState('')
   const [selectedIds, setSelectedIds] = useState([])
   const [viewReport, setViewReport] = useState(null)
@@ -84,6 +86,17 @@ export default function DoctorPatientLabsTab({
         dateLabel: formatDateLabel(new Date()),
       }))
     dispatch(orderPatientLabs({ patientId, tests: selectedTests }))
+    selectedTests.forEach((test) => {
+      dispatch(
+        addPatientAuditEvent({
+          patientId,
+          type: 'lab',
+          action: 'Lab ordered',
+          detail: `${test.title}${test.turnaround ? ` · Ready in ${test.turnaround}` : ''}`,
+          actor: 'Dr. James Carter',
+        }),
+      )
+    })
     setSelectedIds([])
     setMode('selected')
   }
@@ -180,8 +193,7 @@ export default function DoctorPatientLabsTab({
               </colgroup>
               <thead className="bg-[#E8F7F6] sticky top-0 z-10">
                 <tr>
-                  <PatientChartTh center />
-                  {ORDER_COLUMNS.slice(1).map((column) => (
+                  {ORDER_COLUMNS.map((column) => (
                     <PatientChartTh key={column.key} center={column.center}>
                       {column.label}
                     </PatientChartTh>
@@ -191,21 +203,25 @@ export default function DoctorPatientLabsTab({
               <tbody>
                 {orderRows.map((item, index) => {
                   const orderedRow = item.status === 'Ordered'
-                  const checked = selectedIds.includes(item.id)
+                  const selected = selectedIds.includes(item.id)
                   return (
                     <tr
                       key={item.id}
-                      className={checked ? 'bg-[#E8F7F6]' : index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'}
+                      onClick={() => {
+                        if (!orderedRow) toggleOne(item.id)
+                      }}
+                      className={`transition-colors ${
+                        orderedRow
+                          ? 'bg-[#F8FAFC]'
+                          : selected
+                            ? 'bg-[#E8F7F6] cursor-pointer'
+                            : index % 2
+                              ? 'bg-[#FAFCFD] cursor-pointer hover:bg-[#F0FAF9]'
+                              : 'bg-white cursor-pointer hover:bg-[#F0FAF9]'
+                      }`}
                     >
                       <PatientChartTd center>
-                        <input
-                          type="checkbox"
-                          checked={checked}
-                          disabled={orderedRow}
-                          onChange={() => toggleOne(item.id)}
-                          className="w-4 h-4 accent-teal cursor-pointer disabled:cursor-not-allowed disabled:opacity-40"
-                          aria-label={`Select ${item.title}`}
-                        />
+                        <ChartSelectMark selected={selected} locked={orderedRow} />
                       </PatientChartTd>
                       <PatientChartTd center>
                         <span className="text-[13px] font-semibold text-body-gray tabular-nums">
@@ -225,9 +241,13 @@ export default function DoctorPatientLabsTab({
                           <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
                             Ordered{item.dateLabel ? ` · ${item.dateLabel}` : ''}
                           </span>
+                        ) : selected ? (
+                          <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal text-white">
+                            Selected
+                          </span>
                         ) : (
                           <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#F1F5F9] text-body-gray">
-                            Available
+                            Tap to select
                           </span>
                         )}
                       </PatientChartTd>

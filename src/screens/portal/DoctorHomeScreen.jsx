@@ -51,7 +51,7 @@ export default function DoctorHomeScreen({
           actions={actions}
         />
       ) : (
-        <div className="w-full h-full min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto overflow-y-auto scroll-y">
+        <div className="w-full h-full min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto overflow-hidden">
           <header className="shrink-0 flex items-start justify-between gap-3">
             <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
               <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-2xl bg-teal text-white shadow-sm flex items-center justify-center shrink-0">

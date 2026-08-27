@@ -9,6 +9,7 @@ import medicinesReducer from './slices/medicinesSlice'
 import messagesReducer from './slices/messagesSlice'
 import notificationsReducer from './slices/notificationsSlice'
 import pharmacyReducer from './slices/pharmacySlice'
+import doctorPatientAuditReducer from './slices/doctorPatientAuditSlice'
 import doctorPatientRxReducer from './slices/doctorPatientRxSlice'
 import doctorPatientLabsReducer from './slices/doctorPatientLabsSlice'
 import doctorSignedRxReducer from './slices/doctorSignedRxSlice'
@@ -30,6 +31,7 @@ export const store = configureStore({
     doctorSignedRx: doctorSignedRxReducer,
     doctorPatientLabs: doctorPatientLabsReducer,
     doctorPatientRx: doctorPatientRxReducer,
+    doctorPatientAudit: doctorPatientAuditReducer,
     profile: profileReducer,
     lab: labReducer,
     telemedicine: telemedicineReducer,

@@ -109,31 +109,31 @@ export function generateDoctorScheduleSummary(visits = [], now = new Date()) {
   }
 }
 
-export function generateDoctorScheduleDays(visits = [], now = new Date()) {
+export function generateDoctorScheduleDays(visits = [], now = new Date(), dayCount = 10) {
   const todayLabel = formatDateLabel(now)
   const activeStatuses = new Set(['Upcoming', 'Confirmed'])
-  const labels = [...new Set(visits.map((visit) => visit.dateLabel).filter(Boolean))]
+  const start = new Date(now)
+  start.setHours(0, 0, 0, 0)
+  start.setDate(start.getDate() - 3)
 
-  if (!labels.includes(todayLabel)) labels.unshift(todayLabel)
+  return Array.from({ length: dayCount }, (_, index) => {
+    const date = new Date(start)
+    date.setDate(start.getDate() + index)
+    const dateLabel = formatDateLabel(date)
+    const dayVisits = visits.filter(
+      (visit) => visit.dateLabel === dateLabel && activeStatuses.has(visit.status),
+    )
 
-  return labels
-    .map((dateLabel) => {
-      const parsed = parseAppointmentDate(dateLabel, '12:00 AM', now)
-      const dayVisits = visits.filter(
-        (visit) =>
-          visit.dateLabel === dateLabel && activeStatuses.has(visit.status),
-      )
-      return {
-        id: dateLabel,
-        dateLabel,
-        weekday: parsed ? parsed.toLocaleDateString('en-IN', { weekday: 'short' }) : '',
-        day: parsed ? String(parsed.getDate()) : dateLabel,
-        month: parsed ? parsed.toLocaleDateString('en-IN', { month: 'short' }) : '',
-        heading: visitDayHeading(dateLabel, now),
-        isToday: dateLabel === todayLabel,
-        count: dayVisits.length,
-        sortKey: parsed ? parsed.getTime() : Number.MAX_SAFE_INTEGER,
-      }
-    })
-    .sort((left, right) => left.sortKey - right.sortKey)
+    return {
+      id: dateLabel,
+      dateLabel,
+      weekday: date.toLocaleDateString('en-IN', { weekday: 'short' }),
+      day: String(date.getDate()),
+      month: date.toLocaleDateString('en-IN', { month: 'short' }),
+      heading: visitDayHeading(dateLabel, now),
+      isToday: dateLabel === todayLabel,
+      count: dayVisits.length,
+      sortKey: date.getTime(),
+    }
+  })
 }

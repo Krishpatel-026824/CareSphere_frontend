@@ -19,8 +19,21 @@ export const rxDurationOptions = [
   'As advised',
 ]
 
+export const rxDoseOptions = [
+  '1 tablet',
+  '2 tablets',
+  '1/2 tablet',
+  '5 ml',
+  '10 ml',
+  '1 capsule',
+  '2 capsules',
+  'As directed',
+]
+
 export function generateRxScheduleDefaults(medicine = {}) {
+  const fromName = String(medicine.dose || '').trim()
   return {
+    dose: fromName && fromName !== '—' ? fromName : '1 tablet',
     frequency: medicine.frequency || 'Once daily',
     duration: '7 days',
   }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 import { bookDoctorVisit } from '../../store/slices/doctorScheduleSlice'
+import { addPatientAuditEvent } from '../../store/slices/doctorPatientAuditSlice'
 import DoctorPatientBookVisitPanel from './DoctorPatientBookVisitPanel'
 import {
   PatientChartAddButton,
@@ -26,6 +27,15 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
         dateLabel,
         timeLabel,
         status: 'Confirmed',
+      }),
+    )
+    dispatch(
+      addPatientAuditEvent({
+        patientId: patient.id,
+        type: 'visit',
+        action: 'Visit booked',
+        detail: `${dateLabel} · ${timeLabel} · Confirmed`,
+        actor: 'Dr. James Carter',
       }),
     )
     setBookingOpen(false)

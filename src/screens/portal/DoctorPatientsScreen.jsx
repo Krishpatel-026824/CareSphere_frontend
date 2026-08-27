@@ -7,12 +7,22 @@ const patientStatusStyles = {
   Upcoming: 'bg-sky-100 text-sky-700 border border-sky-200',
   Confirmed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
   Completed: 'bg-slate-100 text-slate-600 border border-slate-200',
+  Cancelled: 'bg-rose-100 text-rose-700 border border-rose-200',
 }
 
 function isActivePatient(patient) {
   const status = patient.nextVisit?.status
   return status === 'Upcoming' || status === 'Confirmed'
 }
+
+const COLUMNS = [
+  { key: 'no', label: 'No.', width: '6%' },
+  { key: 'patient', label: 'Patient', width: '38%' },
+  { key: 'date', label: 'Date', width: '16%' },
+  { key: 'time', label: 'Time', width: '14%' },
+  { key: 'status', label: 'Status', width: '16%' },
+  { key: 'actions', label: 'Actions', width: '10%' },
+]
 
 export default function DoctorPatientsScreen({ patients = [], onSelectPatient }) {
   const allWorkDone = useMemo(
@@ -23,53 +33,47 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
   const panelTitle = allWorkDone ? 'Patients' : 'Clinic queue'
 
   return (
-    <div className="w-full min-h-full bg-transparent">
-      <div className="page-pad py-4 sm:py-5 flex flex-col gap-4 max-w-[1440px] mx-auto">
-        <AppointmentPageHeader title="Patients" />
+    <div className="w-full h-full min-h-0 bg-transparent flex flex-col overflow-hidden">
+      <div className="flex-1 min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto w-full">
+        <div className="shrink-0">
+          <AppointmentPageHeader title="Patients" />
+        </div>
 
-        <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden">
+        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col">
           {patients.length === 0 ? (
             <p className="m-4 sm:m-5 rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-sm text-body-gray text-center">
               No patients in your clinic queue yet.
             </p>
           ) : (
             <>
-              <div className="px-4 sm:px-5 pt-4 pb-3.5 border-b border-[#E6EBF1] bg-[#F8FAFC]">
-                <h2 className="text-2xl sm:text-[26px] font-bold text-navy tracking-tight leading-none">
+              <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
+                <h2 className="text-xl sm:text-2xl font-bold text-navy tracking-tight leading-none">
                   {panelTitle}
                 </h2>
+                <span className="text-[12px] font-semibold text-body-gray bg-white border border-[#E6EBF1] px-2.5 py-1 rounded-full tabular-nums">
+                  {patients.length}
+                </span>
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full table-fixed min-w-[680px] border-collapse text-left">
+              <div className="flex-1 min-h-0 overflow-auto">
+                <table className="w-full table-fixed min-w-[720px] border-collapse text-left">
                   <colgroup>
-                    <col className="w-16" />
-                    <col className="w-[30%]" />
-                    <col className="w-[17%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[18%]" />
-                    <col className="w-24" />
+                    {COLUMNS.map((column) => (
+                      <col key={column.key} style={{ width: column.width }} />
+                    ))}
                   </colgroup>
-                  <thead className="bg-[#CBD5E1]">
+                  <thead className="bg-[#E8F7F6] sticky top-0 z-10">
                     <tr>
-                      <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                        No.
-                      </th>
-                      <th className="px-4 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                        Patient
-                      </th>
-                      <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
-                        Date
-                      </th>
-                      <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
-                        Time
-                      </th>
-                      <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                        Status
-                      </th>
-                      <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 text-center align-middle">
-                        Actions
-                      </th>
+                      {COLUMNS.map((column, index) => (
+                        <th
+                          key={column.key}
+                          className={`px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark border-b border-teal/20 ${
+                            index === 1 ? 'text-left' : 'text-center'
+                          }`}
+                        >
+                          {column.label}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
@@ -82,15 +86,20 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                       const meta = [patient.ageLabel, patient.city].filter(Boolean).join(' · ')
 
                       return (
-                        <tr key={patient.id} className="hover:bg-[#F0FDFA] transition-colors">
-                          <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
-                            <span className="text-base font-semibold text-navy tabular-nums">
+                        <tr
+                          key={patient.id}
+                          className={`transition-colors hover:bg-[#F0FDFA] ${
+                            index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'
+                          }`}
+                        >
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                            <span className="text-[14px] font-semibold text-body-gray tabular-nums">
                               {index + 1}
                             </span>
                           </td>
-                          <td className="px-4 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] align-middle">
                             <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white">
+                              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white">
                                 <img
                                   src={patient.avatar}
                                   alt=""
@@ -98,46 +107,46 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                                 />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-base font-semibold text-navy truncate leading-snug">
+                                <p className="text-[15px] font-semibold text-navy truncate leading-snug">
                                   {patient.name}
                                 </p>
                                 {meta ? (
-                                  <p className="text-[13px] text-body-gray truncate mt-0.5 leading-snug">
+                                  <p className="text-[12px] text-body-gray truncate mt-0.5 leading-snug">
                                     {meta}
                                   </p>
                                 ) : null}
                               </div>
                             </div>
                           </td>
-                          <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                            <p className="text-base font-semibold text-navy whitespace-nowrap">
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                            <p className="text-[14px] font-semibold text-navy whitespace-nowrap">
                               {next?.dateLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                            <p className="text-base font-semibold text-navy whitespace-nowrap">
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                            <p className="text-[14px] font-semibold text-navy whitespace-nowrap">
                               {next?.timeLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
                             {next ? (
                               <span
-                                className={`inline-flex text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle}`}
+                                className={`inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full ${statusStyle}`}
                               >
                                 {next.status}
                               </span>
                             ) : (
-                              <span className="text-base text-body-gray">—</span>
+                              <span className="text-[14px] text-body-gray">—</span>
                             )}
                           </td>
-                          <td className="px-3 py-3.5 border-b border-[#D5DEE8] text-center align-middle">
+                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
                             <button
                               type="button"
                               onClick={() => onSelectPatient?.(patient)}
-                              className="w-10 h-10 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 inline-flex items-center justify-center cursor-pointer transition-colors"
+                              className="w-9 h-9 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 inline-flex items-center justify-center cursor-pointer transition-colors"
                               aria-label={`View ${patient.name}`}
                             >
-                              <Eye className="w-5 h-5" strokeWidth={2} />
+                              <Eye className="w-4 h-4" strokeWidth={2} />
                             </button>
                           </td>
                         </tr>
@@ -145,6 +154,16 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                     })}
                   </tbody>
                 </table>
+              </div>
+
+              <div className="shrink-0 px-4 sm:px-5 py-2 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
+                <p className="text-[12px] text-body-gray">
+                  Showing <span className="font-semibold text-navy">{patients.length}</span> patients
+                  in clinic queue
+                </p>
+                {patients.length > 12 ? (
+                  <p className="text-[11px] text-teal font-medium">Scroll for more</p>
+                ) : null}
               </div>
             </>
           )}

@@ -1,8 +1,6 @@
 import {
   CalendarDays,
   CircleUserRound,
-  FileText,
-  FlaskConical,
   House,
   MessageCircleMore,
   Users,
@@ -17,10 +15,7 @@ export const doctorMainNavTabs = [
 
 export const doctorProfileNavTab = { id: 'profile', label: 'Profile', icon: CircleUserRound }
 
-export const doctorSidebarQuickActions = [
-  { id: 'pharmacy', key: 'prescribe', label: 'Write Rx', icon: FileText },
-  { id: 'labReports', key: 'labReports', label: 'Lab reports', icon: FlaskConical },
-]
+export const doctorSidebarQuickActions = []
 
 export const doctorBottomNavTabs = [
   { id: 'home', label: 'Home', icon: House },
