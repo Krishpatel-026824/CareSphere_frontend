@@ -55,26 +55,34 @@ export default function HomeDashboard({
           </button>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 items-stretch">
-          <UpcomingAppointmentPanel
-            key={
-              appointment
-                ? `${appointment.id}-${appointment.status}-${appointment.dateLabel}-${appointment.timeLabel}`
-                : 'empty'
-            }
-            appointment={appointment}
-            visitSignals={visitSignals}
-            onReschedule={() => onRescheduleAppointment?.(appointment)}
-            onOpenPage={() => onAppointmentDetails?.(appointment)}
-            onBook={onBookAppointment}
-          />
-          <MedicineReminderCard />
-          <LabBookingPanel
-            booking={latestLabBooking}
-            onBook={() => onBookLabTest?.() || onActionClick?.('labTests')}
-            onOpenPage={() => onViewLabBookings?.() || onActionClick?.('labTests')}
-          />
-          <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 xl:[grid-auto-rows:1fr]">
+          <div className="min-h-0 h-full">
+            <UpcomingAppointmentPanel
+              key={
+                appointment
+                  ? `${appointment.id}-${appointment.status}-${appointment.dateLabel}-${appointment.timeLabel}`
+                  : 'empty'
+              }
+              appointment={appointment}
+              visitSignals={visitSignals}
+              onReschedule={() => onRescheduleAppointment?.(appointment)}
+              onOpenPage={() => onAppointmentDetails?.(appointment)}
+              onBook={onBookAppointment}
+            />
+          </div>
+          <div className="min-h-0 h-full">
+            <MedicineReminderCard />
+          </div>
+          <div className="min-h-0 h-full">
+            <LabBookingPanel
+              booking={latestLabBooking}
+              onBook={() => onBookLabTest?.() || onActionClick?.('labTests')}
+              onOpenPage={() => onViewLabBookings?.() || onActionClick?.('labTests')}
+            />
+          </div>
+          <div className="min-h-0 h-full">
+            <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
+          </div>
         </div>
       </div>
     </div>

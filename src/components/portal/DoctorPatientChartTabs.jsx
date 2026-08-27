@@ -27,18 +27,18 @@ export default function DoctorPatientChartTabs({ value, counts = {}, onChange })
               key={tab.id}
               type="button"
               onClick={() => onChange?.(tab.id)}
-              className={`w-full min-h-11 sm:min-h-12 inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-1 sm:px-3 text-[11px] sm:text-[13px] font-semibold cursor-pointer transition-colors border ${
+              className={`w-full min-h-11 sm:min-h-12 inline-flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl px-1 sm:px-3 text-[12px] sm:text-[15px] font-semibold cursor-pointer transition-colors border ${
                 active
                   ? 'bg-teal text-white border-teal shadow-sm'
                   : 'bg-[#F8FAFC] text-navy border-[#E6EBF1] hover:bg-[#F0FDFA] hover:border-teal/30'
               }`}
             >
-              <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" strokeWidth={2} />
+              <Icon className="w-4 h-4 sm:w-[18px] sm:h-[18px] shrink-0" strokeWidth={2} />
               <span className="truncate sm:hidden">{tab.short}</span>
               <span className="truncate hidden sm:inline">{tab.label}</span>
               {count != null ? (
                 <span
-                  className={`min-w-[18px] sm:min-w-[20px] h-5 px-1 rounded-full text-[10px] font-bold inline-flex items-center justify-center tabular-nums shrink-0 ${
+                  className={`min-w-[18px] sm:min-w-[22px] h-5 sm:h-6 px-1 rounded-full text-[11px] sm:text-[12px] font-bold inline-flex items-center justify-center tabular-nums shrink-0 ${
                     active ? 'bg-white/20 text-white' : 'bg-white text-body-gray border border-[#E3EAF2]'
                   }`}
                 >

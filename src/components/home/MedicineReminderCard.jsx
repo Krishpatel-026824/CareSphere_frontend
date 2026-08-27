@@ -20,8 +20,8 @@ export default function MedicineReminderCard() {
   const canMarkTaken = !takenToday && remainingCount > 0
 
   return (
-    <section className="bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col gap-4 h-full min-h-[280px] w-full">
-      <div className="flex items-center justify-between gap-3">
+    <section className="h-full min-h-0 bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col gap-3 w-full">
+      <div className="flex items-center justify-between gap-3 shrink-0">
         <div className="min-w-0">
           <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>
           <p className="text-[11px] text-body-gray mt-0.5">
@@ -34,7 +34,7 @@ export default function MedicineReminderCard() {
         </span>
       </div>
 
-      <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease]">
+      <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease] shrink-0">
         <div className="w-[56px] h-[56px] rounded-xl overflow-hidden shrink-0 border border-gray-100 bg-white shadow-sm flex items-center justify-center">
           {medicine.image ? (
             <img
@@ -60,9 +60,9 @@ export default function MedicineReminderCard() {
         </div>
       </div>
 
-      <div className="h-px bg-border-gray/80" />
+      <div className="h-px bg-border-gray/80 shrink-0" />
 
-      <div className="flex flex-col gap-2.5">
+      <div className="flex flex-col gap-2.5 flex-1 min-h-0">
         <div className="flex items-center justify-between gap-2">
           <p className="text-xs font-medium text-body-gray">Refill status</p>
           <p className="text-xs font-bold text-[#7C4DFF] tabular-nums">
@@ -78,73 +78,76 @@ export default function MedicineReminderCard() {
         </p>
       </div>
 
-      <button
-        type="button"
-        onClick={() => markAsTaken(medicine.id)}
-        disabled={!canMarkTaken}
-        className={`w-full min-h-[48px] rounded-2xl text-sm font-semibold inline-flex items-center justify-center gap-2.5 shadow-sm transition-colors ${
-          canMarkTaken
-            ? 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
-            : 'bg-teal/15 text-teal cursor-default'
-        }`}
-      >
-        <span
-          className={`w-6 h-6 rounded-full flex items-center justify-center ${
-            canMarkTaken ? 'border-2 border-white/90' : 'bg-teal/20'
+      <div className="mt-auto shrink-0 flex flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => markAsTaken(medicine.id)}
+          disabled={!canMarkTaken}
+          className={`w-full min-h-[48px] rounded-2xl text-sm font-semibold inline-flex items-center justify-center gap-2.5 shadow-sm transition-colors ${
+            canMarkTaken
+              ? 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
+              : 'bg-teal/15 text-teal cursor-default'
           }`}
         >
-          <Check className="w-3.5 h-3.5 text-current" strokeWidth={3} />
-        </span>
-        {takenToday ? 'Taken today' : 'Mark as taken'}
-      </button>
-
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => { setEditingMedicine(null); setModalOpen(true) }}
-          className="flex-1 h-9 rounded-xl border border-dashed border-[#7C4DFF]/40 text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
-        >
-          <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
-          Add medicine
+          <span
+            className={`w-6 h-6 rounded-full flex items-center justify-center ${
+              canMarkTaken ? 'border-2 border-white/90' : 'bg-teal/20'
+            }`}
+          >
+            <Check className="w-3.5 h-3.5 text-current" strokeWidth={3} />
+          </span>
+          {takenToday ? 'Taken today' : 'Mark as taken'}
         </button>
-        <button
-          type="button"
-          onClick={() => { setEditingMedicine(medicine); setModalOpen(true) }}
-          className="h-9 px-3 rounded-xl border border-[#E4E0FF] text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
-        >
-          <Settings className="w-3.5 h-3.5" strokeWidth={2} />
-          Edit
-        </button>
-      </div>
 
-      {canPage ? (
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={goPrev}
-            aria-label="Previous medicine"
-            className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+            onClick={() => { setEditingMedicine(null); setModalOpen(true) }}
+            className="flex-1 h-9 rounded-xl border border-dashed border-[#7C4DFF]/40 text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
           >
-            <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+            <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
+            Add medicine
           </button>
-          <p className="text-[11px] font-semibold text-[#7C4DFF] tabular-nums">
-            {index + 1} / {count}
-          </p>
           <button
             type="button"
-            onClick={goNext}
-            aria-label="Next medicine"
-            className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+            onClick={() => { setEditingMedicine(medicine); setModalOpen(true) }}
+            className="h-9 px-3 rounded-xl border border-[#E4E0FF] text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
           >
-            <ChevronRight className="w-5 h-5" strokeWidth={2} />
+            <Settings className="w-3.5 h-3.5" strokeWidth={2} />
+            Edit
           </button>
         </div>
-      ) : null}
+
+        {canPage ? (
+          <div className="flex items-center justify-between gap-3">
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous medicine"
+              className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+            >
+              <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+            </button>
+            <p className="text-[11px] font-semibold text-[#7C4DFF] tabular-nums">
+              {index + 1} / {count}
+            </p>
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next medicine"
+              className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+            >
+              <ChevronRight className="w-5 h-5" strokeWidth={2} />
+            </button>
+          </div>
+        ) : null}
+      </div>
+
       <MedicineFormModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         medicine={editingMedicine}
-        onSave={(data) => editingMedicine ? updateMedicine(data) : addMedicine(data)}
+        onSave={(data) => (editingMedicine ? updateMedicine(data) : addMedicine(data))}
         onDelete={removeMedicine}
       />
     </section>
