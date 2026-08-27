@@ -14,14 +14,20 @@ export function generateDoctorVisitDetail(visit) {
   const patient = doctorPatientsMock.find((item) => item.id === visit.patientId)
   const parsed = parseAppointmentDate(visit.dateLabel, visit.timeLabel)
   const isCompleted = visit.status === 'Completed'
+  const isLocked = visit.status === 'Completed' || visit.status === 'Cancelled'
 
-  const tasks = visit.tasks?.length
+  const rawTasks = visit.tasks?.length
     ? visit.tasks
     : (visit.prepItems || []).map((label, index) => ({
         id: `prep-${index}`,
         label,
         done: isCompleted,
       }))
+
+  const tasks = (rawTasks.length ? rawTasks : defaultTasks).map((task) => ({
+    ...task,
+    done: isCompleted ? true : Boolean(task.done),
+  }))
 
   return {
     weekday: parsed?.toLocaleDateString('en-IN', { weekday: 'long' }) || '',
@@ -34,11 +40,12 @@ export function generateDoctorVisitDetail(visit) {
           phone: patient.phone,
         }
       : null,
-    tasks: tasks.length ? tasks : defaultTasks,
-    timeline: generateDoctorVisitTimeline(visit, tasks.length ? tasks : defaultTasks),
+    tasks,
+    timeline: generateDoctorVisitTimeline(visit, tasks),
     duration: '30 min',
     checkInLabel: 'Arrive 15 minutes early',
     specialty: visit.specialty || 'Cardiologist',
     cityLine: `${visit.location || 'Ahmedabad'}, Gujarat`,
+    checklistLocked: isLocked,
   }
 }

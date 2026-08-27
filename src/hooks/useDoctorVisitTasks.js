@@ -10,6 +10,7 @@ export function useDoctorVisitTasks(visit) {
 
   function toggleTask(taskId) {
     if (!visit || !taskId) return
+    if (visit.status === 'Completed' || visit.status === 'Cancelled') return
 
     if (visit.linkedAppointmentId) {
       dispatch(toggleAppointmentTask({ appointmentId: visit.linkedAppointmentId, taskId }))

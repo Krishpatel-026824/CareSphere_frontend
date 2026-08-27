@@ -75,7 +75,7 @@ export default function DoctorHomeAppointmentsTable({
         </label>
 
         <div className="rounded-2xl border border-[#E6EBF1] bg-white p-2">
-          <div className="flex items-center gap-2 overflow-x-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-2">
             {FILTERS.map((item) => {
               const active = filter === item.id
               const Icon = item.Icon
@@ -84,19 +84,19 @@ export default function DoctorHomeAppointmentsTable({
                   key={item.id}
                   type="button"
                   onClick={() => setFilter(item.id)}
-                  className={`shrink-0 h-10 inline-flex items-center gap-2 rounded-full px-4 text-[14px] font-semibold cursor-pointer transition-all border ${
+                  className={`w-full min-h-12 inline-flex items-center justify-center gap-2 rounded-xl px-3 text-[15px] sm:text-base font-semibold cursor-pointer transition-all border ${
                     active
                       ? 'bg-teal text-white border-teal shadow-sm'
-                      : 'bg-white text-navy border-[#DCE5EF] hover:border-teal/45 hover:bg-teal-light/25'
+                      : 'bg-[#F8FAFC] text-navy border-[#DCE5EF] hover:border-teal/45 hover:bg-teal-light/25'
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={2.2} />
-                  {item.label}
+                  <Icon className="w-4 h-4 shrink-0" strokeWidth={2.2} />
+                  <span className="truncate">{item.label}</span>
                   <span
-                    className={`min-w-[22px] h-[22px] px-1 rounded-full text-[11px] font-bold inline-flex items-center justify-center tabular-nums ${
+                    className={`min-w-[24px] h-6 px-1.5 rounded-full text-[12px] font-bold inline-flex items-center justify-center tabular-nums ${
                       active
                         ? 'bg-white/20 text-white'
-                        : 'bg-[#F4F7FA] text-body-gray border border-[#E3EAF2]'
+                        : 'bg-white text-body-gray border border-[#E3EAF2]'
                     }`}
                   >
                     {counts[item.id] || 0}

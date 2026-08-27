@@ -81,7 +81,7 @@ export default function DoctorScheduleScreen({
   return (
     <div className="w-full h-full min-h-full bg-transparent flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto w-full">
-        <header className="shrink-0 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <header className="shrink-0 flex flex-col gap-3">
           <div className="min-w-0 flex items-center gap-3">
             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-teal text-white flex items-center justify-center shrink-0 shadow-sm">
               <CalendarCheck className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />

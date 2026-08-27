@@ -53,16 +53,22 @@ const appointmentsSlice = createSlice({
     },
     completeAppointment(state, action) {
       const id = action.payload
-      state.items = state.items.map((item) =>
-        item.id === id && (item.status === 'Upcoming' || item.status === 'Confirmed')
-          ? { ...item, status: 'Completed' }
-          : item,
-      )
+      state.items = state.items.map((item) => {
+        if (item.id !== id || (item.status !== 'Upcoming' && item.status !== 'Confirmed')) {
+          return item
+        }
+        return {
+          ...item,
+          status: 'Completed',
+          tasks: (item.tasks || []).map((task) => ({ ...task, done: true })),
+        }
+      })
     },
     toggleAppointmentTask(state, action) {
       const { appointmentId, taskId } = action.payload
       state.items = state.items.map((item) => {
         if (item.id !== appointmentId || !item.tasks?.length) return item
+        if (item.status === 'Completed' || item.status === 'Cancelled') return item
         return {
           ...item,
           tasks: item.tasks.map((task) =>

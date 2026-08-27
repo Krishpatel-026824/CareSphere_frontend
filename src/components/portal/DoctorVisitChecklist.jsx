@@ -26,7 +26,7 @@ export default function DoctorVisitChecklist({ tasks = [], title = 'Visit checkl
               <span
                 className={`text-[14px] tracking-tight break-words ${
                   task.done
-                    ? 'font-medium text-navy line-through decoration-teal/40'
+                    ? 'font-medium text-navy/70 line-through decoration-teal/50 decoration-2'
                     : 'font-medium text-navy/85'
                 }`}
               >

@@ -118,7 +118,9 @@ export default function DoctorScheduleSummary({
 
         <DoctorVisitChecklist
           tasks={tasks}
-          onToggleTask={visit.status !== 'Cancelled' ? toggleTask : undefined}
+          onToggleTask={
+            visit.status === 'Upcoming' || visit.status === 'Confirmed' ? toggleTask : undefined
+          }
           compact
         />
 

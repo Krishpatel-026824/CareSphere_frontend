@@ -48,7 +48,11 @@ export default function DoctorVisitPanel({
       <div className={`flex flex-col gap-4 min-h-0 min-w-0 ${fillHeight ? 'flex-1 overflow-y-auto scroll-y pr-0.5' : ''}`}>
         <DoctorVisitChecklist
           tasks={tasks}
-          onToggleTask={readOnly ? undefined : toggleTask}
+          onToggleTask={
+            readOnly || visit.status === 'Completed' || visit.status === 'Cancelled'
+              ? undefined
+              : toggleTask
+          }
         />
         <DoctorVisitPatientSnapshot patientMeta={detail.patientMeta} detail={detail} />
 

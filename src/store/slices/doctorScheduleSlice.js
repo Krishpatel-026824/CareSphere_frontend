@@ -47,12 +47,17 @@ const doctorScheduleSlice = createSlice({
       state.extras = setStatus(state.extras, action.payload, 'Cancelled', ACTIVE)
     },
     completeDoctorVisit(state, action) {
-      state.extras = setStatus(state.extras, action.payload, 'Completed', ACTIVE)
+      state.extras = state.extras.map((visit) => {
+        if (visit.id !== action.payload || !ACTIVE.has(visit.status)) return visit
+        const tasks = resolveVisitTasks(visit).map((task) => ({ ...task, done: true }))
+        return { ...visit, status: 'Completed', tasks }
+      })
     },
     toggleDoctorVisitTask(state, action) {
       const { visitId, taskId } = action.payload
       state.extras = state.extras.map((visit) => {
         if (visit.id !== visitId) return visit
+        if (visit.status === 'Completed' || visit.status === 'Cancelled') return visit
         const tasks = resolveVisitTasks(visit).map((task) =>
           task.id === taskId ? { ...task, done: !task.done } : task,
         )
