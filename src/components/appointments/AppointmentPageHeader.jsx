@@ -1,11 +1,9 @@
-import { CalendarCheck, Plus, Trash2 } from 'lucide-react'
+import { CalendarCheck, Plus } from 'lucide-react'
 
 export default function AppointmentPageHeader({
   count = 0,
   upcomingCount = 0,
   onNewAppointment,
-  onClearAll,
-  recycleBinCount = 0,
   title = 'Appointments',
   subtitle,
   newLabel = 'New appointment',
@@ -33,17 +31,6 @@ export default function AppointmentPageHeader({
       </div>
 
       <div className="flex items-center gap-2.5 shrink-0">
-        {onClearAll ? (
-          <button
-            type="button"
-            onClick={onClearAll}
-            className="h-10 sm:h-11 px-4 sm:px-5 rounded-full bg-white border border-[#E6EBF1] text-[#475569] text-sm font-semibold cursor-pointer hover:bg-red-50 hover:text-red-500 hover:border-red-300 transition-colors inline-flex items-center justify-center gap-2 shadow-sm"
-            aria-label="Recycle bin"
-          >
-            <Trash2 className="w-4 h-4" strokeWidth={2} />
-            <span className="hidden sm:inline">Recycle bin</span>
-          </button>
-        ) : null}
         {onNewAppointment ? (
           <button
             type="button"

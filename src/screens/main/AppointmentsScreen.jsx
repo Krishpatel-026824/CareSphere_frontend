@@ -11,7 +11,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
 import AppointmentRecordDetailModal from '../../components/appointments/AppointmentRecordDetailModal'
-import AppointmentRecycleBinModal from '../../components/appointments/AppointmentRecycleBinModal'
 import DoctorProfileModal from '../../components/appointments/DoctorProfileModal'
 import NewAppointmentModal from '../../components/appointments/NewAppointmentModal'
 import EditAppointmentModal from '../../components/home/EditAppointmentModal'
@@ -26,10 +25,6 @@ export default function AppointmentsScreen({
   onCreateAppointment,
   onUpdateAppointment,
   onDeleteAppointment,
-  recycleBin = [],
-  onRestoreAppointment,
-  onPermanentDeleteAppointment,
-  onEmptyRecycleBin,
 }) {
   const [query, setQuery] = useState('')
   const [startDate, setStartDate] = useState(null)
@@ -39,7 +34,6 @@ export default function AppointmentsScreen({
   const [selectedAppointmentDetail, setSelectedAppointmentDetail] = useState(null)
   const [editingAppointment, setEditingAppointment] = useState(null)
   const [showDoctorProfileModal, setShowDoctorProfileModal] = useState(false)
-  const [showRecycleBin, setShowRecycleBin] = useState(false)
   const [deleteConfirmId, setDeleteConfirmId] = useState(null)
   const [booking, setBooking] = useState({
     fullName: currentUserName || 'Krish Patel',
@@ -154,8 +148,6 @@ export default function AppointmentsScreen({
           count={appointments.length}
           upcomingCount={countUpcomingAppointments(appointments)}
           onNewAppointment={openBookingModal}
-          onClearAll={() => setShowRecycleBin(true)}
-          recycleBinCount={recycleBin.length}
         />
 
         <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden">
@@ -360,22 +352,13 @@ export default function AppointmentsScreen({
               <Trash2 className="w-5 h-5" strokeWidth={2} />
             </div>
             <h3 className="text-[15px] font-bold text-navy mb-1">Delete appointment?</h3>
-            <p className="text-[13px] text-body-gray mb-5">This will move the appointment to the recycle bin. You can recover it later.</p>
+            <p className="text-[13px] text-body-gray mb-5">This appointment will be removed from your list.</p>
             <div className="flex gap-3">
               <button type="button" onClick={() => setDeleteConfirmId(null)} className="flex-1 h-10 rounded-xl border border-[#E6EBF1] text-navy text-sm font-semibold cursor-pointer hover:bg-gray-50 transition-colors">Cancel</button>
               <button type="button" onClick={() => { onDeleteAppointment?.(deleteConfirmId); setDeleteConfirmId(null) }} className="flex-1 h-10 rounded-xl bg-red-500 text-white text-sm font-semibold cursor-pointer hover:bg-red-600 transition-colors">Delete</button>
             </div>
           </div>
         </Dialog>
-
-        <AppointmentRecycleBinModal
-          open={showRecycleBin}
-          onClose={() => setShowRecycleBin(false)}
-          recycleBin={recycleBin}
-          onRestore={onRestoreAppointment}
-          onPermanentDelete={onPermanentDeleteAppointment}
-          onEmptyAll={onEmptyRecycleBin}
-        />
       </div>
     </LocalizationProvider>
   )

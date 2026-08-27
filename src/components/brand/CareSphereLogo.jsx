@@ -16,15 +16,15 @@ const SIZES = {
     rowGap: 'gap-3',
   },
   lg: {
-    mark: 'w-14 h-14',
-    name: 'text-[24px]',
+    mark: 'w-16 h-16',
+    name: 'text-2xl',
     caption: 'text-[11px]',
     stackGap: 'mt-3',
     rowGap: 'gap-3',
   },
   xl: {
-    mark: 'w-[88px] h-[88px] sm:w-28 sm:h-28',
-    name: 'text-[34px] sm:text-5xl',
+    mark: 'w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28',
+    name: 'text-3xl sm:text-4xl lg:text-6xl',
     caption: 'text-xs sm:text-sm',
     stackGap: 'mt-4 sm:mt-5',
     rowGap: 'gap-4',
@@ -49,7 +49,11 @@ export default function CareSphereLogo({
         isRow ? `flex items-center ${s.rowGap} text-left` : 'flex flex-col items-center text-center'
       } ${className}`}
     >
-      <span className={`${s.mark} shrink-0`}>
+      <span
+        className={`${s.mark} shrink-0 ${
+          !isRow && size === 'xl' ? 'shadow-lg shadow-teal/30 rounded-3xl overflow-hidden' : ''
+        }`}
+      >
         <CareSphereMark className="w-full h-full" tone="solid" />
       </span>
 
@@ -57,11 +61,11 @@ export default function CareSphereLogo({
         <div className={isRow ? 'min-w-0' : undefined}>
           {showName ? (
             <p
-              className={`font-display ${s.name} font-bold tracking-[-0.03em] leading-none ${
+              className={`font-display ${s.name} font-bold tracking-tight leading-none ${
                 !isRow ? s.stackGap : ''
               } ${isDark ? 'text-white' : 'text-navy'}`}
             >
-              Care<span className={isDark ? 'text-teal-light' : 'text-teal'}>Sphere</span>
+              CareSphere
             </p>
           ) : null}
           {caption ? (

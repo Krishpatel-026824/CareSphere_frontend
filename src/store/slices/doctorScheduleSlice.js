@@ -1,5 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { generateDoctorExtraVisits, mergeDoctorVisits } from '../../data/generators/doctorScheduleGenerator'
+import {
+  generateDoctorExtraVisits,
+  mergeDoctorVisits,
+  toDoctorVisit,
+} from '../../data/generators/doctorScheduleGenerator'
+import { doctorClinicDefaultsMock } from '../../data/mocks/doctorVisits'
 import { DEFAULT_DOCTOR_ID } from '../../data/mocks/doctorSession'
 import { getUpcomingAppointment } from '../../utils/appointmentFormat'
 
@@ -54,6 +59,39 @@ const doctorScheduleSlice = createSlice({
         return { ...visit, tasks }
       })
     },
+    bookDoctorVisit(state, action) {
+      const {
+        patientId,
+        patientName,
+        patientPhoto,
+        dateLabel,
+        timeLabel,
+        status = 'Confirmed',
+        room,
+        visitType,
+      } = action.payload || {}
+
+      if (!patientId || !dateLabel || !timeLabel) return
+
+      const visit = toDoctorVisit({
+        id: `dvis-book-${patientId}-${Date.now()}`,
+        doctorId: DEFAULT_DOCTOR_ID,
+        patientId,
+        patientName: patientName || 'Patient',
+        patientPhoto: patientPhoto || '',
+        dateLabel,
+        timeLabel,
+        status,
+        ...doctorClinicDefaultsMock,
+        room: room || doctorClinicDefaultsMock.room,
+        visitType: visitType || doctorClinicDefaultsMock.visitType,
+        prepNote: `Next visit booked for ${patientName || 'patient'}.`,
+        prepItems: ['Valid photo ID', 'Previous prescriptions'],
+        tasks: defaultTasks.map((task) => ({ ...task })),
+      })
+
+      state.extras = [visit, ...state.extras]
+    },
   },
 })
 
@@ -62,6 +100,7 @@ export const {
   declineDoctorVisit,
   completeDoctorVisit,
   toggleDoctorVisitTask,
+  bookDoctorVisit,
 } = doctorScheduleSlice.actions
 
 export function selectDoctorVisits(state) {

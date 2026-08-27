@@ -24,7 +24,7 @@ function goToNewAppointment(navigate) {
 }
 
 export function AppointmentsPage() {
-  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment } = useAppStore()
   const authUser = useAppSelector((state) => state.auth.user)
   const appointments =
     authUser?.roleType === 'patient' && authUser?.name
@@ -42,17 +42,13 @@ export function AppointmentsPage() {
       onCreateAppointment={addBookedAppointment}
       onUpdateAppointment={updateAppointment}
       onDeleteAppointment={softDeleteAppointment}
-      recycleBin={recycleBin}
-      onRestoreAppointment={restoreAppointment}
-      onPermanentDeleteAppointment={permanentDeleteAppointment}
-      onEmptyRecycleBin={emptyRecycleBin}
     />
   )
 }
 
 export function AppointmentDetailsPage() {
   const { id } = useParams()
-  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment, recycleBin, restoreAppointment, permanentDeleteAppointment, emptyRecycleBin } = useAppStore()
+  const { appointments: allAppointments, doctorFlowData, addBookedAppointment, updateAppointment, softDeleteAppointment } = useAppStore()
   const authUser = useAppSelector((state) => state.auth.user)
   const appointments =
     authUser?.roleType === 'patient' && authUser?.name
@@ -74,10 +70,6 @@ export function AppointmentDetailsPage() {
       onCreateAppointment={addBookedAppointment}
       onUpdateAppointment={updateAppointment}
       onDeleteAppointment={softDeleteAppointment}
-      recycleBin={recycleBin}
-      onRestoreAppointment={restoreAppointment}
-      onPermanentDeleteAppointment={permanentDeleteAppointment}
-      onEmptyRecycleBin={emptyRecycleBin}
     />
   )
 }

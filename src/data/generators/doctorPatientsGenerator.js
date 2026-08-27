@@ -1,5 +1,13 @@
 import { doctorPatientsMock } from '../mocks/doctorPatients'
+import { parseAppointmentDate } from '../../utils/appointmentFormat'
 import { visitsForPatient } from './doctorScheduleGenerator'
+
+function visitSortTime(visit) {
+  if (!visit) return Number.POSITIVE_INFINITY
+  return (
+    parseAppointmentDate(visit.dateLabel, visit.timeLabel)?.getTime() ?? Number.POSITIVE_INFINITY
+  )
+}
 
 export function generateDoctorPatients(visits = []) {
   return doctorPatientsMock
@@ -14,4 +22,5 @@ export function generateDoctorPatients(visits = []) {
       }
     })
     .filter(Boolean)
+    .sort((left, right) => visitSortTime(left.nextVisit) - visitSortTime(right.nextVisit))
 }

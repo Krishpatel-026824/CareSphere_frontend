@@ -16,6 +16,56 @@ function reportStatusForBadge(badge) {
   return 'Verified'
 }
 
+export function generateCatalogLabReport(test, patient, options = {}) {
+  if (!test || !patient) return null
+
+  const dateLabel = options.dateLabel || '12 Mar 2026'
+  const status = options.status || 'Verified'
+  const parameters = options.parameters || [
+    { name: 'Result', value: 'Within range', unit: '', reference: 'See lab reference', status: 'Normal' },
+    { name: 'Specimen', value: 'Accepted', unit: '', reference: 'Adequate', status: 'Normal' },
+  ]
+
+  return {
+    id: options.id || `CLR-${patient.id}-${test.id}`,
+    bookingRef: `CS-LAB-${String(test.id).toUpperCase()}`,
+    title: `${test.name || test.title} Report`,
+    testName: test.name || test.title,
+    testCode: options.testCode || String(test.id).toUpperCase(),
+    status,
+    type: 'Lab',
+    dateLabel,
+    doctorName: doctorLabFacilityMock.pathologist,
+    patient: {
+      name: patient.name,
+      age: parseAge(patient.ageLabel),
+      gender: patient.gender,
+      patientId: patient.id.replace('pat-', 'CS-PAT-').toUpperCase(),
+      phone: patient.phone,
+    },
+    lab: { ...doctorLabFacilityMock },
+    sample: {
+      type: options.specimen || 'Blood',
+      collectionMode: 'Clinic collection',
+      collectionDate: dateLabel,
+      collectionTime: '08:30 AM',
+      reportDate: dateLabel,
+      reportTime: '11:15 AM',
+    },
+    parameters,
+    interpretation:
+      options.interpretation ||
+      `${test.name || test.title} completed. Review with current clinical findings at the next visit.`,
+    payment: {
+      method: 'self-pay',
+      testFee: test.price || 800,
+      totalPaid: test.price || 800,
+      paidOn: `${dateLabel} · 08:45 AM`,
+    },
+    preview: test.thumbnail || test.image || null,
+  }
+}
+
 export function generateDoctorLabReport(task, patient) {
   const template = doctorLabReportTemplatesMock[task.id]
   if (!template || !task || !patient) return null

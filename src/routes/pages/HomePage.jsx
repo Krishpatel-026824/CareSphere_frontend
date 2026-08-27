@@ -45,7 +45,7 @@ export default function HomePage() {
         onBellClick={() => navigate(PATHS.notifications)}
         onActionClick={(key) => {
           const routes = {
-            bookAppointment: PATHS.newAppointment,
+            bookAppointment: PATHS.appointments,
             pharmacy: PATHS.pharmacy,
             labTests: PATHS.labTests,
             healthRecords: PATHS.healthRecords,
@@ -53,11 +53,15 @@ export default function HomePage() {
           if (routes[key]) navigate(routes[key])
         }}
         onRescheduleAppointment={() => setEditOpen(true)}
-        onBookAppointment={() => navigate(PATHS.newAppointment)}
+        onBookAppointment={() => navigate(PATHS.appointments)}
         onBookLabTest={() => navigate(PATHS.labTests)}
-        onViewLabBookings={() => navigate(PATHS.labTests)}
+        onViewLabBookings={() => navigate(PATHS.labBookings)}
         onAppointmentDetails={(appointment) => {
-          if (appointment?.id) navigate(appointmentDetailsPath(appointment.id))
+          if (appointment?.id) {
+            navigate(appointmentDetailsPath(appointment.id))
+            return
+          }
+          navigate(PATHS.appointments)
         }}
       />
       <EditAppointmentModal

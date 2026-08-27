@@ -65,14 +65,14 @@ export default function HomeDashboard({
             appointment={appointment}
             visitSignals={visitSignals}
             onReschedule={() => onRescheduleAppointment?.(appointment)}
-            onJoinDetails={() => onAppointmentDetails?.(appointment)}
+            onOpenPage={() => onAppointmentDetails?.(appointment)}
             onBook={onBookAppointment}
           />
           <MedicineReminderCard />
           <LabBookingPanel
             booking={latestLabBooking}
             onBook={() => onBookLabTest?.() || onActionClick?.('labTests')}
-            onViewBookings={() => onViewLabBookings?.() || onActionClick?.('labTests')}
+            onOpenPage={() => onViewLabBookings?.() || onActionClick?.('labTests')}
           />
           <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
         </div>
