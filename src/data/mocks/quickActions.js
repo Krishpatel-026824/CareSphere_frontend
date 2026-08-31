@@ -66,4 +66,15 @@ export const pharmacyItemsMock = [
   { id: 'med-63', name: 'Zincovit Syrup', subtitle: 'Multivitamin syrup • 200ml', price: 165, inStock: true, category: 'syrups', brand: 'brand2', period: 'recent', image: pharmacyImages.zincovitSyrup },
   { id: 'med-64', name: 'Honitus Syrup', subtitle: 'Herbal cough relief • 100ml', price: 110, inStock: true, category: 'syrups', brand: 'brand1', period: 'recent', image: pharmacyImages.honitusSyrup },
   { id: 'med-65', name: 'Ambrolite-D Syrup', subtitle: 'Cough & cold • 100ml', price: 98, inStock: true, category: 'syrups', brand: 'brand2', period: 'recent', image: pharmacyImages.ambroliteSyrup },
+  {
+    id: 'med-66',
+    name: 'Metoprolol 50mg',
+    subtitle: 'Blood pressure • 30 tablets',
+    price: 95,
+    inStock: true,
+    category: 'others',
+    brand: 'brand1',
+    period: 'quarter',
+    image: pharmacyImages.losartan,
+  },
 ]

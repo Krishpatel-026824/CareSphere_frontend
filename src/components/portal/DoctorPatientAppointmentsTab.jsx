@@ -78,7 +78,7 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
         count={filtered.length}
         fill
         action={
-          <PatientChartAddButton label="Add appoint" onClick={() => setBookingOpen(true)} />
+          <PatientChartAddButton label="Add appointment" onClick={() => setBookingOpen(true)} />
         }
       >
         <PatientChartToolbar>

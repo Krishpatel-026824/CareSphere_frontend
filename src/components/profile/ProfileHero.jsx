@@ -103,23 +103,21 @@ function ProfileStatCard({ item }) {
 
   return (
     <div
-      className={`rounded-2xl border px-3.5 sm:px-4 py-4 min-w-0 overflow-hidden flex items-start gap-3 h-full ${style.card}`}
+      className={`rounded-xl border px-3 py-2.5 min-w-0 flex items-center gap-2.5 ${style.card}`}
     >
       <span
-        className={`w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${style.icon}`}
+        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${style.icon}`}
       >
-        <Icon className="w-5 h-5" strokeWidth={1.75} />
+        <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[24px] sm:text-[26px] xl:text-[24px] 2xl:text-[28px] font-bold text-navy tabular-nums leading-none">
+        <p className="text-[22px] sm:text-[24px] font-bold text-navy tabular-nums leading-none">
           {item.value}
         </p>
-        <p className="text-[14px] sm:text-[15px] font-semibold text-navy mt-1.5 leading-tight break-words">
+        <p className="text-[13px] font-semibold text-navy mt-0.5 leading-tight break-words">
           {item.label}
         </p>
-        <p className="text-[12px] sm:text-[13px] text-body-gray mt-1 leading-snug break-words">
-          {item.hint}
-        </p>
+        <p className="text-[11px] text-body-gray leading-snug break-words">{item.hint}</p>
       </div>
     </div>
   )
@@ -131,21 +129,26 @@ function ProfileDetailTile({ row, value }) {
 
   return (
     <div
-      className={`flex items-start gap-3.5 min-w-0 rounded-2xl border px-4 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)] ${style.card}`}
+      className={`flex items-center gap-3 min-w-0 rounded-xl border px-3 py-2.5 ${style.card}`}
     >
-      <span className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${style.icon}`}>
-        <Icon className="w-5 h-5" strokeWidth={1.85} />
+      <span className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${style.icon}`}>
+        <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
-      <div className="min-w-0 flex-1 pt-0.5">
-        <p className="text-[13px] sm:text-sm font-semibold text-navy/55 uppercase tracking-[0.04em]">
+      <div className="min-w-0 flex-1">
+        <p className="text-[11px] font-semibold text-navy/55 uppercase tracking-[0.04em]">
           {row.label}
         </p>
-        <p className="text-[17px] sm:text-lg font-bold text-navy mt-1.5 break-words leading-snug">
+        <p className="text-[14px] sm:text-[15px] font-bold text-navy mt-0.5 break-words leading-snug">
           {value || '—'}
         </p>
       </div>
     </div>
   )
+}
+
+function statsGridClass(count) {
+  if (count <= 3) return 'grid grid-cols-1 sm:grid-cols-3 gap-2.5'
+  return 'grid grid-cols-2 lg:grid-cols-4 gap-2.5'
 }
 
 export default function ProfileHero({
@@ -180,11 +183,11 @@ export default function ProfileHero({
   }
 
   return (
-    <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col min-w-0 h-full">
+    <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden min-w-0">
       <div className="h-1 bg-gradient-to-r from-teal via-[#0C948E] to-[#0B6E6A] shrink-0" />
 
-      <div className="p-5 sm:p-6 flex flex-col gap-5 sm:gap-6 flex-1">
-        <div className="flex items-start gap-4 sm:gap-5">
+      <div className="p-4 sm:p-5 flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div className="relative shrink-0">
             <input
               ref={fileInputRef}
@@ -198,7 +201,7 @@ export default function ProfileHero({
               onClick={openPhotoPicker}
               disabled={!onAvatarChange}
               aria-label="Change profile photo"
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden bg-teal-light flex items-center justify-center text-teal text-2xl font-bold ring-[3px] ring-[#E6EBF1] cursor-pointer hover:ring-teal/40 transition-shadow disabled:cursor-default p-0 border-0"
+              className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-full overflow-hidden bg-teal-light flex items-center justify-center text-teal text-xl font-bold ring-2 ring-[#E6EBF1] cursor-pointer hover:ring-teal/40 transition-shadow disabled:cursor-default p-0 border-0"
             >
               {details.avatar ? (
                 <img
@@ -212,21 +215,21 @@ export default function ProfileHero({
             </button>
           </div>
 
-          <div className="min-w-0 flex-1 pt-1">
-            <h2 className="font-display text-[28px] sm:text-[34px] font-bold text-navy tracking-tight leading-tight truncate">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-[22px] sm:text-[28px] font-bold text-navy tracking-tight leading-tight truncate">
               {details.name}
             </h2>
-            <p className="text-[15px] sm:text-base text-body-gray mt-1.5 truncate">
+            <p className="text-[14px] sm:text-[15px] text-body-gray mt-1 truncate">
               {details.role}
               {details.memberSince ? ` · ${details.memberSince}` : ''}
             </p>
-            <div className="flex flex-wrap gap-2.5 mt-3">
+            <div className="flex flex-wrap gap-2 mt-2">
               {badges.map((badge) => (
                 <span
                   key={badge.label}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[13px] sm:text-sm font-semibold ${badge.tone}`}
+                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-semibold ${badge.tone}`}
                 >
-                  <badge.icon className="w-4 h-4" strokeWidth={2.25} />
+                  <badge.icon className="w-3.5 h-3.5" strokeWidth={2.25} />
                   {badge.label}
                 </span>
               ))}
@@ -234,55 +237,55 @@ export default function ProfileHero({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 auto-rows-fr">
+        <div className={statsGridClass(stats.length)}>
           {stats.map((item) => (
             <ProfileStatCard key={item.id} item={item} />
           ))}
         </div>
 
-        <div className="pt-5 border-t border-[#E6EBF1] flex-1">
-          <h3 className="text-[17px] sm:text-lg font-bold text-navy flex items-center gap-2.5">
-            <User className="w-5 h-5 text-teal" strokeWidth={2} />
+        <div className="pt-3 border-t border-[#E6EBF1]">
+          <h3 className="text-[15px] sm:text-base font-bold text-navy flex items-center gap-2">
+            <User className="w-4 h-4 text-teal" strokeWidth={2} />
             Personal details
           </h3>
 
           {isEditing ? (
             <form
-              className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5"
+              className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5"
               onSubmit={(event) => {
                 event.preventDefault()
                 onSave()
               }}
             >
               {fields.map((field) => (
-                <label key={field.id} className="flex flex-col gap-2 min-w-0">
+                <label key={field.id} className="flex flex-col gap-1.5 min-w-0">
                   <span className="text-sm font-semibold text-body-gray">{field.label}</span>
                   <input
                     type={field.type}
                     value={draft[field.id] || ''}
                     onChange={(event) => onChange(field.id, event.target.value)}
-                    className="min-h-12 rounded-xl border border-[#E6EBF1] bg-white px-3.5 text-[15px] text-navy outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                    className="min-h-11 rounded-xl border border-[#E6EBF1] bg-white px-3.5 text-[15px] text-navy outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
                   />
                 </label>
               ))}
-              <div className="sm:col-span-2 flex flex-col-reverse sm:flex-row gap-3 mt-1">
+              <div className="sm:col-span-2 flex flex-col-reverse sm:flex-row gap-2.5 mt-1">
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="flex-1 min-h-12 rounded-xl border border-[#E6EBF1] bg-white text-[15px] font-semibold text-navy cursor-pointer hover:bg-bg-gray"
+                  className="flex-1 min-h-11 rounded-xl border border-[#E6EBF1] bg-white text-[15px] font-semibold text-navy cursor-pointer hover:bg-bg-gray"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 min-h-12 rounded-xl bg-teal text-white text-[15px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors"
+                  className="flex-1 min-h-11 rounded-xl bg-teal text-white text-[15px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors"
                 >
                   Save changes
                 </button>
               </div>
             </form>
           ) : (
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {infoRows.map((row) => (
                 <ProfileDetailTile key={row.id} row={row} value={details[row.id]} />
               ))}
@@ -290,14 +293,14 @@ export default function ProfileHero({
           )}
         </div>
 
-        <div className="flex items-center gap-3.5 rounded-2xl border border-[#7DD3FC] bg-[#E0F2FE] px-4 py-4 mt-auto shadow-[0_1px_2px_rgba(14,116,144,0.08)]">
-          <span className="w-11 h-11 rounded-xl bg-white text-sky-600 flex items-center justify-center shrink-0 shadow-sm ring-1 ring-sky-200/80">
-            <Shield className="w-5 h-5" strokeWidth={1.85} />
+        <div className="flex items-center gap-2.5 rounded-xl border border-[#7DD3FC] bg-[#E0F2FE] px-3 py-2.5">
+          <span className="w-9 h-9 rounded-lg bg-white text-sky-600 flex items-center justify-center shrink-0 shadow-sm ring-1 ring-sky-200/80">
+            <Shield className="w-4 h-4" strokeWidth={1.85} />
           </span>
-          <p className="text-[14px] sm:text-[15px] font-medium text-navy/75 leading-relaxed flex-1 min-w-0">
+          <p className="text-[13px] sm:text-[14px] font-medium text-navy/75 leading-snug flex-1 min-w-0">
             Your information is secure and encrypted. We never share your data with third parties.
           </p>
-          <Lock className="w-5 h-5 text-sky-600 shrink-0" strokeWidth={1.85} />
+          <Lock className="w-4 h-4 text-sky-600 shrink-0" strokeWidth={1.85} />
         </div>
       </div>
     </section>

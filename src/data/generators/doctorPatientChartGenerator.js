@@ -7,7 +7,7 @@ import { doctorPatientsMock } from '../mocks/doctorPatients'
 import { labTestsMock } from '../mocks/labTests'
 import { pharmacyItemsMock } from '../mocks/quickActions'
 import { generateCatalogLabReport, generateDoctorLabReport } from './doctorLabReportsGenerator'
-import { resolveMedicineImage } from './medicineImageResolver'
+import { resolveMedicineImage, withPharmacyMedicineImage } from './medicineImageResolver'
 
 function countAbnormal(parameters = []) {
   return parameters.filter((row) => row.status === 'High' || row.status === 'Low').length
@@ -49,7 +49,7 @@ export function generatePatientPrescriptions(patientId) {
       instructions: item.instructions,
       subtitle: item.subtitle,
       useFor: item.subtitle,
-      image: resolveMedicineImage(item.title),
+      image: withPharmacyMedicineImage({ name: item.title }).image,
     }))
 
   if (fromTasks.length) return fromTasks

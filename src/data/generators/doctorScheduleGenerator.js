@@ -87,7 +87,10 @@ export function mergeDoctorVisits(appointments = [], extraVisits = [], doctorId 
   const extras = extraVisits
     .filter((item) => item.doctorId === doctorId)
     .filter((item) => !linkedIds.has(item.id))
-    .filter((item) => !linkedPatientIds.has(item.patientId))
+    .filter((item) => {
+      if (String(item.id).startsWith('dvis-book-')) return true
+      return !linkedPatientIds.has(item.patientId)
+    })
     .map((item) => toDoctorVisit(item))
 
   return [...linked, ...extras]

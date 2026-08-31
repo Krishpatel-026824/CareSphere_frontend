@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { CalendarCheck } from 'lucide-react'
+import { CalendarCheck, Search } from 'lucide-react'
 import AppointmentActionDialog from '../../components/appointments/AppointmentActionDialog'
 import AppointmentActionMenu from '../../components/appointments/AppointmentActionMenu'
 import DoctorScheduleAgenda from '../../components/portal/DoctorScheduleAgenda'
@@ -40,17 +40,37 @@ export default function DoctorScheduleScreen({
     if (!days.some((day) => day.id === dayId) && days[0]) setDayId(days[0].id)
   }, [days, dayId])
 
-  const dayVisits = useMemo(() => {
+  const calendarDayIds = useMemo(() => new Set(days.map((day) => day.id)), [days])
+
+  const agendaVisits = useMemo(() => {
     const q = query.trim().toLowerCase()
+    const activeStatuses = new Set(['Upcoming', 'Confirmed'])
+
     return list.filter((visit) => {
-      if (visit.dateLabel !== dayId) return false
-      if (visit.status === 'Completed' || visit.status === 'Cancelled') return false
-      if (!q) return true
-      return [visit.patientName, visit.clinic, visit.visitType, visit.room]
+      if (!activeStatuses.has(visit.status)) return false
+      if (!calendarDayIds.has(visit.dateLabel)) return false
+      if (!q) return visit.dateLabel === dayId
+
+      return [
+        visit.patientName,
+        visit.clinic,
+        visit.visitType,
+        visit.room,
+        visit.dateLabel,
+        visit.timeLabel,
+      ]
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(q))
     })
-  }, [dayId, list, query])
+  }, [calendarDayIds, dayId, list, query])
+
+  const searchActive = Boolean(query.trim())
+  const rangeVisits = useMemo(() => {
+    const activeStatuses = new Set(['Upcoming', 'Confirmed'])
+    return list.filter(
+      (visit) => activeStatuses.has(visit.status) && calendarDayIds.has(visit.dateLabel),
+    )
+  }, [calendarDayIds, list])
 
   const selected = list.find((item) => item.id === currentId) || null
   const activeDay = days.find((day) => day.id === dayId)
@@ -95,13 +115,25 @@ export default function DoctorScheduleScreen({
           </div>
 
           <DoctorScheduleDateStrip days={days} selectedId={dayId} onSelect={setDayId} />
+
+          <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
+            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search patients across 10 days"
+              className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
+              aria-label="Search schedule across 10 days"
+            />
+          </label>
         </header>
 
         <DoctorScheduleAgenda
-          visits={dayVisits}
+          visits={agendaVisits}
           dayLabel={dayLabel}
-          query={query}
-          onQueryChange={setQuery}
+          searchActive={searchActive}
+          totalInRange={rangeVisits.length}
+          daySpan={days.length}
           onSelect={handleSelect}
         />
       </div>

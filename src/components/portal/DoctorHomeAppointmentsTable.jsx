@@ -218,7 +218,7 @@ function AppointmentRow({ visit, index, onAccept, onDecline, onView }) {
         </span>
       </td>
       <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <div className="inline-flex items-center justify-center gap-1">
+        <div className="inline-flex items-center justify-center gap-1.5">
           {canDecide ? (
             <>
               <ActionButton
@@ -226,14 +226,14 @@ function AppointmentRow({ visit, index, onAccept, onDecline, onView }) {
                 onClick={() => onAccept?.(visit)}
                 label={`Accept ${visit.patientName}`}
               >
-                <Check className="w-4 h-4" strokeWidth={2.25} />
+                <Check className="w-4 h-4" strokeWidth={2} />
               </ActionButton>
               <ActionButton
                 tone="reject"
                 onClick={() => onDecline?.(visit)}
                 label={`Reject ${visit.patientName}`}
               >
-                <X className="w-4 h-4" strokeWidth={2.25} />
+                <X className="w-4 h-4" strokeWidth={2} />
               </ActionButton>
             </>
           ) : null}
@@ -248,9 +248,12 @@ function AppointmentRow({ visit, index, onAccept, onDecline, onView }) {
 
 function ActionButton({ children, onClick, label, tone }) {
   const tones = {
-    accept: 'bg-teal text-white hover:bg-teal-dark shadow-sm',
-    reject: 'bg-white text-rose-600 border border-rose-200 hover:bg-rose-50',
-    view: 'bg-white text-body-gray border border-[#E6EBF1] hover:text-teal hover:border-teal/30 hover:bg-teal-light/30',
+    accept:
+      'bg-white text-teal border border-teal/25 hover:bg-teal hover:text-white hover:border-teal',
+    reject:
+      'bg-white text-rose-600 border border-rose-200 hover:bg-rose-50 hover:border-rose-300',
+    view:
+      'bg-white text-body-gray border border-[#E6EBF1] hover:text-teal hover:border-teal/30 hover:bg-teal-light/30',
   }
 
   return (
@@ -258,7 +261,7 @@ function ActionButton({ children, onClick, label, tone }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`w-8 h-8 rounded-lg inline-flex items-center justify-center cursor-pointer transition-colors ${tones[tone]}`}
+      className={`w-8 h-8 rounded-lg inline-flex items-center justify-center cursor-pointer border transition-all duration-150 hover:shadow-sm active:scale-95 ${tones[tone]}`}
     >
       {children}
     </button>

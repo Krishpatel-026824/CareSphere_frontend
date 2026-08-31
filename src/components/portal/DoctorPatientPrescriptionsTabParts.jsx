@@ -1,4 +1,30 @@
+import { useState } from 'react'
 import { Pill } from 'lucide-react'
+import { resolveMedicineImage } from '../../data/generators/medicineImageResolver'
+
+function RxMedicineThumb({ item, size = 'md' }) {
+  const [failed, setFailed] = useState(false)
+  const image = item.image || resolveMedicineImage(item.name, item.pharmacyId || item.id)
+  const box = size === 'sm' ? 'w-10 h-10' : 'w-11 h-11'
+  const icon = size === 'sm' ? 'w-4 h-4' : 'w-4 h-4'
+
+  return (
+    <div
+      className={`${box} rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-white shadow-sm flex items-center justify-center ring-1 ring-black/[0.03]`}
+    >
+      {image && !failed ? (
+        <img
+          src={image}
+          alt=""
+          className="w-full h-full object-contain p-1"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <Pill className={`${icon} text-teal`} strokeWidth={1.85} />
+      )}
+    </div>
+  )
+}
 
 export const ROUTINE_RX_COLUMNS = [
   { key: 'no', label: 'No.', center: true, width: '52px' },
@@ -25,13 +51,7 @@ export function RxMedicineCell({ item, statusBadge = null, compact = false }) {
 
   return (
     <div className="flex items-center gap-3 min-w-0">
-      <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-white shadow-sm flex items-center justify-center ring-1 ring-black/[0.03]">
-        {item.image ? (
-          <img src={item.image} alt="" className="w-full h-full object-contain p-1" />
-        ) : (
-          <Pill className="w-4 h-4 text-teal" strokeWidth={1.85} />
-        )}
-      </div>
+      <RxMedicineThumb item={item} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 min-w-0 flex-wrap">
           <p className="text-[15px] sm:text-[16px] font-bold text-navy truncate leading-snug">
@@ -66,13 +86,7 @@ export function RxRoutineBadge({ badge = 'Previous' }) {
 export function RxAddMedicineCell({ item, statusBadge = null }) {
   return (
     <div className="flex items-center gap-3 min-w-0">
-      <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-white flex items-center justify-center shadow-sm">
-        {item.image ? (
-          <img src={item.image} alt="" className="w-full h-full object-contain p-1" />
-        ) : (
-          <Pill className="w-5 h-5 text-teal" strokeWidth={1.85} />
-        )}
-      </div>
+      <RxMedicineThumb item={item} />
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 min-w-0 flex-wrap">
           <p className="text-[16px] sm:text-[17px] font-bold text-navy leading-snug">{item.name}</p>

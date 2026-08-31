@@ -1,4 +1,4 @@
-import { Eye, Search } from 'lucide-react'
+import { Eye } from 'lucide-react'
 import {
   appointmentStatusLabels,
   appointmentStatusStyles,
@@ -17,38 +17,35 @@ const COLUMNS = [
 export default function DoctorScheduleAgenda({
   visits = [],
   dayLabel,
-  query,
-  onQueryChange,
+  searchActive = false,
+  totalInRange = 0,
+  daySpan = 10,
   onSelect,
 }) {
+  const badgeLabel = searchActive
+    ? `${visits.length} match${visits.length === 1 ? '' : 'es'}`
+    : `${visits.length} visit${visits.length === 1 ? '' : 's'}`
+
+  const subtitle = searchActive
+    ? `Across ${daySpan} days · ${visits.length} result${visits.length === 1 ? '' : 's'}`
+    : `${dayLabel} · ${visits.length} visit${visits.length === 1 ? '' : 's'}`
+
   return (
     <section className="flex-1 min-h-0 min-w-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col">
       <div className="h-1 shrink-0 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
 
-      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex flex-col gap-4">
+      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
           <div className="min-w-0">
             <h2 className="text-xl sm:text-2xl font-bold text-navy tracking-tight leading-tight">
-              Day agenda
+              {searchActive ? 'Schedule results' : 'Day agenda'}
             </h2>
-            <p className="text-[13px] sm:text-sm text-body-gray mt-1 truncate">
-              {dayLabel} · {visits.length} visit{visits.length === 1 ? '' : 's'}
-            </p>
+            <p className="text-[13px] sm:text-sm text-body-gray mt-1 truncate">{subtitle}</p>
           </div>
           <span className="self-start sm:self-auto shrink-0 text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-3 py-1.5 rounded-full tabular-nums">
-            {visits.length} today
+            {badgeLabel}
           </span>
         </div>
-
-        <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
-          <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange?.(event.target.value)}
-            placeholder="Search patient or room"
-            className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
-          />
-        </label>
       </div>
 
       {visits.length === 0 ? (
@@ -86,8 +83,18 @@ export default function DoctorScheduleAgenda({
 
           <footer className="shrink-0 px-4 sm:px-5 py-2.5 border-t border-[#E6EBF1] bg-[#F8FAFC]">
             <p className="text-[12px] sm:text-[13px] text-body-gray">
-              Showing <span className="font-semibold text-navy">{visits.length}</span> visit
-              {visits.length === 1 ? '' : 's'} for this day
+              {searchActive ? (
+                <>
+                  Showing <span className="font-semibold text-navy">{visits.length}</span> of{' '}
+                  <span className="font-semibold text-navy">{totalInRange}</span> visits across{' '}
+                  {daySpan} days
+                </>
+              ) : (
+                <>
+                  Showing <span className="font-semibold text-navy">{visits.length}</span> visit
+                  {visits.length === 1 ? '' : 's'} for this day
+                </>
+              )}
             </p>
           </footer>
         </>
@@ -158,7 +165,9 @@ function EmptyState() {
   return (
     <div className="flex-1 min-h-[200px] flex items-center justify-center p-6">
       <p className="rounded-2xl border border-dashed border-[#D0D9E3] bg-[#F8FAFC] px-6 py-5 text-sm text-body-gray text-center max-w-sm">
-        No visits this day. Pick another date or clear your search.
+        {searchActive
+          ? 'No visits match your search across the 10-day calendar.'
+          : 'No visits this day. Pick another date on the calendar.'}
       </p>
     </div>
   )

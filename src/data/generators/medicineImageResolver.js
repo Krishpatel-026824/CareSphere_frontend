@@ -1,3 +1,4 @@
+import { pharmacyImages } from '../mocks/pharmacyImages'
 import { pharmacyItemsMock } from '../mocks/quickActions'
 
 function normalizeName(value = '') {
@@ -5,6 +6,23 @@ function normalizeName(value = '') {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
+}
+
+const MEDICINE_IMAGE_ALIASES = {
+  metoprolol: pharmacyImages.losartan,
+  propranolol: pharmacyImages.losartan,
+  carvedilol: pharmacyImages.losartan,
+  bisoprolol: pharmacyImages.losartan,
+  nebivolol: pharmacyImages.losartan,
+  rosuvastatin: pharmacyImages.atorvastatin,
+  simvastatin: pharmacyImages.atorvastatin,
+  pravastatin: pharmacyImages.atorvastatin,
+  aspirin: pharmacyImages.ecosprin,
+  clopidogrel: pharmacyImages.ecosprin,
+  telmisartan: pharmacyImages.telma,
+  ramipril: pharmacyImages.lisinopril,
+  enalapril: pharmacyImages.lisinopril,
+  warfarin: pharmacyImages.ecosprin,
 }
 
 export function getPharmacyMedicineOptions() {
@@ -40,8 +58,10 @@ export function resolveMedicineImage(medicineName = '', pharmacyId) {
     const firstWord = target.split(' ')[0]
     return firstWord.length >= 3 && (name.includes(firstWord) || target.includes(name.split(' ')[0]))
   })
+  if (partial?.image) return partial.image
 
-  return partial?.image || ''
+  const alias = MEDICINE_IMAGE_ALIASES[target.split(' ')[0]]
+  return alias || ''
 }
 
 export function withPharmacyMedicineImage(medicine = {}) {

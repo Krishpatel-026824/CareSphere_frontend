@@ -14,7 +14,7 @@ export default function DoctorPatientBookVisitPanel({ patientName, onClose, onBo
   const canBook = Boolean(dateLabel && timeLabel)
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end sm:items-center justify-center p-3 sm:p-6">
+    <div className="fixed inset-0 z-[1300] flex items-end sm:items-center justify-center p-3 sm:p-6">
       <button
         type="button"
         className="absolute inset-0 bg-navy/35 cursor-pointer"
