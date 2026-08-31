@@ -2,32 +2,32 @@ import CareSphereMark from './CareSphereMark'
 
 const SIZES = {
   sm: {
-    mark: 'w-9 h-9',
-    name: 'text-[17px]',
+    mark: 'w-10 h-10',
+    word: 'text-[17px]',
+    gap: 'gap-3',
     caption: 'text-[9px]',
-    stackGap: 'mt-2',
-    rowGap: 'gap-2.5',
+    rule: 'w-10',
   },
   md: {
-    mark: 'w-11 h-11',
-    name: 'text-[20px]',
+    mark: 'w-[52px] h-[52px]',
+    word: 'text-[21px]',
+    gap: 'gap-3.5',
     caption: 'text-[10px]',
-    stackGap: 'mt-2.5',
-    rowGap: 'gap-3',
+    rule: 'w-12',
   },
   lg: {
     mark: 'w-16 h-16',
-    name: 'text-2xl',
+    word: 'text-[26px]',
+    gap: 'gap-4',
     caption: 'text-[11px]',
-    stackGap: 'mt-3',
-    rowGap: 'gap-3',
+    rule: 'w-14',
   },
   xl: {
-    mark: 'w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28',
-    name: 'text-3xl sm:text-4xl lg:text-6xl',
+    mark: 'w-[92px] h-[92px] sm:w-[100px] sm:h-[100px] lg:w-[112px] lg:h-[112px]',
+    word: 'text-[40px] sm:text-[46px] lg:text-[52px]',
+    gap: 'gap-5 sm:gap-6',
     caption: 'text-xs sm:text-sm',
-    stackGap: 'mt-4 sm:mt-5',
-    rowGap: 'gap-4',
+    rule: 'w-20 sm:w-24',
   },
 }
 
@@ -42,43 +42,49 @@ export default function CareSphereLogo({
   const isDark = variant === 'dark'
   const isRow = layout === 'row'
   const s = SIZES[size] || SIZES.md
+  const textPrimary = isDark ? 'text-white' : 'text-navy'
+
+  const mark = (
+    <span className={`${s.mark} shrink-0`}>
+      <CareSphereMark className="w-full h-full" tone="solid" />
+    </span>
+  )
+
+  const title = showName ? (
+    <div className="text-center">
+      <p className={`font-sans ${s.word} leading-none whitespace-nowrap ${textPrimary}`}>
+        <span className="font-medium tracking-[0.02em]">Care</span>
+        <span className="font-bold tracking-[0.01em]">Sphere</span>
+      </p>
+      {!isRow ? (
+        <span
+          className={`block mx-auto mt-2.5 h-[2px] rounded-full bg-gradient-to-r from-transparent via-teal to-transparent ${s.rule}`}
+          aria-hidden="true"
+        />
+      ) : null}
+    </div>
+  ) : null
+
+  const tagline = caption ? (
+    <p
+      className={`${s.caption} tracking-[0.16em] uppercase font-medium text-center ${
+        isDark ? 'text-white/45' : 'text-body-gray'
+      }`}
+    >
+      {caption}
+    </p>
+  ) : null
 
   return (
     <div
-      className={`${
-        isRow ? `flex items-center ${s.rowGap} text-left` : 'flex flex-col items-center text-center'
+      className={`inline-flex ${
+        isRow ? `flex-row items-center ${s.gap}` : `flex-col items-center ${s.gap}`
       } ${className}`}
+      aria-label="CareSphere"
     >
-      <span
-        className={`${s.mark} shrink-0 ${
-          !isRow && size === 'xl' ? 'shadow-lg shadow-teal/30 rounded-3xl overflow-hidden' : ''
-        }`}
-      >
-        <CareSphereMark className="w-full h-full" tone="solid" />
-      </span>
-
-      {showName || caption ? (
-        <div className={isRow ? 'min-w-0' : undefined}>
-          {showName ? (
-            <p
-              className={`font-display ${s.name} font-bold tracking-tight leading-none ${
-                !isRow ? s.stackGap : ''
-              } ${isDark ? 'text-white' : 'text-navy'}`}
-            >
-              CareSphere
-            </p>
-          ) : null}
-          {caption ? (
-            <p
-              className={`${showName ? 'mt-1.5' : ''} ${s.caption} tracking-[0.16em] uppercase font-semibold ${
-                isDark ? 'text-white/55' : 'text-body-gray'
-              }`}
-            >
-              {caption}
-            </p>
-          ) : null}
-        </div>
-      ) : null}
+      {mark}
+      {title}
+      {tagline}
     </div>
   )
 }

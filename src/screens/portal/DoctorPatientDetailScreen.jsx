@@ -45,7 +45,7 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
   }
 
   return (
-    <div className="w-full h-full min-h-0 bg-transparent flex flex-col overflow-hidden">
+    <div className="w-full h-full min-h-0 bg-[#F4F7FA] flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto w-full">
         <div className="shrink-0 flex flex-col gap-3">
           <DoctorPatientHeader patient={patient} visitCount={visits.length} onBack={onBack} />

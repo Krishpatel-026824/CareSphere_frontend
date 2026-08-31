@@ -17,7 +17,7 @@ export default function AuthLayout({
         </div>
 
         <div className="relative z-10">
-          <CareSphereLogo variant="dark" size="md" layout="row" />
+          <CareSphereLogo variant="dark" size="lg" layout="stack" />
         </div>
 
         <div className="relative z-10 max-w-lg">
@@ -36,7 +36,7 @@ export default function AuthLayout({
             </button>
           ) : null}
           <div className="mb-3">
-            <CareSphereLogo variant="dark" size="sm" layout="row" />
+            <CareSphereLogo variant="dark" size="md" layout="stack" />
           </div>
           <h1 className="text-white text-xl sm:text-2xl font-bold tracking-tight">{title}</h1>
           <p className="text-white/60 text-sm mt-1">{subtitle}</p>

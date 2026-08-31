@@ -7,15 +7,24 @@ function statusTone(status) {
 }
 
 function reportStatusTone(status) {
-  if (status === 'Ready for review') return 'bg-amber-400/20 text-amber-50'
-  return 'bg-white/15 text-emerald-100'
+  if (status === 'Ready for review') return 'bg-amber-100 text-amber-800'
+  if (status === 'Ready') return 'bg-emerald-100 text-emerald-800'
+  return 'bg-emerald-100 text-emerald-800'
+}
+
+function reportNumber(report) {
+  if (report.bookingRef) return report.bookingRef
+  if (report.testCode && report.sample?.reportDate) {
+    return `${report.testCode}-${String(report.sample.reportDate).replace(/\s+/g, '')}`
+  }
+  return report.testCode || 'CS-RPT'
 }
 
 function InfoCard({ title, children }) {
   return (
-    <div className="rounded-xl border border-border-gray bg-[#F8FBFC] p-4 sm:p-5">
+    <div className="rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] p-4 sm:p-5">
       <p className="font-display text-[15px] font-bold text-navy mb-3">{title}</p>
-      <dl className="flex flex-col divide-y divide-border-gray/80">{children}</dl>
+      <dl className="flex flex-col divide-y divide-[#E6EBF1]">{children}</dl>
     </div>
   )
 }
@@ -38,15 +47,7 @@ function InfoRow({ label, value, tone = 'text' }) {
   )
 }
 
-function reportNumber(report) {
-  if (report.bookingRef) return report.bookingRef
-  if (report.testCode && report.sample?.reportDate) {
-    return `${report.testCode}-${String(report.sample.reportDate).replace(/\s+/g, '')}`
-  }
-  return report.testCode || 'CS-RPT'
-}
-
-export default function LabReportDetail({ report, hideDownload = false }) {
+export default function LabReportDetail({ report, hideDownload = false, embedded = false }) {
   if (!report) return null
 
   function handleDownload() {
@@ -59,43 +60,52 @@ export default function LabReportDetail({ report, hideDownload = false }) {
       hospital: report.lab?.name,
       interpretation: report.interpretation,
       parameters: report.parameters,
-      verifiedBy: report.doctorName,
+      verifiedBy: report.verifiedBy || report.doctorName,
     })
   }
 
-  return (
-    <article className="rounded-2xl border border-border-gray bg-white shadow-sm overflow-hidden">
-      <header className="bg-gradient-to-r from-[#0F766E] to-[#0D9488] px-4 sm:px-6 py-4 sm:py-5 text-white">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/80">
-              {report.lab?.name || 'CareSphere Diagnostics'}
-            </p>
-            <h3 className="font-display text-xl sm:text-2xl font-bold mt-1 leading-tight">{report.testName}</h3>
-            <p className="text-xs text-white/75 mt-1.5">
-              {report.lab?.accreditation || 'NABL Accredited · ISO 15189'}
-            </p>
+  const body = (
+  <>
+      {!embedded ? (
+        <header className="px-4 sm:px-6 pt-4 sm:pt-5 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="font-display text-xl sm:text-2xl font-bold text-navy leading-tight">
+                {report.testName}
+              </h3>
+              <p className="text-[13px] text-body-gray mt-1.5">
+                {[report.dateLabel || report.sample?.reportDate, report.status]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </p>
+            </div>
+            <div className="shrink-0 text-right">
+              <span
+                className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${reportStatusTone(report.status)}`}
+              >
+                {report.status}
+              </span>
+              <p className="text-[10px] text-body-gray mt-2 uppercase tracking-wide">Report No.</p>
+              <p className="font-mono text-xs font-semibold tabular-nums tracking-wide text-navy">
+                {reportNumber(report)}
+              </p>
+            </div>
           </div>
-          <div className="shrink-0 text-right">
-            <span
-              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${reportStatusTone(report.status)}`}
-            >
-              {report.status}
-            </span>
-            <p className="text-[10px] text-white/70 mt-2">Report No.</p>
-            <p className="font-mono text-xs font-semibold tabular-nums tracking-wide">{reportNumber(report)}</p>
-            {report.testCode ? (
-              <p className="font-mono text-[10px] text-white/70 mt-1 tracking-wide">Code · {report.testCode}</p>
-            ) : null}
-          </div>
-        </div>
-      </header>
+        </header>
+      ) : null}
 
-      <div className="p-4 sm:p-6 flex flex-col gap-5">
+      {!embedded ? (
+        <div className="h-1 shrink-0 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
+      ) : null}
+
+      <div className={`flex flex-col gap-5 ${embedded ? '' : 'p-4 sm:p-6'}`}>
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <InfoCard title="Patient details">
             <InfoRow label="Name" value={report.patient.name} tone="name" />
-            <InfoRow label="Age / Gender" value={`${report.patient.age} yrs · ${report.patient.gender}`} />
+            <InfoRow
+              label="Age / Gender"
+              value={`${report.patient.age} yrs · ${report.patient.gender}`}
+            />
             <InfoRow label="Patient ID" value={report.patient.patientId} tone="id" />
             <InfoRow label="Phone" value={report.patient.phone} tone="id" />
           </InfoCard>
@@ -116,15 +126,25 @@ export default function LabReportDetail({ report, hideDownload = false }) {
 
         <section>
           <p className="font-display text-[15px] font-bold text-navy mb-3">Test results</p>
-          <div className="overflow-x-auto rounded-xl border border-border-gray">
-            <table className="w-full min-w-[560px] text-sm">
+          <div className="overflow-x-auto rounded-xl border border-[#E6EBF1]">
+            <table className="w-full min-w-[560px] text-sm border-collapse">
               <thead>
                 <tr className="bg-[#E0F2FE] text-left">
-                  <th className="px-3 py-2.5 font-semibold text-navy">Parameter</th>
-                  <th className="px-3 py-2.5 font-semibold text-navy">Result</th>
-                  <th className="px-3 py-2.5 font-semibold text-navy">Unit</th>
-                  <th className="px-3 py-2.5 font-semibold text-navy">Reference</th>
-                  <th className="px-3 py-2.5 font-semibold text-navy">Status</th>
+                  <th className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy">
+                    Parameter
+                  </th>
+                  <th className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy">
+                    Result
+                  </th>
+                  <th className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy">
+                    Unit
+                  </th>
+                  <th className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy">
+                    Reference
+                  </th>
+                  <th className="px-3 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-navy">
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -133,17 +153,17 @@ export default function LabReportDetail({ report, hideDownload = false }) {
                   return (
                     <tr
                       key={row.name}
-                      className={`border-t border-border-gray ${abnormal ? 'bg-rose-50/40' : ''}`}
+                      className={`border-t border-[#E6EBF1] ${abnormal ? 'bg-rose-50/50' : 'bg-white'}`}
                     >
                       <td className="px-3 py-2.5 text-body-gray">{row.name}</td>
                       <td className="px-3 py-2.5 font-mono text-sm font-semibold tabular-nums text-navy">
                         {row.value}
                       </td>
-                      <td className="px-3 py-2.5 text-body-gray">{row.unit}</td>
+                      <td className="px-3 py-2.5 text-body-gray">{row.unit || '—'}</td>
                       <td className="px-3 py-2.5 text-body-gray">{row.reference}</td>
                       <td className="px-3 py-2.5">
                         <span
-                          className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${statusTone(row.status)}`}
+                          className={`inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${statusTone(row.status)}`}
                         >
                           {row.status}
                         </span>
@@ -156,13 +176,21 @@ export default function LabReportDetail({ report, hideDownload = false }) {
           </div>
         </section>
 
-        <section className="rounded-xl border border-border-gray bg-bg-gray/30 p-4">
+        <section className="rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] p-4">
           <p className="font-display text-[15px] font-bold text-navy mb-1.5">Clinical interpretation</p>
           <p className="font-sans text-sm text-body-gray leading-relaxed">{report.interpretation}</p>
+          {report.verifiedBy || report.doctorName ? (
+            <p className="text-[12px] text-body-gray mt-3 pt-3 border-t border-[#E6EBF1]">
+              Verified by{' '}
+              <span className="font-semibold text-navy">
+                {report.verifiedBy || report.doctorName}
+              </span>
+            </p>
+          ) : null}
         </section>
 
         {report.recommendations?.length ? (
-          <section className="rounded-xl border border-border-gray p-4">
+          <section className="rounded-xl border border-[#E6EBF1] p-4">
             <p className="font-display text-[15px] font-bold text-navy mb-2">Recommendations</p>
             <ul className="list-disc pl-5 text-sm text-body-gray space-y-1">
               {report.recommendations.map((item) => (
@@ -176,13 +204,21 @@ export default function LabReportDetail({ report, hideDownload = false }) {
           <button
             type="button"
             onClick={handleDownload}
-            className="w-full min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
+            className="w-full min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2 shadow-sm"
           >
             <Download className="w-5 h-5" strokeWidth={1.8} />
             Download report
           </button>
         )}
       </div>
+  </>
+  )
+
+  if (embedded) return body
+
+  return (
+    <article className="rounded-2xl border border-[#E6EBF1] bg-white shadow-sm overflow-hidden">
+      {body}
     </article>
   )
 }

@@ -1,10 +1,15 @@
 import { doctorLabFacilityMock, doctorLabReportTemplatesMock, doctorLabReportsPageMock } from '../mocks/doctorLabReports'
 import { doctorLabTasksMock } from '../mocks/doctorClinicTools'
 import { doctorPatientsMock } from '../mocks/doctorPatients'
+import { getLabReportTemplate } from '../mocks/labReportTemplates'
 
 function parseAge(ageLabel = '') {
   const match = String(ageLabel).match(/\d+/)
   return match ? Number(match[0]) : ''
+}
+
+function formatPatientId(patientId = '') {
+  return String(patientId).replace(/^pat-/, 'CS-PAT-').toUpperCase()
 }
 
 function countAbnormal(parameters = []) {
@@ -16,100 +21,126 @@ function reportStatusForBadge(badge) {
   return 'Verified'
 }
 
+function resolveReportTemplate(test, options = {}) {
+  if (options.parameters?.length) {
+    return {
+      testCode: options.testCode || 'LAB-GEN',
+      parameters: options.parameters,
+      interpretation: options.interpretation || 'Report reviewed and verified.',
+    }
+  }
+
+  const catalogTemplate = test?.id ? getLabReportTemplate(test.id) : null
+  const doctorTemplate = test?.id ? doctorLabReportTemplatesMock[test.id] : null
+  const template = catalogTemplate || doctorTemplate
+
+  return {
+    testCode: options.testCode || template?.testCode || String(test?.id || 'LAB').toUpperCase(),
+    parameters: template?.parameters || [],
+    interpretation:
+      options.interpretation ||
+      template?.interpretation ||
+      `${test?.name || 'Lab test'} completed. Review with current clinical findings at the next visit.`,
+    preview: template?.preview || test?.thumbnail || test?.image || null,
+  }
+}
+
+function buildSampleBlock(dateLabel, options = {}) {
+  return {
+    type: options.specimen || 'Blood',
+    collectionMode: options.collectionMode || 'Clinic collection',
+    collectionDate: dateLabel,
+    collectionTime: options.collectionTime || '08:30 AM',
+    reportDate: dateLabel,
+    reportTime: options.reportTime || '11:15 AM',
+  }
+}
+
 export function generateCatalogLabReport(test, patient, options = {}) {
   if (!test || !patient) return null
 
   const dateLabel = options.dateLabel || '12 Mar 2026'
   const status = options.status || 'Verified'
-  const parameters = options.parameters || [
-    { name: 'Result', value: 'Within range', unit: '', reference: 'See lab reference', status: 'Normal' },
-    { name: 'Specimen', value: 'Accepted', unit: '', reference: 'Adequate', status: 'Normal' },
-  ]
+  const template = resolveReportTemplate(test, options)
 
   return {
     id: options.id || `CLR-${patient.id}-${test.id}`,
-    bookingRef: `CS-LAB-${String(test.id).toUpperCase()}`,
-    title: `${test.name || test.title} Report`,
-    testName: test.name || test.title,
-    testCode: options.testCode || String(test.id).toUpperCase(),
+    bookingRef: options.bookingRef || `CS-LAB-${template.testCode}`,
+    title: `${test.name} Report`,
+    testName: test.name,
+    testCode: template.testCode,
     status,
     type: 'Lab',
     dateLabel,
     doctorName: doctorLabFacilityMock.pathologist,
+    verifiedBy: doctorLabFacilityMock.pathologist,
     patient: {
       name: patient.name,
       age: parseAge(patient.ageLabel),
       gender: patient.gender,
-      patientId: patient.id.replace('pat-', 'CS-PAT-').toUpperCase(),
+      patientId: formatPatientId(patient.id),
       phone: patient.phone,
     },
     lab: { ...doctorLabFacilityMock },
-    sample: {
-      type: options.specimen || 'Blood',
-      collectionMode: 'Clinic collection',
-      collectionDate: dateLabel,
-      collectionTime: '08:30 AM',
-      reportDate: dateLabel,
-      reportTime: '11:15 AM',
-    },
-    parameters,
-    interpretation:
-      options.interpretation ||
-      `${test.name || test.title} completed. Review with current clinical findings at the next visit.`,
+    sample: buildSampleBlock(dateLabel, options),
+    parameters: template.parameters,
+    interpretation: template.interpretation,
     payment: {
-      method: 'self-pay',
+      method: options.paymentMethod || 'self-pay',
       testFee: test.price || 800,
       totalPaid: test.price || 800,
       paidOn: `${dateLabel} · 08:45 AM`,
     },
-    preview: test.thumbnail || test.image || null,
+    preview: template.preview,
   }
 }
 
 export function generateDoctorLabReport(task, patient) {
-  const template = doctorLabReportTemplatesMock[task.id]
-  if (!template || !task || !patient) return null
+  if (!task || !patient) return null
+
+  const doctorTemplate = doctorLabReportTemplatesMock[task.id]
+  const catalogTemplate = getLabReportTemplate(task.id)
+  const template = doctorTemplate || catalogTemplate
 
   const reportDate = task.visitLabel?.includes('·')
     ? task.visitLabel.split('·')[0].trim()
     : '18 Aug 2026'
   const status = reportStatusForBadge(task.badge)
 
+  const parameters = template?.parameters || []
+  if (!parameters.length) return null
+
   return {
     id: `DLR-${task.id}`,
-    bookingRef: `CS-LAB-${task.id.toUpperCase()}`,
+    bookingRef: `CS-LAB-${template?.testCode || task.id.toUpperCase()}`,
     title: `${task.title} Report`,
     testName: task.title,
-    testCode: template.testCode,
+    testCode: template?.testCode || task.id.toUpperCase(),
     status,
     type: 'Lab',
     dateLabel: reportDate,
     doctorName: doctorLabFacilityMock.pathologist,
+    verifiedBy: doctorLabFacilityMock.pathologist,
     patient: {
       name: patient.name,
       age: parseAge(patient.ageLabel),
       gender: patient.gender,
-      patientId: patient.id.replace('pat-', 'CS-PAT-').toUpperCase(),
+      patientId: formatPatientId(patient.id),
       phone: patient.phone,
     },
     lab: { ...doctorLabFacilityMock },
-    sample: {
-      type: task.specimen || 'Blood',
-      collectionMode: 'Clinic collection',
-      collectionDate: reportDate,
-      collectionTime: '08:30 AM',
-      reportDate,
-      reportTime: '11:15 AM',
-    },
-    parameters: template.parameters,
-    interpretation: template.interpretation,
+    sample: buildSampleBlock(reportDate, { specimen: task.specimen || 'Blood' }),
+    parameters,
+    interpretation:
+      template?.interpretation ||
+      `${task.title} completed. Review with current clinical findings at the next visit.`,
     payment: {
       method: 'insurance',
       testFee: task.badge === 'Urgent' ? 2400 : 1800,
       totalPaid: task.badge === 'Urgent' ? 2400 : 1800,
       paidOn: `${reportDate} · 08:45 AM`,
     },
-    preview: template.preview,
+    preview: template?.preview,
   }
 }
 

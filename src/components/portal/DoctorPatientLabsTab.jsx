@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Check, Eye, Search, X } from 'lucide-react'
+import { Check, Eye, X } from 'lucide-react'
 import { formatDateLabel } from '../../utils/appointmentFormat'
 import {
   orderPatientLabs,
@@ -18,6 +18,7 @@ import {
 import {
   PatientChartEmpty,
   PatientChartPanel,
+  PatientChartSearch,
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
@@ -133,9 +134,8 @@ export default function DoctorPatientLabsTab({
       >
         <LabModeTabs value={mode} counts={modeCounts} onChange={setMode} />
 
-        <label className="shrink-0 mx-3 mt-2 mb-2 flex items-center gap-2.5 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1] px-3 min-h-11">
-          <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.85} />
-          <input
+        <div className="shrink-0 px-4 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC]">
+          <PatientChartSearch
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={
@@ -145,10 +145,9 @@ export default function DoctorPatientLabsTab({
                   ? 'Search selected list'
                   : 'Search lab tests (CBC, lipid, thyroid…)'
             }
-            className="w-full bg-transparent text-sm text-navy outline-none placeholder:text-body-gray/70"
             aria-label="Search labs"
           />
-        </label>
+        </div>
 
         {mode === 'order' && selectedItems.length ? (
           <div className="shrink-0 mx-3 mb-2 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3 py-2.5">

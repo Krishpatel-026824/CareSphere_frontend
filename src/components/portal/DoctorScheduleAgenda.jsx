@@ -1,8 +1,18 @@
-import { Search } from 'lucide-react'
+import { Eye, Search } from 'lucide-react'
 import {
   appointmentStatusLabels,
   appointmentStatusStyles,
 } from '../../data/mocks/appointmentActions'
+
+const COLUMNS = [
+  { key: 'no', label: 'No.', center: true, width: '52px' },
+  { key: 'patient', label: 'Patient', center: false, width: '26%' },
+  { key: 'room', label: 'Room', center: true, width: '16%' },
+  { key: 'date', label: 'Date', center: true, width: '14%' },
+  { key: 'time', label: 'Time', center: true, width: '12%' },
+  { key: 'status', label: 'Status', center: true, width: '12%' },
+  { key: 'actions', label: 'Actions', center: true, width: '88px' },
+]
 
 export default function DoctorScheduleAgenda({
   visits = [],
@@ -13,140 +23,143 @@ export default function DoctorScheduleAgenda({
 }) {
   return (
     <section className="flex-1 min-h-0 min-w-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col">
-      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-3.5 border-b border-[#E6EBF1] bg-[#F8FAFC] flex flex-col gap-3.5">
-        <div className="min-w-0">
-          <h2 className="text-2xl sm:text-[26px] font-bold text-navy tracking-tight leading-none">
-            Day agenda
-          </h2>
-          <p className="text-sm text-body-gray mt-1.5 truncate">
-            {dayLabel} · {visits.length} visit{visits.length === 1 ? '' : 's'}
-          </p>
+      <div className="h-1 shrink-0 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
+
+      <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-navy tracking-tight leading-tight">
+              Day agenda
+            </h2>
+            <p className="text-[13px] sm:text-sm text-body-gray mt-1 truncate">
+              {dayLabel} · {visits.length} visit{visits.length === 1 ? '' : 's'}
+            </p>
+          </div>
+          <span className="self-start sm:self-auto shrink-0 text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-3 py-1.5 rounded-full tabular-nums">
+            {visits.length} today
+          </span>
         </div>
 
-        <label className="flex items-center gap-3 rounded-2xl bg-white border border-[#E6EBF1] px-4 min-h-14 shadow-sm">
-          <Search className="w-5 h-5 text-body-gray shrink-0" strokeWidth={1.85} />
+        <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
+          <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
           <input
             value={query}
             onChange={(event) => onQueryChange?.(event.target.value)}
             placeholder="Search patient or room"
-            className="w-full bg-transparent text-base text-navy outline-none placeholder:text-body-gray/70"
+            className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
           />
         </label>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-auto">
-        {visits.length === 0 ? (
-          <p className="m-4 sm:m-5 rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-base text-body-gray text-center">
-            No visits this day. Pick another date or clear filters.
-          </p>
-        ) : (
-          <table className="w-full table-fixed min-w-[760px] border-collapse text-left">
-            <colgroup>
-              <col className="w-16" />
-              <col className="w-[28%]" />
-              <col className="w-[18%]" />
-              <col className="w-[16%]" />
-              <col className="w-[14%]" />
-              <col className="w-[14%]" />
-              <col className="w-32" />
-            </colgroup>
-            <thead className="bg-[#CBD5E1] sticky top-0 z-10">
-              <tr>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                  No.
-                </th>
-                <th className="px-4 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                  Patient
-                </th>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                  Room
-                </th>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
-                  Date
-                </th>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
-                  Time
-                </th>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
-                  Status
-                </th>
-                <th className="px-3 py-4 text-[15px] font-bold uppercase tracking-[0.05em] text-navy border-b-2 text-center align-middle">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {visits.map((visit, index) => {
-                const statusStyle =
-                  appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
-                const statusLabel = appointmentStatusLabels[visit.status] || visit.status
+      {visits.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <div className="flex-1 min-h-0 overflow-auto">
+            <table className="w-full min-w-[720px] border-collapse table-fixed text-left">
+              <colgroup>
+                {COLUMNS.map((col) => (
+                  <col key={col.key} style={{ width: col.width }} />
+                ))}
+              </colgroup>
+              <thead className="sticky top-0 z-10 bg-[#E8F7F6]/95 backdrop-blur-sm">
+                <tr>
+                  {COLUMNS.map((col) => (
+                    <th
+                      key={col.key}
+                      className={`px-3 sm:px-4 py-3 text-[11px] font-bold uppercase tracking-[0.07em] text-teal-dark border-b border-teal/20 ${
+                        col.center ? 'text-center' : 'text-left'
+                      }`}
+                    >
+                      {col.label}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {visits.map((visit, index) => (
+                  <AgendaRow key={visit.id} visit={visit} index={index} onSelect={onSelect} />
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-                return (
-                  <tr key={visit.id} className="hover:bg-[#F0FDFA] transition-colors">
-                    <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
-                      <span className="text-base font-semibold text-navy tabular-nums">
-                        {index + 1}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white">
-                          <img
-                            src={visit.patientPhoto}
-                            alt=""
-                            className="w-full h-full object-cover object-top"
-                          />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-base font-semibold text-navy truncate leading-snug">
-                            {visit.patientName}
-                          </p>
-                          {visit.visitType ? (
-                            <p className="text-[13px] text-body-gray truncate mt-0.5 leading-snug">
-                              {visit.visitType}
-                            </p>
-                          ) : null}
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                      <p className="text-base font-semibold text-navy truncate">
-                        {visit.room || '—'}
-                      </p>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                      <p className="text-base font-semibold text-navy whitespace-nowrap">
-                        {visit.dateLabel || '—'}
-                      </p>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                      <p className="text-base font-semibold text-navy whitespace-nowrap">
-                        {visit.timeLabel || '—'}
-                      </p>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
-                      <span
-                        className={`inline-flex text-xs font-semibold px-3 py-1.5 rounded-full ${statusStyle}`}
-                      >
-                        {statusLabel}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3.5 border-b border-[#D5DEE8] text-center align-middle">
-                      <button
-                        type="button"
-                        onClick={() => onSelect?.(visit)}
-                        className="inline-flex items-center justify-center min-h-9 px-3.5 rounded-xl bg-teal text-white text-[13px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors"
-                      >
-                        View
-                      </button>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        )}
-      </div>
+          <footer className="shrink-0 px-4 sm:px-5 py-2.5 border-t border-[#E6EBF1] bg-[#F8FAFC]">
+            <p className="text-[12px] sm:text-[13px] text-body-gray">
+              Showing <span className="font-semibold text-navy">{visits.length}</span> visit
+              {visits.length === 1 ? '' : 's'} for this day
+            </p>
+          </footer>
+        </>
+      )}
     </section>
+  )
+}
+
+function AgendaRow({ visit, index, onSelect }) {
+  const statusStyle = appointmentStatusStyles[visit.status] || appointmentStatusStyles.Upcoming
+  const statusLabel = appointmentStatusLabels[visit.status] || visit.status
+
+  return (
+    <tr className="group bg-white even:bg-[#FAFCFD] hover:bg-[#F0FDFA] transition-colors">
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <span className="text-[13px] font-semibold text-body-gray tabular-nums">{index + 1}</span>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] align-middle">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white shadow-sm">
+            <img src={visit.patientPhoto} alt="" className="w-full h-full object-cover object-top" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[14px] sm:text-[15px] font-semibold text-navy truncate">
+              {visit.patientName}
+            </p>
+            {visit.visitType ? (
+              <p className="text-[12px] text-body-gray truncate mt-0.5">{visit.visitType}</p>
+            ) : null}
+          </div>
+        </div>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[12px] sm:text-[13px] font-medium text-body-gray truncate">
+          {visit.room || '—'}
+        </p>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[13px] sm:text-[14px] font-semibold text-navy whitespace-nowrap tabular-nums">
+          {visit.dateLabel || '—'}
+        </p>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[13px] sm:text-[14px] font-medium text-navy whitespace-nowrap tabular-nums">
+          {visit.timeLabel || '—'}
+        </p>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <span className={`inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full border border-transparent ${statusStyle}`}>
+          {statusLabel}
+        </span>
+      </td>
+      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+        <button
+          type="button"
+          onClick={() => onSelect?.(visit)}
+          aria-label={`View ${visit.patientName}`}
+          className="w-8 h-8 rounded-lg inline-flex items-center justify-center cursor-pointer transition-colors bg-white text-body-gray border border-[#E6EBF1] hover:text-teal hover:border-teal/30 hover:bg-teal-light/30"
+        >
+          <Eye className="w-4 h-4" strokeWidth={2} />
+        </button>
+      </td>
+    </tr>
+  )
+}
+
+function EmptyState() {
+  return (
+    <div className="flex-1 min-h-[200px] flex items-center justify-center p-6">
+      <p className="rounded-2xl border border-dashed border-[#D0D9E3] bg-[#F8FAFC] px-6 py-5 text-sm text-body-gray text-center max-w-sm">
+        No visits this day. Pick another date or clear your search.
+      </p>
+    </div>
   )
 }

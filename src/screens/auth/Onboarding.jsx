@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { CalendarCheck, Pill, FlaskConical, ChevronRight, Heart, FileText } from 'lucide-react'
+import { CalendarCheck, Pill, FlaskConical, ChevronRight, FileText } from 'lucide-react'
 import Button from '../../components/Button'
+import CareSphereLogo from '../../components/brand/CareSphereLogo'
 
 const slides = [
   {
@@ -44,11 +45,8 @@ export default function Onboarding({ onNext }) {
           <div className="absolute bottom-16 right-8 w-72 h-72 rounded-full bg-teal blur-3xl" />
         </div>
         <div className="relative z-10 max-w-lg">
-          <div className="flex items-center gap-3 mb-10">
-            <div className="w-12 h-12 bg-teal rounded-xl flex items-center justify-center shrink-0">
-              <Heart className="w-6 h-6 text-white" strokeWidth={1.75} />
-            </div>
-            <span className="text-2xl font-bold tracking-tight">CareSphere</span>
+          <div className="mb-10">
+            <CareSphereLogo variant="dark" size="lg" layout="stack" />
           </div>
           <h2 className="font-display text-4xl xl:text-5xl font-bold leading-tight mb-4">
             Your complete health companion
@@ -60,11 +58,8 @@ export default function Onboarding({ onNext }) {
       </aside>
 
       <section className="h-full bg-white flex flex-col px-6 sm:px-10 lg:px-12 xl:px-16">
-        <div className="lg:hidden pt-8 pb-2 flex items-center gap-2.5">
-          <div className="w-9 h-9 bg-teal rounded-lg flex items-center justify-center">
-            <Heart className="w-4 h-4 text-white" strokeWidth={1.75} />
-          </div>
-          <span className="text-lg font-bold text-navy tracking-tight">CareSphere</span>
+        <div className="lg:hidden pt-8 pb-2">
+          <CareSphereLogo variant="light" size="sm" layout="stack" />
         </div>
 
         <div className="flex-1 flex flex-col items-center justify-center text-center py-6">

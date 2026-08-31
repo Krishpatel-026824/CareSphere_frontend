@@ -51,7 +51,7 @@ export default function LabReportsList({ reports, expandedId, onToggle }) {
               </div>
             </button>
 
-            {isOpen ? <LabReportDetail report={report} /> : null}
+            {isOpen ? <LabReportDetail report={report} embedded /> : null}
           </div>
         )
       })}

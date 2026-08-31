@@ -16,7 +16,7 @@ export default function RoleToggle({ value, options, onChange }) {
             key={option.id}
             type="button"
             onClick={() => onChange(option.id)}
-            className={`min-h-11 rounded-xl text-sm font-semibold cursor-pointer inline-flex items-center justify-center gap-2 transition-all ${
+            className={`min-h-10 sm:min-h-11 rounded-xl text-[13px] sm:text-sm font-semibold cursor-pointer inline-flex items-center justify-center gap-1.5 sm:gap-2 transition-all px-2 ${
               active
                 ? 'bg-white text-navy shadow-sm ring-1 ring-teal/25'
                 : 'bg-transparent text-body-gray hover:text-navy'

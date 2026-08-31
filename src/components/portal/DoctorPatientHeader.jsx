@@ -1,5 +1,6 @@
 import {
   ArrowLeft,
+  CalendarDays,
   Droplets,
   FileHeart,
   Phone,
@@ -9,10 +10,10 @@ import {
 import { generateDoctorPatientProfile } from '../../data/generators/doctorPatientProfileGenerator'
 
 const statusStyles = {
-  Upcoming: 'bg-sky-100 text-sky-700 border-sky-200',
-  Confirmed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  Completed: 'bg-slate-100 text-slate-600 border-slate-200',
-  Cancelled: 'bg-rose-100 text-rose-700 border-rose-200',
+  Upcoming: 'bg-sky-50 text-sky-700 border-sky-200',
+  Confirmed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  Completed: 'bg-slate-50 text-slate-600 border-slate-200',
+  Cancelled: 'bg-rose-50 text-rose-700 border-rose-200',
 }
 
 export default function DoctorPatientHeader({ patient, visitCount = 0, onBack }) {
@@ -24,25 +25,45 @@ export default function DoctorPatientHeader({ patient, visitCount = 0, onBack })
   const demographics = [profile.ageLabel, profile.gender, profile.city].filter(Boolean).join(' · ')
   const allergyAlert = profile.allergies && !/none|not on file/i.test(profile.allergies)
 
+  const facts = [
+    { icon: Droplets, label: 'Blood group', value: profile.bloodGroup, tone: 'teal' },
+    { icon: Stethoscope, label: 'Primary concern', value: profile.primaryConcern },
+    { icon: Phone, label: 'Phone', value: profile.phone },
+    {
+      icon: ShieldAlert,
+      label: 'Allergies',
+      value: profile.allergies,
+      tone: allergyAlert ? 'alert' : 'default',
+    },
+    { icon: FileHeart, label: 'Insurance', value: profile.insurance, tone: 'care' },
+    {
+      icon: CalendarDays,
+      label: 'Last checkup',
+      value: profile.lastCheckup && profile.lastCheckup !== '—' ? profile.lastCheckup : null,
+    },
+  ].filter((item) => item.value)
+
   return (
     <section className="shrink-0 rounded-2xl border border-[#E6EBF1] bg-white shadow-sm overflow-hidden">
-      <div className="px-4 sm:px-5 py-3.5 sm:py-4 flex items-center gap-3 sm:gap-4">
+      <div className="h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-[#0D9488]" />
+
+      <div className="px-4 sm:px-5 py-4 flex items-start gap-3 sm:gap-4">
         <button
           type="button"
           onClick={onBack}
-          className="w-11 h-11 rounded-xl border border-[#E6EBF1] bg-[#F7FAFC] text-navy flex items-center justify-center cursor-pointer hover:border-teal hover:text-teal shrink-0"
+          className="w-10 h-10 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] text-navy flex items-center justify-center cursor-pointer hover:border-teal hover:text-teal shrink-0 transition-colors"
           aria-label="Back"
         >
           <ArrowLeft className="w-5 h-5" strokeWidth={2} />
         </button>
 
-        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-teal-light ring-2 ring-[#E8F7F6] shrink-0">
+        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-teal-light ring-2 ring-[#E8F7F6] shrink-0 shadow-sm">
           <img src={patient.avatar} alt="" className="w-full h-full object-cover object-top" />
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2.5 min-w-0 flex-wrap">
-            <h1 className="font-display text-[22px] sm:text-[26px] font-bold text-navy tracking-tight truncate leading-none">
+          <div className="flex items-center gap-2 min-w-0 flex-wrap">
+            <h1 className="font-display text-[24px] sm:text-[28px] font-bold text-navy tracking-tight truncate leading-tight">
               {patient.name}
             </h1>
             {next?.status ? (
@@ -52,35 +73,26 @@ export default function DoctorPatientHeader({ patient, visitCount = 0, onBack })
                 {next.status}
               </span>
             ) : null}
-            <span className="text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-2.5 py-1 rounded-full">
+            <span className="text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-2.5 py-1 rounded-full tabular-nums">
               {visitCount} visit{visitCount === 1 ? '' : 's'}
             </span>
           </div>
           {demographics ? (
-            <p className="text-[14px] sm:text-[15px] text-body-gray truncate mt-1.5 leading-snug">
-              {demographics}
-            </p>
+            <p className="text-[14px] sm:text-[15px] text-body-gray mt-1 leading-snug">{demographics}</p>
           ) : null}
         </div>
       </div>
 
-      <div className="px-4 sm:px-5 pb-3.5 flex flex-wrap gap-2 border-t border-[#F0F4F8] pt-3">
-        <Chip icon={Droplets} label={profile.bloodGroup} tone="teal" />
-        <Chip icon={Stethoscope} label={profile.primaryConcern} />
-        <Chip icon={Phone} label={profile.phone} />
-        <Chip
-          icon={ShieldAlert}
-          label={profile.allergies}
-          tone={allergyAlert ? 'alert' : 'default'}
-        />
-        <Chip icon={FileHeart} label={profile.insurance} tone="care" />
-        {profile.lastCheckup && profile.lastCheckup !== '—' ? (
-          <Chip label={`Last checkup · ${profile.lastCheckup}`} />
-        ) : null}
-      </div>
+      {facts.length ? (
+        <div className="px-4 sm:px-5 pb-4 grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-2">
+          {facts.map((fact) => (
+            <FactCard key={fact.label} {...fact} />
+          ))}
+        </div>
+      ) : null}
 
       {profile.careNote ? (
-        <div className="px-4 sm:px-5 py-3 bg-[#E8F7F6] border-t border-teal/15">
+        <div className="mx-4 sm:mx-5 mb-4 rounded-xl border border-teal/15 bg-gradient-to-r from-[#F0FDFA] to-white px-4 py-3">
           <p className="text-[14px] sm:text-[15px] text-navy leading-relaxed">
             <span className="font-bold text-teal">Care note · </span>
             {profile.careNote}
@@ -91,23 +103,25 @@ export default function DoctorPatientHeader({ patient, visitCount = 0, onBack })
   )
 }
 
-function Chip({ icon: Icon, label, tone = 'default' }) {
-  if (!label) return null
+function FactCard({ icon: Icon, label, value, tone = 'default' }) {
   const tones = {
-    default: 'bg-[#F7FAFC] text-navy border-[#EAF0F5]',
-    teal: 'bg-[#E8F7F6] text-teal border-teal/20',
-    care: 'bg-[#E8F7F6] text-teal border-teal/20',
-    alert: 'bg-rose-50 text-rose-700 border-rose-100',
+    default: 'bg-[#F8FAFC] border-[#EAF0F5] text-navy',
+    teal: 'bg-[#F0FDFA] border-teal/15 text-teal',
+    care: 'bg-[#F0FDFA] border-teal/15 text-teal',
+    alert: 'bg-rose-50 border-rose-100 text-rose-700',
   }
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[12px] sm:text-[13px] font-semibold max-w-full ${
-        tones[tone] || tones.default
-      }`}
+    <div
+      className={`rounded-xl border px-3 py-2.5 min-w-0 ${tones[tone] || tones.default}`}
     >
-      {Icon ? <Icon className="w-3.5 h-3.5 shrink-0" strokeWidth={2} /> : null}
-      <span className="truncate">{label}</span>
-    </span>
+      <div className="flex items-center gap-1.5 mb-1">
+        <Icon className="w-3.5 h-3.5 shrink-0 opacity-80" strokeWidth={2} />
+        <p className="text-[10px] font-bold uppercase tracking-[0.06em] opacity-70 truncate">
+          {label}
+        </p>
+      </div>
+      <p className="text-[13px] sm:text-[14px] font-semibold leading-snug truncate">{value}</p>
+    </div>
   )
 }

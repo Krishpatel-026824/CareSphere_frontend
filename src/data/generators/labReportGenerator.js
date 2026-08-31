@@ -63,6 +63,7 @@ function buildLabReport({
     type: 'Lab',
     dateLabel: reportDate,
     doctorName: labFacilityMock.pathologist,
+    verifiedBy: labFacilityMock.pathologist,
     patient: {
       ...labPatientMock,
       name: patientName || labPatientMock.name,
@@ -122,6 +123,7 @@ export function buildLabReportFromHealthRecord(record) {
     type: 'Lab',
     dateLabel: record.dateLabel,
     doctorName: labFacilityMock.pathologist,
+    verifiedBy: labFacilityMock.pathologist,
     patient: {
       ...labPatientMock,
     },

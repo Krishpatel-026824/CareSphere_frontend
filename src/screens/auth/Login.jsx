@@ -22,22 +22,22 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
 
   return (
     <AuthCardLayout>
-      <div className="animate-login-rise">
+      <div className="animate-login-rise w-full">
         <AuthBrandMark caption={isDoctor ? 'Clinic Workspace' : 'Health Dashboard'} />
       </div>
 
-      <header className="mt-4 sm:mt-5 mb-4 sm:mb-5 text-center animate-login-rise-delay-1">
-        <h1 className="font-display text-[24px] sm:text-[28px] font-bold text-navy leading-tight tracking-tight">
+      <header className="mt-3 sm:mt-4 md:mt-5 mb-3 sm:mb-4 md:mb-5 text-center animate-login-rise-delay-1">
+        <h1 className="font-display text-[22px] sm:text-[26px] md:text-[28px] font-bold text-navy leading-tight tracking-tight">
           Welcome back
         </h1>
-        <p className="mt-1.5 text-[12px] sm:text-[13px] text-body-gray leading-snug px-1">
+        <p className="mt-1.5 text-[12px] sm:text-[13px] md:text-sm text-body-gray leading-snug px-0.5 max-w-[340px] mx-auto">
           {isDoctor
             ? 'Sign in to manage visits, patients, and clinic tools'
             : 'Sign in to continue your CareSphere health journey'}
         </p>
       </header>
 
-      <div className="mb-4 animate-login-rise-delay-2">
+      <div className="mb-3 sm:mb-4 animate-login-rise-delay-2">
         <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-body-gray mb-2 px-0.5">
           Sign in as
         </p>
@@ -49,7 +49,7 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
           e.preventDefault()
           submitLogin()
         }}
-        className="flex flex-col gap-3.5 animate-login-rise-delay-3"
+        className="flex flex-col gap-3 sm:gap-3.5 animate-login-rise-delay-3"
       >
         <AuthInput
           id="login-email"
@@ -83,7 +83,7 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
           </button>
         </div>
 
-        <Button type="submit" className="min-h-[48px] text-[15px] shadow-[0_10px_20px_-10px_rgba(14,165,160,0.65)]">
+        <Button type="submit" className="w-full min-h-[46px] sm:min-h-[48px] text-[14px] sm:text-[15px] shadow-[0_10px_20px_-10px_rgba(14,165,160,0.65)]">
           Sign In
         </Button>
       </form>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ArrowLeft, Check, Search, X } from 'lucide-react'
+import { ArrowLeft, Check, X } from 'lucide-react'
 import { formatDateLabel } from '../../utils/appointmentFormat'
 import {
   generateRxScheduleDefaults,
@@ -19,6 +19,7 @@ import {
   PatientChartAddButton,
   PatientChartEmpty,
   PatientChartPanel,
+  PatientChartSearch,
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
@@ -158,16 +159,14 @@ export default function DoctorPatientPrescriptionsTab({
     >
       {mode === 'routine' ? (
         <>
-          <label className="shrink-0 mx-3 mt-3 mb-2 flex items-center gap-2.5 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1] px-3 min-h-11">
-            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.85} />
-            <input
+          <div className="shrink-0 px-4 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC]">
+            <PatientChartSearch
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search previous prescriptions"
-              className="w-full bg-transparent text-sm text-navy outline-none placeholder:text-body-gray/70"
               aria-label="Search previous prescriptions"
             />
-          </label>
+          </div>
 
           {!routineRows.length ? (
             <PatientChartEmpty text="No previous prescriptions for this patient. Tap New to add medicines to their routine." />
@@ -186,16 +185,27 @@ export default function DoctorPatientPrescriptionsTab({
               </thead>
               <tbody>
                 {routineRows.map((item, index) => (
-                  <tr key={item.id} className={index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'}>
-                    <PatientChartTd center>{index + 1}</PatientChartTd>
+                  <tr
+                    key={item.id}
+                    className={`transition-colors hover:bg-[#F0FAF9] ${
+                      index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'
+                    }`}
+                  >
+                    <PatientChartTd center>
+                      <span className="text-[13px] font-semibold text-body-gray tabular-nums">
+                        {index + 1}
+                      </span>
+                    </PatientChartTd>
                     <PatientChartTd>
                       <RxMedicineCell item={item} />
                     </PatientChartTd>
-                    <PatientChartTd center>{item.dose || '—'}</PatientChartTd>
+                    <PatientChartTd center>
+                      <span className="font-semibold text-navy">{item.dose || '—'}</span>
+                    </PatientChartTd>
                     <PatientChartTd center>{item.frequency || '—'}</PatientChartTd>
                     <PatientChartTd center>{item.duration || '—'}</PatientChartTd>
                     <PatientChartTd center>
-                      <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-light text-teal-dark">
+                      <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal-light text-teal-dark border border-teal/10">
                         {item.badge || 'Previous'}
                       </span>
                     </PatientChartTd>
@@ -207,18 +217,15 @@ export default function DoctorPatientPrescriptionsTab({
         </>
       ) : (
         <>
-          <label className="shrink-0 mx-3 mt-3 mb-2 flex items-center gap-2.5 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1] px-3 min-h-11">
-            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.85} />
-            <input
+          <div className="shrink-0 px-4 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC] space-y-3">
+            <PatientChartSearch
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search medicine (Dolo, Cetirizine…)"
-              className="w-full bg-transparent text-sm text-navy outline-none placeholder:text-body-gray/70"
               aria-label="Search medicines"
             />
-          </label>
 
-          <div className="shrink-0 mx-3 mb-2 grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <label className="flex flex-col gap-1 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] px-3 py-2">
               <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark">
                 Dose
@@ -267,10 +274,11 @@ export default function DoctorPatientPrescriptionsTab({
                 ))}
               </select>
             </label>
+            </div>
           </div>
 
           {selectedItems.length ? (
-            <div className="shrink-0 mx-3 mb-2 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3 py-2.5">
+            <div className="shrink-0 mx-4 my-3 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3.5 py-3">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <p className="text-[12px] font-bold text-teal-dark">
                   Selected for routine ({selectedItems.length})

@@ -34,9 +34,13 @@ export default function PharmacyScreen({ onBack }) {
         />
 
         {catalog.catalogItems.length ? (
-          <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <section className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 items-stretch">
             {catalog.catalogItems.map((item) => (
-              <div key={item.id} onClick={() => setSelectedMedicine(item)} className="cursor-pointer">
+              <div
+                key={item.id}
+                onClick={() => setSelectedMedicine(item)}
+                className="cursor-pointer h-full"
+              >
                 <PharmacyItemCard item={item} />
               </div>
             ))}
