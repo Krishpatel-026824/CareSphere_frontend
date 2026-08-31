@@ -116,13 +116,13 @@ export default function DoctorScheduleScreen({
 
           <DoctorScheduleDateStrip days={days} selectedId={dayId} onSelect={setDayId} />
 
-          <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
-            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
+          <label className="flex items-center gap-3 rounded-xl bg-white border border-[#C5D0DC] px-3.5 min-h-12 shadow-sm focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/15 transition-shadow">
+            <Search className="w-4 h-4 text-navy/50 shrink-0" strokeWidth={2} />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search patients across 10 days"
-              className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
+              className="w-full bg-transparent text-[15px] sm:text-[16px] text-navy outline-none placeholder:text-navy/40"
               aria-label="Search schedule across 10 days"
             />
           </label>

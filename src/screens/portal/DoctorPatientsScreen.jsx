@@ -1,15 +1,15 @@
 import { useMemo, useState } from 'react'
-import { Eye, Search } from 'lucide-react'
+import { ChevronDown, Eye, Search } from 'lucide-react'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
 const SCROLL_ROW_THRESHOLD = 12
 
 const patientStatusStyles = {
-  Upcoming: 'bg-amber-100 text-amber-800 border-amber-200',
-  Confirmed: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-  Completed: 'bg-slate-100 text-slate-700 border-slate-200',
-  Cancelled: 'bg-rose-100 text-rose-800 border-rose-200',
+  Upcoming: 'bg-amber-200/90 text-amber-950 border-amber-400',
+  Confirmed: 'bg-emerald-200/90 text-emerald-950 border-emerald-400',
+  Completed: 'bg-slate-200/90 text-slate-800 border-slate-400',
+  Cancelled: 'bg-rose-200/90 text-rose-950 border-rose-400',
 }
 
 function isActivePatient(patient) {
@@ -18,13 +18,24 @@ function isActivePatient(patient) {
 }
 
 const COLUMNS = [
-  { key: 'no', label: 'No.', center: true, width: '52px' },
-  { key: 'patient', label: 'Patient', center: false, width: '34%' },
-  { key: 'date', label: 'Date', center: true, width: '16%' },
-  { key: 'time', label: 'Time', center: true, width: '14%' },
-  { key: 'status', label: 'Status', center: true, width: '14%' },
-  { key: 'actions', label: 'Actions', center: true, width: '96px' },
+  { key: 'no', label: 'No.', align: 'center', width: '56px' },
+  { key: 'patient', label: 'Patient', align: 'left', width: '36%' },
+  { key: 'date', label: 'Date', align: 'center', width: '15%' },
+  { key: 'time', label: 'Time', align: 'center', width: '13%' },
+  { key: 'status', label: 'Status', align: 'center', width: '15%' },
+  { key: 'actions', label: 'Actions', align: 'center', width: '104px' },
 ]
+
+const TH_CELL =
+  'px-4 py-3.5 text-[12px] font-bold uppercase tracking-[0.07em] text-white border-b border-teal-dark border-r border-white/15 last:border-r-0 whitespace-nowrap'
+const TD_CELL =
+  'px-4 py-3.5 border-b border-[#C5D0DC] border-r border-[#D4DCE6] last:border-r-0 align-middle h-[68px]'
+
+function cellAlignClass(align) {
+  if (align === 'center') return 'text-center'
+  if (align === 'right') return 'text-right'
+  return 'text-left'
+}
 
 function matchesPatientQuery(patient, query) {
   const q = query.trim().toLowerCase()
@@ -60,10 +71,10 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
           <AppointmentPageHeader title="Patients" />
         </div>
 
-        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-[0_8px_30px_-12px_rgba(7,26,47,0.1)] overflow-hidden flex flex-col">
+        <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#C5D0DC] shadow-[0_10px_32px_-14px_rgba(7,26,47,0.18)] overflow-hidden flex flex-col">
           <div className="h-1 shrink-0 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
 
-          <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex flex-col gap-3.5">
+          <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#C5D0DC] bg-gradient-to-b from-[#EEF2F6] to-[#F8FAFC] flex flex-col gap-3.5">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -78,7 +89,7 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
               </div>
             </div>
 
-            <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-4 min-h-12 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
+            <label className="flex items-center gap-3 rounded-xl bg-white border border-[#C5D0DC] px-4 min-h-12 shadow-sm focus-within:border-teal focus-within:ring-2 focus-within:ring-teal/15 transition-shadow">
               <Search className="w-[18px] h-[18px] text-body-gray shrink-0" strokeWidth={2} />
               <input
                 value={query}
@@ -104,21 +115,19 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
             </div>
           ) : (
             <>
-              <div className="flex-1 min-h-0 overflow-auto">
-                <table className="w-full table-fixed min-w-[760px] border-collapse text-left">
+              <div className="flex-1 min-h-0 overflow-auto bg-[#F4F7FA] border-t border-[#C5D0DC]">
+                <table className="w-full table-fixed min-w-[820px] border-collapse bg-white">
                   <colgroup>
                     {COLUMNS.map((column) => (
                       <col key={column.key} style={{ width: column.width }} />
                     ))}
                   </colgroup>
-                  <thead className="sticky top-0 z-10 bg-[#E8F7F6]/95 backdrop-blur-sm">
+                  <thead className="sticky top-0 z-10 bg-teal-dark shadow-[0_2px_6px_rgba(7,26,47,0.18)]">
                     <tr>
                       {COLUMNS.map((column) => (
                         <th
                           key={column.key}
-                          className={`px-3 sm:px-4 py-3.5 text-[12px] sm:text-[13px] font-bold uppercase tracking-[0.06em] text-teal-dark border-b border-teal/20 ${
-                            column.center ? 'text-center' : 'text-left'
-                          }`}
+                          className={`${TH_CELL} ${cellAlignClass(column.align)}`}
                         >
                           {column.label}
                         </th>
@@ -137,16 +146,16 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                       return (
                         <tr
                           key={patient.id}
-                          className="group bg-white even:bg-[#FAFCFD] hover:bg-[#F0FDFA] transition-colors"
+                          className="group bg-white even:bg-[#EEF2F6] hover:bg-[#D8F4F1] transition-colors"
                         >
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] text-center align-middle">
-                            <span className="text-[15px] font-semibold text-body-gray tabular-nums">
+                          <td className={`${TD_CELL} text-center`}>
+                            <span className="inline-flex w-full justify-center text-[15px] font-bold text-navy/70 tabular-nums">
                               {index + 1}
                             </span>
                           </td>
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] align-middle">
+                          <td className={TD_CELL}>
                             <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white shadow-sm">
+                              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-[#C5D0DC] shadow-md">
                                 <img
                                   src={patient.avatar}
                                   alt=""
@@ -154,47 +163,49 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                                 />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-[16px] sm:text-[17px] font-bold text-navy truncate leading-snug tracking-tight">
+                                <p className="text-[15px] sm:text-[16px] font-bold text-navy truncate leading-snug tracking-tight">
                                   {patient.name}
                                 </p>
                                 {meta ? (
-                                  <p className="text-[13px] sm:text-[14px] text-body-gray truncate mt-0.5 leading-snug">
+                                  <p className="text-[13px] sm:text-[14px] text-navy/60 truncate mt-0.5 leading-snug font-medium">
                                     {meta}
                                   </p>
                                 ) : null}
                               </div>
                             </div>
                           </td>
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] text-center align-middle">
+                          <td className={`${TD_CELL} text-center`}>
                             <p className="text-[15px] sm:text-[16px] font-semibold text-navy whitespace-nowrap tabular-nums">
                               {next?.dateLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] text-center align-middle">
+                          <td className={`${TD_CELL} text-center`}>
                             <p className="text-[15px] sm:text-[16px] font-medium text-navy whitespace-nowrap tabular-nums">
                               {next?.timeLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] text-center align-middle">
+                          <td className={`${TD_CELL} text-center`}>
                             {next ? (
                               <span
-                                className={`inline-flex text-[13px] font-semibold px-3 py-1 rounded-full border ${statusStyle}`}
+                                className={`inline-flex min-w-[96px] justify-center text-[12px] font-bold px-3 py-1.5 rounded-full border shadow-sm ${statusStyle}`}
                               >
                                 {next.status}
                               </span>
                             ) : (
-                              <span className="text-[15px] text-body-gray">—</span>
+                              <span className="text-[15px] font-medium text-navy/50">—</span>
                             )}
                           </td>
-                          <td className="px-3 sm:px-4 py-4 border-b border-[#EEF2F6] text-center align-middle">
-                            <button
-                              type="button"
-                              onClick={() => onSelectPatient?.(patient)}
-                              className="w-10 h-10 rounded-xl bg-white text-body-gray border border-[#E6EBF1] hover:text-teal hover:border-teal/30 hover:bg-teal-light/30 inline-flex items-center justify-center cursor-pointer transition-all shadow-sm hover:shadow"
-                              aria-label={`View ${patient.name}`}
-                            >
-                              <Eye className="w-[18px] h-[18px]" strokeWidth={2} />
-                            </button>
+                          <td className={`${TD_CELL} text-center`}>
+                            <div className="flex justify-center">
+                              <button
+                                type="button"
+                                onClick={() => onSelectPatient?.(patient)}
+                                className="w-9 h-9 rounded-lg bg-[#F8FAFC] text-navy/70 border border-[#C5D0DC] hover:text-teal-dark hover:border-teal hover:bg-teal-light/50 inline-flex items-center justify-center cursor-pointer transition-all shadow-sm hover:shadow-md active:scale-95"
+                                aria-label={`View ${patient.name}`}
+                              >
+                                <Eye className="w-4 h-4" strokeWidth={2} />
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       )
@@ -203,14 +214,17 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                 </table>
               </div>
 
-              <footer className="shrink-0 px-4 sm:px-5 py-3 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
-                <p className="text-[13px] sm:text-[14px] text-body-gray">
-                  Showing <span className="font-semibold text-navy">{filtered.length}</span> of{' '}
-                  <span className="font-semibold text-navy">{patients.length}</span> patients in
+              <footer className="shrink-0 px-4 sm:px-5 py-3 border-t border-[#C5D0DC] bg-[#EEF2F6] flex items-center justify-between gap-2">
+                <p className="text-[13px] sm:text-[14px] text-navy/65 font-medium">
+                  Showing <span className="font-bold text-navy">{filtered.length}</span> of{' '}
+                  <span className="font-bold text-navy">{patients.length}</span> patients in
                   clinic queue
                 </p>
                 {filtered.length > SCROLL_ROW_THRESHOLD ? (
-                  <p className="text-[12px] sm:text-[13px] text-teal font-semibold">Scroll for more</p>
+                  <p className="inline-flex items-center gap-1 text-[12px] sm:text-[13px] text-teal-dark font-bold">
+                    Scroll for more
+                    <ChevronDown className="w-3.5 h-3.5" strokeWidth={2.5} />
+                  </p>
                 ) : null}
               </footer>
             </>

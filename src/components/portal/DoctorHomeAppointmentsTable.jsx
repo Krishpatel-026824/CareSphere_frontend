@@ -117,7 +117,7 @@ export default function DoctorHomeAppointmentsTable({
                   {COLUMNS.map((col) => (
                     <th
                       key={col.key}
-                      className={`px-3 sm:px-4 py-3 text-[11px] font-bold uppercase tracking-[0.07em] text-teal-dark border-b border-teal/20 ${
+                      className={`px-3 sm:px-4 py-3.5 text-[12px] font-bold uppercase tracking-[0.07em] text-teal-dark border-b border-teal/20 ${
                         col.center ? 'text-center' : 'text-left'
                       }`}
                     >
@@ -188,36 +188,36 @@ function AppointmentRow({ visit, index, onAccept, onDecline, onView }) {
 
   return (
     <tr className="group bg-white even:bg-[#FAFCFD] hover:bg-[#F0FDFA] transition-colors">
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <span className="text-[13px] font-semibold text-body-gray tabular-nums">{index + 1}</span>
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+        <span className="text-[14px] font-semibold text-body-gray tabular-nums">{index + 1}</span>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] align-middle">
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white shadow-sm">
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] align-middle">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white shadow-sm">
             <img src={visit.patientPhoto} alt="" className="w-full h-full object-cover object-top" />
           </div>
-          <p className="text-[14px] sm:text-[15px] font-semibold text-navy truncate">{visit.patientName}</p>
+          <p className="text-[15px] sm:text-[16px] font-semibold text-navy truncate leading-snug">{visit.patientName}</p>
         </div>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <p className="text-[13px] sm:text-[14px] font-semibold text-navy whitespace-nowrap tabular-nums">
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[14px] sm:text-[15px] font-semibold text-navy whitespace-nowrap tabular-nums">
           {visit.dateLabel || '—'}
         </p>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <p className="text-[13px] sm:text-[14px] font-medium text-navy whitespace-nowrap tabular-nums">
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[14px] sm:text-[15px] font-medium text-navy whitespace-nowrap tabular-nums">
           {visit.timeLabel || '—'}
         </p>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <p className="text-[12px] sm:text-[13px] font-medium text-body-gray truncate">{visit.room || '—'}</p>
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+        <p className="text-[13px] sm:text-[14px] font-medium text-body-gray truncate">{visit.room || '—'}</p>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
-        <span className={`inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full border border-transparent ${statusStyle}`}>
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+        <span className={`inline-flex text-[12px] font-semibold px-2.5 py-1 rounded-full border border-transparent ${statusStyle}`}>
           {statusText}
         </span>
       </td>
-      <td className="px-3 sm:px-4 py-3 border-b border-[#EEF2F6] text-center align-middle">
+      <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
         <div className="inline-flex items-center justify-center gap-1.5">
           {canDecide ? (
             <>
@@ -261,7 +261,7 @@ function ActionButton({ children, onClick, label, tone }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`w-8 h-8 rounded-lg inline-flex items-center justify-center cursor-pointer border transition-all duration-150 hover:shadow-sm active:scale-95 ${tones[tone]}`}
+      className={`w-9 h-9 rounded-lg inline-flex items-center justify-center cursor-pointer border transition-all duration-150 hover:shadow-sm active:scale-95 ${tones[tone]}`}
     >
       {children}
     </button>
