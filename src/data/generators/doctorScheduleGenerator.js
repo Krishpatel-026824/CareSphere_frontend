@@ -1,4 +1,9 @@
-import { doctorClinicDefaultsMock, doctorLinkedPatientMock, doctorVisitTimeSlotsMock } from '../mocks/doctorVisits'
+import {
+  doctorClinicDefaultsMock,
+  doctorDefaultPrepItems,
+  doctorLinkedPatientMock,
+  doctorVisitTimeSlotsMock,
+} from '../mocks/doctorVisits'
 import { doctorPatientsMock } from '../mocks/doctorPatients'
 import { DEFAULT_DOCTOR_ID } from '../mocks/doctorSession'
 import { formatDateLabel, parseAppointmentDate, visitDayHeading } from '../../utils/appointmentFormat'
@@ -27,7 +32,7 @@ export function generateDoctorExtraVisits(now = new Date()) {
       ...doctorClinicDefaultsMock,
       room: `Consultation Room ${(index % 5) + 1}`,
       prepNote: `Consult for ${patient.name}. Review latest notes and vitals.`,
-      prepItems: ['Valid photo ID', 'Previous prescriptions'],
+      prepItems: doctorDefaultPrepItems,
     })
   })
 }

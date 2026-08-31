@@ -1,6 +1,12 @@
 import { BadgeCheck, CheckCircle2, Clock3, LayoutGrid, XCircle } from 'lucide-react'
 import { patientImages } from './patientImages'
 
+export const doctorDefaultPrepItems = [
+  'Valid photo ID',
+  'Previous prescriptions',
+  'Current medication list',
+]
+
 export const doctorClinicDefaultsMock = {
   clinic: 'CareSphere Heart Center',
   clinicDetail: 'CareSphere Heart Center',

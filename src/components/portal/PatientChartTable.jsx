@@ -4,13 +4,18 @@ export function PatientChartTable({
   children,
   minWidth = '720px',
   fill = false,
+  fit = false,
   fixed = false,
   className = '',
 }) {
+  const wrapperClass = fit
+    ? 'shrink-0 overflow-auto bg-white'
+    : fill
+      ? 'flex-1 min-h-0 overflow-auto bg-[#FAFCFD]'
+      : 'max-h-[min(420px,calc(100dvh-300px))] overflow-auto'
+
   return (
-    <div
-      className={`overflow-auto ${fill ? 'flex-1 min-h-0 bg-[#FAFCFD]' : 'max-h-[min(420px,calc(100dvh-300px))]'}`}
-    >
+    <div className={wrapperClass}>
       <table
         className={`w-full border-collapse text-left text-[14px] ${fixed ? 'table-fixed' : ''} ${className}`}
         style={{ minWidth }}

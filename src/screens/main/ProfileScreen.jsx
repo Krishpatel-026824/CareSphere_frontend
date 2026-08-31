@@ -24,7 +24,7 @@ export default function ProfileScreen({
       <div className="w-full min-h-full page-pad py-4 sm:py-5 lg:py-6 flex flex-col gap-4 sm:gap-5 max-w-[1440px] mx-auto">
         <ProfileHeader onEdit={onStartEdit} isEditing={isEditing} />
 
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.9fr)] gap-4 sm:gap-5 min-w-0 xl:items-start">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.9fr)] gap-4 sm:gap-5 min-w-0 xl:items-stretch">
           <ProfileHero
             details={details}
             stats={stats}

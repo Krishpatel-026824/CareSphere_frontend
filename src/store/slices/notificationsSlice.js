@@ -3,7 +3,10 @@ import {
   generateDoctorNotificationsData,
   generateNotificationsData,
 } from '../../data/generators/notificationsGenerator'
+import { doctorProfilePrefsMock } from '../../data/mocks/doctorProfile'
 import { loadAuthWorkspace } from '../../utils/authStorage'
+import { loadDoctorPrefs } from '../../utils/profilePrefsStorage'
+import { filterNotificationsByPrefs } from '../../utils/notificationPrefs'
 
 function listKey(state) {
   return state.workspace === 'doctor' ? 'doctorItems' : 'items'
@@ -16,6 +19,7 @@ const notificationsSlice = createSlice({
     doctorItems: generateDoctorNotificationsData(),
     workspace: loadAuthWorkspace(),
     activeFilter: 'all',
+    doctorPrefs: loadDoctorPrefs(doctorProfilePrefsMock),
   },
   reducers: {
     setNotificationWorkspace(state, action) {
@@ -57,6 +61,9 @@ const notificationsSlice = createSlice({
         key === 'doctorItems' ? generateDoctorNotificationsData() : generateNotificationsData()
       state.activeFilter = 'all'
     },
+    setDoctorNotificationPrefs(state, action) {
+      state.doctorPrefs = action.payload
+    },
   },
 })
 
@@ -68,12 +75,20 @@ export const {
   markAllAsRead,
   deleteNotification,
   refreshNotifications,
+  setDoctorNotificationPrefs,
 } = notificationsSlice.actions
 
 export function selectActiveNotifications(state) {
   return state.notifications.workspace === 'doctor'
     ? state.notifications.doctorItems
     : state.notifications.items
+}
+
+export function selectVisibleNotifications(state) {
+  const items = selectActiveNotifications(state)
+  const isDoctor = state.notifications.workspace === 'doctor'
+  const prefs = isDoctor ? state.notifications.doctorPrefs : state.profile.prefs
+  return filterNotificationsByPrefs(items, prefs, isDoctor ? 'doctor' : 'patient')
 }
 
 export default notificationsSlice.reducer

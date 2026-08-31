@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { generateProfileData, withLiveProfileStats } from '../data/generators/profileGenerator'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import { logout } from '../store/slices/authSlice'
+import { selectAppointments } from '../store/slices/appointmentsSlice'
+import { selectHealthRecords } from '../store/slices/healthSlice'
 import { selectPendingReminders } from '../store/slices/medicinesSlice'
-import { setWorkspace } from '../store/slices/messagesSlice'
+import { selectActiveConversations, setWorkspace } from '../store/slices/messagesSlice'
 import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
 import { saveProfile, togglePref } from '../store/slices/profileSlice'
 import { PATIENT_AVATAR_KEY, writeStoredAvatar } from '../utils/profileAvatarStorage'
@@ -15,6 +17,9 @@ export function useProfile() {
   const details = useAppSelector((state) => state.profile.details)
   const prefs = useAppSelector((state) => state.profile.prefs)
   const pendingReminders = useAppSelector(selectPendingReminders)
+  const appointments = useAppSelector(selectAppointments)
+  const records = useAppSelector(selectHealthRecords)
+  const conversations = useAppSelector(selectActiveConversations)
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(details)
 
@@ -40,7 +45,12 @@ export function useProfile() {
   return {
     details,
     prefs,
-    stats: withLiveProfileStats(profileMeta.stats, { reminders: pendingReminders }),
+    stats: withLiveProfileStats(profileMeta.stats, {
+      visits: appointments.length,
+      records: records.length,
+      reminders: pendingReminders,
+      messages: conversations.length,
+    }),
     fields: profileMeta.fields,
     infoRows: profileMeta.infoRows,
     menu: profileMeta.menu,

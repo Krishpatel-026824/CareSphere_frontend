@@ -1,6 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { generateProfileData, withUpdatedDetails } from '../../data/generators/profileGenerator'
+import { profilePrefsMock } from '../../data/mocks/profile'
 import { PATIENT_AVATAR_KEY, readStoredAvatar } from '../../utils/profileAvatarStorage'
+import { loadPatientPrefs, savePatientPrefs } from '../../utils/profilePrefsStorage'
 
 const generated = generateProfileData()
 const initial = {
@@ -9,6 +11,7 @@ const initial = {
     ...generated.details,
     avatar: readStoredAvatar(PATIENT_AVATAR_KEY, generated.details.avatar),
   },
+  prefs: loadPatientPrefs(profilePrefsMock),
 }
 
 const profileSlice = createSlice({
@@ -25,6 +28,7 @@ const profileSlice = createSlice({
       state.prefs = state.prefs.map((item) =>
         item.id === action.payload ? { ...item, on: !item.on } : item,
       )
+      savePatientPrefs(state.prefs)
     },
   },
 })

@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { generateDoctorPortalProfileData, withUpdatedDoctorDetails } from '../data/generators/doctorPortalProfileGenerator'
+import { doctorProfilePrefsMock } from '../data/mocks/doctorProfile'
 import { useAppDispatch } from '../store/hooks'
 import { logout } from '../store/slices/authSlice'
 import { setWorkspace } from '../store/slices/messagesSlice'
-import { setNotificationWorkspace } from '../store/slices/notificationsSlice'
+import { setDoctorNotificationPrefs, setNotificationWorkspace } from '../store/slices/notificationsSlice'
 import { DOCTOR_AVATAR_KEY, readStoredAvatar, writeStoredAvatar } from '../utils/profileAvatarStorage'
+import { loadDoctorPrefs, saveDoctorPrefs } from '../utils/profilePrefsStorage'
 
 const profileMeta = generateDoctorPortalProfileData()
-const DOCTOR_PREFS_KEY = 'caresphere.doctorPrefs'
 
 function loadDoctorDetails() {
   return {
@@ -16,35 +17,16 @@ function loadDoctorDetails() {
   }
 }
 
-function loadDoctorPrefs() {
-  try {
-    const raw = window.localStorage.getItem(DOCTOR_PREFS_KEY)
-    if (!raw) return profileMeta.prefs
-    const saved = JSON.parse(raw)
-    return profileMeta.prefs.map((item) => ({
-      ...item,
-      on: typeof saved[item.id] === 'boolean' ? saved[item.id] : item.on,
-    }))
-  } catch {
-    return profileMeta.prefs
-  }
-}
-
-function saveDoctorPrefs(prefs) {
-  try {
-    const payload = Object.fromEntries(prefs.map((item) => [item.id, item.on]))
-    window.localStorage.setItem(DOCTOR_PREFS_KEY, JSON.stringify(payload))
-  } catch {
-    /* ignore quota / private mode */
-  }
-}
-
 export function useDoctorProfile() {
   const dispatch = useAppDispatch()
   const [details, setDetails] = useState(loadDoctorDetails)
-  const [prefs, setPrefs] = useState(loadDoctorPrefs)
+  const [prefs, setPrefs] = useState(() => loadDoctorPrefs(doctorProfilePrefsMock))
   const [isEditing, setIsEditing] = useState(false)
   const [draft, setDraft] = useState(details)
+
+  useEffect(() => {
+    dispatch(setDoctorNotificationPrefs(prefs))
+  }, [dispatch, prefs])
 
   function startEdit() {
     setDraft(details)

@@ -5,7 +5,7 @@ import DoctorScheduleVisitModal from '../../components/portal/DoctorScheduleVisi
 import DoctorHomeStatusScreen from './DoctorHomeStatusScreen'
 import { generateDoctorHomeData } from '../../data/generators/doctorHomeGenerator'
 import { useAppSelector } from '../../store/hooks'
-import { selectActiveNotifications } from '../../store/slices/notificationsSlice'
+import { selectVisibleNotifications } from '../../store/slices/notificationsSlice'
 import { formatTodayLabel, getTimeGreeting } from '../../utils/greeting'
 
 export default function DoctorHomeScreen({
@@ -28,7 +28,7 @@ export default function DoctorHomeScreen({
   const now = new Date()
   const greeting = getTimeGreeting(now)
   const todayLabel = formatTodayLabel(now)
-  const unreadNotices = useAppSelector(selectActiveNotifications).filter((item) => item.unread)
+  const unreadNotices = useAppSelector(selectVisibleNotifications).filter((item) => item.unread)
     .length
 
   const modalVisit = !homeStat ? selectedVisit : null

@@ -75,10 +75,34 @@ export const doctorProfileMenuMock = [
 ]
 
 export const doctorProfilePrefsMock = [
-  { id: 'reminders', label: 'Visit reminders', hint: 'Alert before each consult', icon: 'calendar', on: true },
-  { id: 'email', label: 'Email updates', hint: 'New bookings and reports', icon: 'mail', on: true },
-  { id: 'sms', label: 'SMS alerts', hint: 'Cancellations and running late', icon: 'message', on: false },
-  { id: 'promotions', label: 'Promotions & offers', hint: 'Clinic tips and special deals', icon: 'bell', on: true },
+  {
+    id: 'reminders',
+    label: 'Visit reminders',
+    hint: 'Daily clinic schedule and slot alerts',
+    icon: 'calendar',
+    on: true,
+  },
+  {
+    id: 'bookings',
+    label: 'New booking alerts',
+    hint: 'Confirmations and patient bookings',
+    icon: 'bell',
+    on: true,
+  },
+  {
+    id: 'lab-reports',
+    label: 'Report review alerts',
+    hint: 'Lab and ECG results waiting for sign-off',
+    icon: 'lab',
+    on: true,
+  },
+  {
+    id: 'messages',
+    label: 'Patient messages',
+    hint: 'When a patient sends a chat',
+    icon: 'message',
+    on: true,
+  },
 ]
 
 export const doctorClinicTeamMock = [

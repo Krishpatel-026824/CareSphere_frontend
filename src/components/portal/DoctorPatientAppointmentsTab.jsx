@@ -16,10 +16,22 @@ import {
   PatientChartToolbar,
 } from './PatientChartTable'
 
+function visitReasonLabel(visit) {
+  return visit.prepNote || visit.visitReason || visit.visitType || 'Clinic visit'
+}
+
 function matchesVisitQuery(visit, query) {
   const q = query.trim().toLowerCase()
   if (!q) return true
-  return [visit.patientName, visit.dateLabel, visit.timeLabel, visit.room, visit.status, visit.visitType]
+  return [
+    visit.patientName,
+    visit.dateLabel,
+    visit.timeLabel,
+    visitReasonLabel(visit),
+    visit.status,
+    visit.visitType,
+    visit.clinic,
+  ]
     .filter(Boolean)
     .some((value) => String(value).toLowerCase().includes(q))
 }
@@ -73,7 +85,7 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
           <PatientChartSearch
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search date, time, room, or status"
+            placeholder="Search date, time, reason, or status"
             aria-label="Search appointments"
           />
         </PatientChartToolbar>
@@ -87,8 +99,8 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
             <PatientChartTable fill>
               <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
                 <tr>
-                  {['No.', 'Patient', 'Date', 'Time', 'Room', 'Status'].map((label, index) => (
-                    <PatientChartTh key={label} center={index !== 1}>
+                  {['No.', 'Patient', 'Date', 'Time', 'Visit reason', 'Status'].map((label, index) => (
+                    <PatientChartTh key={label} center={index !== 1 && index !== 4}>
                       {label}
                     </PatientChartTh>
                   ))}
@@ -142,8 +154,13 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
                           {visit.timeLabel || '—'}
                         </span>
                       </PatientChartTd>
-                      <PatientChartTd center>
-                        <span className="text-[12px] text-body-gray">{visit.room || '—'}</span>
+                      <PatientChartTd className="max-w-[240px]">
+                        <p
+                          className="text-[13px] font-medium text-navy leading-snug line-clamp-2"
+                          title={visitReasonLabel(visit)}
+                        >
+                          {visitReasonLabel(visit)}
+                        </p>
                       </PatientChartTd>
                       <PatientChartTd center>
                         <span

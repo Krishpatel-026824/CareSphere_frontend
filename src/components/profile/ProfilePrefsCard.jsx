@@ -1,9 +1,11 @@
-import { Bell, CalendarDays, Mail, MessageSquareText, SlidersHorizontal } from 'lucide-react'
+import { Bell, CalendarDays, FlaskConical, Mail, MessageSquareText, Pill, SlidersHorizontal } from 'lucide-react'
 
 const prefStyles = {
   calendar: { icon: 'bg-emerald-50 text-emerald-600', Icon: CalendarDays },
-  mail: { icon: 'bg-violet-50 text-violet-600', Icon: Mail },
+  lab: { icon: 'bg-amber-50 text-amber-600', Icon: FlaskConical },
+  pill: { icon: 'bg-orange-50 text-orange-600', Icon: Pill },
   message: { icon: 'bg-sky-50 text-sky-600', Icon: MessageSquareText },
+  mail: { icon: 'bg-violet-50 text-violet-600', Icon: Mail },
   bell: { icon: 'bg-orange-50 text-orange-500', Icon: Bell },
 }
 

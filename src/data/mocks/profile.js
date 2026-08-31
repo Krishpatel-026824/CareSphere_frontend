@@ -18,6 +18,7 @@ export const profileStatsMock = [
   { id: 'visits', label: 'Visits', hint: 'Total visits', value: '8', icon: 'calendar' },
   { id: 'records', label: 'Records', hint: 'Medical records', value: '4', icon: 'file' },
   { id: 'reminders', label: 'Reminders', hint: 'Upcoming reminders', value: '4', icon: 'bell' },
+  { id: 'messages', label: 'Messages', hint: 'Doctor chats', value: '4', icon: 'message' },
 ]
 
 export const profileFieldsMock = [
@@ -76,29 +77,29 @@ export const profilePrefsMock = [
   {
     id: 'reminders',
     label: 'Appointment reminders',
-    hint: 'Get notified before visits',
+    hint: 'Confirmations and visit reminders',
     icon: 'calendar',
     on: true,
   },
   {
-    id: 'email',
-    label: 'Email updates',
-    hint: 'Reports and booking emails',
-    icon: 'mail',
+    id: 'lab-reports',
+    label: 'Lab report alerts',
+    hint: 'Sample collection and report-ready updates',
+    icon: 'lab',
     on: true,
   },
   {
-    id: 'sms',
-    label: 'SMS alerts',
-    hint: 'OTP and visit alerts',
+    id: 'medicine',
+    label: 'Medicine reminders',
+    hint: 'Dose times and pharmacy refill alerts',
+    icon: 'pill',
+    on: true,
+  },
+  {
+    id: 'messages',
+    label: 'Doctor messages',
+    hint: 'When your care team sends a chat',
     icon: 'message',
-    on: true,
-  },
-  {
-    id: 'promotions',
-    label: 'Promotions & offers',
-    hint: 'Health tips and special deals',
-    icon: 'bell',
     on: true,
   },
 ]

@@ -15,22 +15,22 @@ export default function AppointmentPageHeader({
     (count > 0 || upcomingCount > 0 ? `${upcomingCount} upcoming · ${count} total` : null)
 
   return (
-    <header className="shrink-0 flex items-center justify-between gap-4">
-      <div className="flex items-center gap-3 min-w-0">
-        <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${iconTone} flex items-center justify-center shrink-0`}>
-          <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />
-        </div>
-        <div className={`min-w-0 ${resolvedSubtitle ? '' : 'flex items-center min-h-11 sm:min-h-12'}`}>
-          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-navy tracking-tight leading-none">
+    <header className="shrink-0 flex items-start justify-between gap-4">
+      <div className="flex flex-col gap-1.5 min-w-0">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl ${iconTone} flex items-center justify-center shrink-0`}>
+            <Icon className="w-6 h-6 sm:w-7 sm:h-7" strokeWidth={1.75} />
+          </div>
+          <h1 className="text-[24px] sm:text-[28px] lg:text-[32px] font-bold text-navy tracking-tight leading-none min-w-0">
             {title}
           </h1>
-          {resolvedSubtitle ? (
-            <p className="text-sm text-body-gray mt-1">{resolvedSubtitle}</p>
-          ) : null}
         </div>
+        {resolvedSubtitle ? (
+          <p className="text-sm text-body-gray leading-snug">{resolvedSubtitle}</p>
+        ) : null}
       </div>
 
-      <div className="flex items-center gap-2.5 shrink-0">
+      <div className="flex items-center gap-2.5 shrink-0 pt-0.5">
         {onNewAppointment ? (
           <button
             type="button"

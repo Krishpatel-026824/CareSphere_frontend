@@ -4,7 +4,7 @@ import {
   mergeDoctorVisits,
   toDoctorVisit,
 } from '../../data/generators/doctorScheduleGenerator'
-import { doctorClinicDefaultsMock } from '../../data/mocks/doctorVisits'
+import { doctorClinicDefaultsMock, doctorDefaultPrepItems } from '../../data/mocks/doctorVisits'
 import { DEFAULT_DOCTOR_ID } from '../../data/mocks/doctorSession'
 import { getUpcomingAppointment } from '../../utils/appointmentFormat'
 
@@ -91,7 +91,7 @@ const doctorScheduleSlice = createSlice({
         room: room || doctorClinicDefaultsMock.room,
         visitType: visitType || doctorClinicDefaultsMock.visitType,
         prepNote: `Next visit booked for ${patientName || 'patient'}.`,
-        prepItems: ['Valid photo ID', 'Previous prescriptions'],
+        prepItems: doctorDefaultPrepItems,
         tasks: defaultTasks.map((task) => ({ ...task })),
       })
 

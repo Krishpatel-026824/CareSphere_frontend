@@ -21,6 +21,8 @@ const doctorPatientLabsSlice = createSlice({
           title: test.title || test.name || 'Lab test',
           subtitle: test.subtitle || test.description || '',
           turnaround: test.turnaround || '',
+          collectionType: test.collectionType || 'Home Collection',
+          priority: test.priority || 'Routine',
           dateLabel: test.dateLabel || '',
           status: 'Ordered',
           orderedAt: test.orderedAt || Date.now(),

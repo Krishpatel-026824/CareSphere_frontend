@@ -1,5 +1,15 @@
 import { FlaskConical } from 'lucide-react'
 
+export const labCollectionOptions = ['Home Collection', 'Visit Lab']
+export const labPriorityOptions = ['Routine', 'Urgent']
+
+export function generateLabOrderDefaults() {
+  return {
+    collectionType: labCollectionOptions[0],
+    priority: labPriorityOptions[0],
+  }
+}
+
 const MODES = [
   { id: 'previous', label: 'Previous reports' },
   { id: 'order', label: 'Order tests' },
@@ -7,10 +17,21 @@ const MODES = [
 ]
 
 export const ORDER_COLUMNS = [
-  { key: 'no', label: 'No.', center: true, width: '8%' },
-  { key: 'test', label: 'Lab test', center: false, width: '48%' },
-  { key: 'turnaround', label: 'Ready in', center: true, width: '22%' },
-  { key: 'action', label: '', center: true, width: '22%' },
+  { key: 'no', label: 'No.', center: true, width: '52px' },
+  { key: 'test', label: 'Lab test', center: false, width: '30%' },
+  { key: 'turnaround', label: 'Ready in', center: true, width: '12%' },
+  { key: 'collection', label: 'Collection', center: true, width: '16%' },
+  { key: 'priority', label: 'Priority', center: true, width: '12%' },
+  { key: 'action', label: 'Action', center: true, width: '14%' },
+]
+
+export const SELECTED_LAB_COLUMNS = [
+  { key: 'no', label: 'No.', center: true, width: '52px' },
+  { key: 'test', label: 'Lab test', center: false, width: '28%' },
+  { key: 'ordered', label: 'Ordered on', center: true, width: '14%' },
+  { key: 'collection', label: 'Collection', center: true, width: '16%' },
+  { key: 'priority', label: 'Priority', center: true, width: '12%' },
+  { key: 'status', label: 'Status', center: true, width: '12%' },
 ]
 
 export function matchesLabQuery(item, query) {
@@ -59,23 +80,53 @@ export function LabModeTabs({ value, counts, onChange }) {
   )
 }
 
+export function LabOrderRowSelect({
+  value,
+  options,
+  onChange,
+  disabled = false,
+  lockedValue,
+}) {
+  if (disabled) {
+    return (
+      <span className="text-[13px] font-semibold text-navy whitespace-nowrap">{lockedValue || value}</span>
+    )
+  }
+
+  return (
+    <select
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      className="w-full min-w-[100px] max-w-[150px] rounded-lg border border-[#E6EBF1] bg-white px-2 py-1.5 text-[13px] font-semibold text-navy outline-none cursor-pointer focus:border-teal focus:ring-1 focus:ring-teal/30"
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  )
+}
+
 export function LabTestCell({ item, statusBadge = null }) {
   return (
     <div className="flex items-center gap-3 min-w-0">
-      <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-center">
+      <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-white flex items-center justify-center shadow-sm">
         {item.image ? (
           <img src={item.image} alt="" className="w-full h-full object-cover" />
         ) : (
-          <FlaskConical className="w-4 h-4 text-teal" strokeWidth={1.85} />
+          <FlaskConical className="w-5 h-5 text-teal" strokeWidth={1.85} />
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2 min-w-0">
-          <p className="font-semibold text-navy truncate leading-snug">{item.title}</p>
+        <div className="flex items-center gap-2 min-w-0 flex-wrap">
+          <p className="text-[15px] sm:text-[16px] font-bold text-navy leading-snug">{item.title}</p>
           {statusBadge}
         </div>
         {item.subtitle ? (
-          <p className="text-[12px] text-body-gray truncate mt-0.5">{item.subtitle}</p>
+          <p className="text-[12px] sm:text-[13px] text-body-gray mt-0.5 leading-snug line-clamp-2">
+            {item.subtitle}
+          </p>
         ) : null}
       </div>
     </div>

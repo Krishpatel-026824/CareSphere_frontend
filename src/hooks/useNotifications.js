@@ -5,13 +5,13 @@ import {
   markAllAsRead,
   markAsRead,
   refreshNotifications,
-  selectActiveNotifications,
+  selectVisibleNotifications,
   setActiveFilter,
 } from '../store/slices/notificationsSlice'
 
 export function useNotifications() {
   const dispatch = useAppDispatch()
-  const notifications = useAppSelector(selectActiveNotifications)
+  const notifications = useAppSelector(selectVisibleNotifications)
   const activeFilter = useAppSelector((state) => state.notifications.activeFilter)
   const isDoctor = useAppSelector((state) => state.notifications.workspace === 'doctor')
 

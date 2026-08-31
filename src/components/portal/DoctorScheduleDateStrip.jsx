@@ -3,6 +3,7 @@ export default function DoctorScheduleDateStrip({ days = [], selectedId, onSelec
 
   const rangeLabel = formatRangeLabel(days)
   const totalVisits = days.reduce((sum, day) => sum + (day.count || 0), 0)
+  const daySpan = days.length
 
   return (
     <div className="w-full rounded-2xl border border-[#E6EBF1] bg-white shadow-sm overflow-hidden">
@@ -10,7 +11,9 @@ export default function DoctorScheduleDateStrip({ days = [], selectedId, onSelec
 
       <div className="px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-[15px] sm:text-base font-bold text-navy tracking-tight">10-day calendar</p>
+          <p className="text-[15px] sm:text-base font-bold text-navy tracking-tight">
+            {daySpan}-day calendar
+          </p>
           <p className="text-[12px] sm:text-[13px] text-body-gray mt-0.5 tabular-nums">{rangeLabel}</p>
         </div>
         <span className="shrink-0 text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-3 py-1.5 rounded-full tabular-nums">
@@ -19,7 +22,15 @@ export default function DoctorScheduleDateStrip({ days = [], selectedId, onSelec
       </div>
 
       <div className="p-2 sm:p-2.5 bg-[#DDE4EC]">
-        <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5">
+        <div
+          className={`grid gap-1.5 ${
+            daySpan <= 5
+              ? 'grid-cols-5'
+              : daySpan <= 7
+                ? 'grid-cols-7'
+                : 'grid-cols-5 sm:grid-cols-10'
+          }`}
+        >
           {days.map((day) => {
             const active = day.id === selectedId
             const count = day.count || 0
@@ -61,19 +72,17 @@ export default function DoctorScheduleDateStrip({ days = [], selectedId, onSelec
                   {day.month}
                 </span>
 
-                <span className="h-2.5 flex items-center justify-center gap-0.5 mt-0.5" aria-hidden="true">
-                  {count > 0
-                    ? Array.from({ length: Math.min(count, 3) }).map((_, index) => (
-                        <span
-                          key={`${day.id}-dot-${index}`}
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            active ? 'bg-white/90' : 'bg-teal'
-                          }`}
-                        />
-                      ))
-                    : (
-                      <span className="w-1.5 h-1.5" />
-                    )}
+                <span
+                  className={`mt-1 min-h-[16px] min-w-[18px] px-1 rounded-full text-[10px] font-bold tabular-nums inline-flex items-center justify-center ${
+                    count > 0
+                      ? active
+                        ? 'bg-white/20 text-white'
+                        : 'bg-teal/15 text-teal-dark'
+                      : 'text-transparent'
+                  }`}
+                  aria-label={count > 0 ? `${count} visits` : 'No visits'}
+                >
+                  {count > 0 ? count : '·'}
                 </span>
               </button>
             )

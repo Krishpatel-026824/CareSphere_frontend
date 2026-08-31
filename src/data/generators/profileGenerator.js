@@ -33,9 +33,8 @@ export function withUpdatedDetails(details, patch) {
 }
 
 export function withLiveProfileStats(stats = [], counts = {}) {
-  return stats.map((item) =>
-    item.id === 'reminders' && counts.reminders != null
-      ? { ...item, value: String(counts.reminders) }
-      : item,
-  )
+  return stats.map((item) => {
+    if (counts[item.id] == null) return item
+    return { ...item, value: String(counts[item.id]) }
+  })
 }
