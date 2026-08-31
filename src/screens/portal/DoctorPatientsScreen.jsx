@@ -1,13 +1,15 @@
-import { useMemo } from 'react'
-import { Eye } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { Eye, Search } from 'lucide-react'
 import AppointmentPageHeader from '../../components/appointments/AppointmentPageHeader'
 import { appointmentStatusStyles } from '../../data/mocks/appointmentActions'
 
+const SCROLL_ROW_THRESHOLD = 12
+
 const patientStatusStyles = {
-  Upcoming: 'bg-sky-100 text-sky-700 border border-sky-200',
-  Confirmed: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
-  Completed: 'bg-slate-100 text-slate-600 border border-slate-200',
-  Cancelled: 'bg-rose-100 text-rose-700 border border-rose-200',
+  Upcoming: 'bg-amber-100 text-amber-800 border-amber-200',
+  Confirmed: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  Completed: 'bg-slate-100 text-slate-700 border-slate-200',
+  Cancelled: 'bg-rose-100 text-rose-800 border-rose-200',
 }
 
 function isActivePatient(patient) {
@@ -16,21 +18,40 @@ function isActivePatient(patient) {
 }
 
 const COLUMNS = [
-  { key: 'no', label: 'No.', width: '6%' },
-  { key: 'patient', label: 'Patient', width: '38%' },
-  { key: 'date', label: 'Date', width: '16%' },
-  { key: 'time', label: 'Time', width: '14%' },
-  { key: 'status', label: 'Status', width: '16%' },
-  { key: 'actions', label: 'Actions', width: '10%' },
+  { key: 'no', label: 'No.', center: true, width: '52px' },
+  { key: 'patient', label: 'Patient', center: false, width: '34%' },
+  { key: 'date', label: 'Date', center: true, width: '16%' },
+  { key: 'time', label: 'Time', center: true, width: '14%' },
+  { key: 'status', label: 'Status', center: true, width: '14%' },
+  { key: 'actions', label: 'Actions', center: true, width: '96px' },
 ]
 
+function matchesPatientQuery(patient, query) {
+  const q = query.trim().toLowerCase()
+  if (!q) return true
+  const next = patient.nextVisit
+  return [patient.name, patient.ageLabel, patient.city, next?.dateLabel, next?.timeLabel, next?.status]
+    .filter(Boolean)
+    .some((value) => String(value).toLowerCase().includes(q))
+}
+
 export default function DoctorPatientsScreen({ patients = [], onSelectPatient }) {
+  const [query, setQuery] = useState('')
+
   const allWorkDone = useMemo(
     () => patients.length > 0 && patients.every((patient) => !isActivePatient(patient)),
     [patients],
   )
 
-  const panelTitle = allWorkDone ? 'Patients' : 'Clinic queue'
+  const filtered = useMemo(
+    () => patients.filter((patient) => matchesPatientQuery(patient, query)),
+    [patients, query],
+  )
+
+  const panelTitle = allWorkDone ? 'All patients' : 'Clinic queue'
+  const panelSubtitle = allWorkDone
+    ? 'Every visit in this list is completed or closed'
+    : 'Today’s patients — open a chart to review or prescribe'
 
   return (
     <div className="w-full h-full min-h-0 bg-transparent flex flex-col overflow-hidden">
@@ -40,35 +61,63 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
         </div>
 
         <section className="flex-1 min-h-0 bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden flex flex-col">
+          <div className="h-1 shrink-0 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
+
+          <div className="shrink-0 px-4 sm:px-5 pt-4 pb-4 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex flex-col gap-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <h2 className="font-display text-xl sm:text-2xl font-bold text-navy tracking-tight leading-tight">
+                    {panelTitle}
+                  </h2>
+                  <span className="shrink-0 text-[12px] font-bold text-teal bg-[#E8F7F6] border border-teal/15 px-2.5 py-1 rounded-full tabular-nums">
+                    {filtered.length}
+                  </span>
+                </div>
+                <p className="text-[13px] sm:text-sm text-body-gray mt-1.5 leading-snug">{panelSubtitle}</p>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
+              <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search patient, date, time, or status"
+                className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
+                aria-label="Search clinic queue"
+              />
+            </label>
+          </div>
+
           {patients.length === 0 ? (
-            <p className="m-4 sm:m-5 rounded-xl border border-border-gray bg-[#F8FAFC] p-6 text-sm text-body-gray text-center">
-              No patients in your clinic queue yet.
-            </p>
+            <div className="flex-1 min-h-[200px] flex items-center justify-center p-6">
+              <p className="rounded-2xl border border-dashed border-[#D0D9E3] bg-[#F8FAFC] px-6 py-5 text-sm text-body-gray text-center max-w-sm">
+                No patients in your clinic queue yet.
+              </p>
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="flex-1 min-h-[200px] flex items-center justify-center p-6">
+              <p className="rounded-2xl border border-dashed border-[#D0D9E3] bg-[#F8FAFC] px-6 py-5 text-sm text-body-gray text-center max-w-sm">
+                No patients match your search.
+              </p>
+            </div>
           ) : (
             <>
-              <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
-                <h2 className="text-xl sm:text-2xl font-bold text-navy tracking-tight leading-none">
-                  {panelTitle}
-                </h2>
-                <span className="text-[12px] font-semibold text-body-gray bg-white border border-[#E6EBF1] px-2.5 py-1 rounded-full tabular-nums">
-                  {patients.length}
-                </span>
-              </div>
-
               <div className="flex-1 min-h-0 overflow-auto">
-                <table className="w-full table-fixed min-w-[720px] border-collapse text-left">
+                <table className="w-full table-fixed min-w-[760px] border-collapse text-left">
                   <colgroup>
                     {COLUMNS.map((column) => (
                       <col key={column.key} style={{ width: column.width }} />
                     ))}
                   </colgroup>
-                  <thead className="bg-[#E8F7F6] sticky top-0 z-10">
+                  <thead className="sticky top-0 z-10 bg-[#E8F7F6]/95 backdrop-blur-sm">
                     <tr>
-                      {COLUMNS.map((column, index) => (
+                      {COLUMNS.map((column) => (
                         <th
                           key={column.key}
-                          className={`px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark border-b border-teal/20 ${
-                            index === 1 ? 'text-left' : 'text-center'
+                          className={`px-3 sm:px-4 py-3.5 text-[11px] font-bold uppercase tracking-[0.07em] text-teal-dark border-b border-teal/20 ${
+                            column.center ? 'text-center' : 'text-left'
                           }`}
                         >
                           {column.label}
@@ -77,7 +126,7 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                     </tr>
                   </thead>
                   <tbody>
-                    {patients.map((patient, index) => {
+                    {filtered.map((patient, index) => {
                       const next = patient.nextVisit
                       const statusStyle =
                         patientStatusStyles[next?.status] ||
@@ -88,18 +137,16 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                       return (
                         <tr
                           key={patient.id}
-                          className={`transition-colors hover:bg-[#F0FDFA] ${
-                            index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'
-                          }`}
+                          className="group bg-white even:bg-[#FAFCFD] hover:bg-[#F0FDFA] transition-colors"
                         >
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
                             <span className="text-[14px] font-semibold text-body-gray tabular-nums">
                               {index + 1}
                             </span>
                           </td>
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] align-middle">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] align-middle">
                             <div className="flex items-center gap-3 min-w-0">
-                              <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white">
+                              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 bg-teal-light ring-2 ring-white shadow-sm">
                                 <img
                                   src={patient.avatar}
                                   alt=""
@@ -107,31 +154,31 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                                 />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-[15px] font-semibold text-navy truncate leading-snug">
+                                <p className="text-[15px] sm:text-[16px] font-bold text-navy truncate leading-snug tracking-tight">
                                   {patient.name}
                                 </p>
                                 {meta ? (
-                                  <p className="text-[12px] text-body-gray truncate mt-0.5 leading-snug">
+                                  <p className="text-[12px] sm:text-[13px] text-body-gray truncate mt-0.5 leading-snug">
                                     {meta}
                                   </p>
                                 ) : null}
                               </div>
                             </div>
                           </td>
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
-                            <p className="text-[14px] font-semibold text-navy whitespace-nowrap">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+                            <p className="text-[14px] sm:text-[15px] font-semibold text-navy whitespace-nowrap tabular-nums">
                               {next?.dateLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
-                            <p className="text-[14px] font-semibold text-navy whitespace-nowrap">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
+                            <p className="text-[14px] sm:text-[15px] font-medium text-navy whitespace-nowrap tabular-nums">
                               {next?.timeLabel || '—'}
                             </p>
                           </td>
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
                             {next ? (
                               <span
-                                className={`inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full ${statusStyle}`}
+                                className={`inline-flex text-[12px] font-semibold px-2.5 py-1 rounded-full border ${statusStyle}`}
                               >
                                 {next.status}
                               </span>
@@ -139,11 +186,11 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                               <span className="text-[14px] text-body-gray">—</span>
                             )}
                           </td>
-                          <td className="px-3 py-3 border-b border-[#E6EBF1] text-center align-middle">
+                          <td className="px-3 sm:px-4 py-3.5 border-b border-[#EEF2F6] text-center align-middle">
                             <button
                               type="button"
                               onClick={() => onSelectPatient?.(patient)}
-                              className="w-9 h-9 rounded-xl text-navy/65 hover:text-teal hover:bg-teal-light/60 inline-flex items-center justify-center cursor-pointer transition-colors"
+                              className="w-9 h-9 rounded-lg bg-white text-body-gray border border-[#E6EBF1] hover:text-teal hover:border-teal/30 hover:bg-teal-light/30 inline-flex items-center justify-center cursor-pointer transition-colors"
                               aria-label={`View ${patient.name}`}
                             >
                               <Eye className="w-4 h-4" strokeWidth={2} />
@@ -156,15 +203,16 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                 </table>
               </div>
 
-              <div className="shrink-0 px-4 sm:px-5 py-2 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
-                <p className="text-[12px] text-body-gray">
-                  Showing <span className="font-semibold text-navy">{patients.length}</span> patients
-                  in clinic queue
+              <footer className="shrink-0 px-4 sm:px-5 py-2.5 border-t border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-between gap-2">
+                <p className="text-[12px] sm:text-[13px] text-body-gray">
+                  Showing <span className="font-semibold text-navy">{filtered.length}</span> of{' '}
+                  <span className="font-semibold text-navy">{patients.length}</span> patients in
+                  clinic queue
                 </p>
-                {patients.length > 12 ? (
-                  <p className="text-[11px] text-teal font-medium">Scroll for more</p>
+                {filtered.length > SCROLL_ROW_THRESHOLD ? (
+                  <p className="text-[11px] sm:text-[12px] text-teal font-semibold">Scroll for more</p>
                 ) : null}
-              </div>
+              </footer>
             </>
           )}
         </section>
