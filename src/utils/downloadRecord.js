@@ -1,3 +1,5 @@
+import { downloadLabReportPdf } from './downloadLabReportPdf'
+
 function fileName(title, ext = 'txt') {
   const slug = `${title || 'caresphere-record'}`
     .toLowerCase()
@@ -37,6 +39,17 @@ function saveTextFile(name, text) {
   saveBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), name)
 }
 
+function isLabReportPayload(record = {}) {
+  return Boolean(
+    record.parameters?.length ||
+      record.findings?.length ||
+      record.testName ||
+      record.patient ||
+      record.sample ||
+      record.type === 'Lab',
+  )
+}
+
 export async function downloadReportImage(url, title) {
   if (!url) return
 
@@ -61,17 +74,10 @@ export async function downloadReportImage(url, title) {
 export function downloadHealthReport(record) {
   if (!record) return
 
-  const findings = (record.findings?.length
-    ? record.findings
-    : (record.parameters || []).map((row) => ({
-        label: row.label || row.name,
-        value: row.value,
-        unit: row.unit,
-        status: row.status,
-      }))
-  )
-    .map((row) => `- ${row.label}: ${row.value} ${row.unit || ''} (${row.status || ''})`.trim())
-    .join('\n')
+  if (isLabReportPayload(record)) {
+    downloadLabReportPdf(record)
+    return
+  }
 
   const text = [
     'CareSphere health report',
@@ -81,14 +87,8 @@ export function downloadHealthReport(record) {
     `Doctor: ${record.doctorName || ''}`,
     `Facility: ${record.hospital || ''}`,
     '',
-    'Findings',
-    findings || 'No findings listed.',
-    '',
     'Interpretation',
     record.interpretation || '—',
-    '',
-    'Recommendations',
-    ...(record.recommendations || []),
     '',
     `Verified by: ${record.verifiedBy || ''}`,
   ].join('\n')
@@ -112,3 +112,5 @@ export function downloadRecordFiles(records, doctorName) {
   const name = fileName(`${doctorName || 'caresphere'}-records`)
   saveTextFile(name, text)
 }
+
+export { downloadLabReportPdf } from './downloadLabReportPdf'

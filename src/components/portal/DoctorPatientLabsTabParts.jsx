@@ -7,11 +7,10 @@ const MODES = [
 ]
 
 export const ORDER_COLUMNS = [
-  { key: 'pick', label: '', center: true, width: '8%' },
-  { key: 'no', label: 'No.', center: true, width: '7%' },
-  { key: 'test', label: 'Lab test', center: false, width: '47%' },
-  { key: 'turnaround', label: 'Ready in', center: true, width: '18%' },
-  { key: 'status', label: 'Status', center: true, width: '20%' },
+  { key: 'no', label: 'No.', center: true, width: '8%' },
+  { key: 'test', label: 'Lab test', center: false, width: '48%' },
+  { key: 'turnaround', label: 'Ready in', center: true, width: '22%' },
+  { key: 'action', label: '', center: true, width: '22%' },
 ]
 
 export function matchesLabQuery(item, query) {
@@ -24,8 +23,8 @@ export function matchesLabQuery(item, query) {
 
 export function LabModeTabs({ value, counts, onChange }) {
   return (
-    <div className="shrink-0 px-4 pt-3">
-      <div className="flex gap-1 p-1 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1]">
+    <div className="shrink-0 px-4 sm:px-5 pt-3 pb-1">
+      <div className="grid grid-cols-3 gap-1.5 p-1.5 rounded-xl bg-[#DDE4EC]">
         {MODES.map((mode) => {
           const active = value === mode.id
           const count = counts[mode.id]
@@ -34,15 +33,19 @@ export function LabModeTabs({ value, counts, onChange }) {
               key={mode.id}
               type="button"
               onClick={() => onChange(mode.id)}
-              className={`flex-1 min-h-10 rounded-lg text-[13px] font-semibold cursor-pointer transition-colors inline-flex items-center justify-center gap-1.5 ${
-                active ? 'bg-teal text-white shadow-sm' : 'text-navy hover:bg-white'
+              className={`min-h-10 rounded-lg text-[12px] sm:text-[13px] font-semibold cursor-pointer transition-all inline-flex items-center justify-center gap-1.5 px-2 ${
+                active
+                  ? 'bg-teal-dark text-white shadow-md shadow-teal-dark/20'
+                  : 'text-navy/75 hover:text-navy hover:bg-white/60'
               }`}
             >
               <span className="truncate">{mode.label}</span>
               {count != null ? (
                 <span
                   className={`min-w-[20px] h-5 px-1 rounded-full text-[11px] font-bold inline-flex items-center justify-center tabular-nums ${
-                    active ? 'bg-white/20 text-white' : 'bg-white text-body-gray border border-[#E3EAF2]'
+                    active
+                      ? 'bg-white/20 text-white'
+                      : 'bg-white text-body-gray border border-[#D0D9E3]'
                   }`}
                 >
                   {count}
@@ -56,7 +59,7 @@ export function LabModeTabs({ value, counts, onChange }) {
   )
 }
 
-export function LabTestCell({ item }) {
+export function LabTestCell({ item, statusBadge = null }) {
   return (
     <div className="flex items-center gap-3 min-w-0">
       <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-center">
@@ -67,7 +70,10 @@ export function LabTestCell({ item }) {
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="font-semibold text-navy truncate leading-snug">{item.title}</p>
+        <div className="flex items-center gap-2 min-w-0">
+          <p className="font-semibold text-navy truncate leading-snug">{item.title}</p>
+          {statusBadge}
+        </div>
         {item.subtitle ? (
           <p className="text-[12px] text-body-gray truncate mt-0.5">{item.subtitle}</p>
         ) : null}

@@ -32,94 +32,97 @@ export default function ConversationList({
   }
 
   return (
-    <aside className="chat-panel relative min-h-0 flex flex-col h-full rounded-2xl border border-border-gray bg-white shadow-sm p-3 sm:p-4">
-      <div className="relative flex items-center gap-2.5 shrink-0">
-        <div className="flex-1 min-w-0 rounded-xl border border-border-gray px-3.5 py-2.5 bg-[#F7F8FA] flex items-center gap-2.5">
-          <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={1.75} />
-          <input
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder={searchPlaceholder}
-            className="w-full text-sm text-navy outline-none bg-transparent placeholder:text-body-gray/70"
+    <aside className="chat-panel relative min-h-0 flex flex-col h-full bg-white border-r border-[#E9EDEF] overflow-hidden">
+      <div className="shrink-0 px-3 pt-3 pb-2 bg-[#F0F2F5]">
+        <div className="relative flex items-center gap-2">
+          <div className="flex-1 min-w-0 rounded-lg bg-white px-3 py-2 flex items-center gap-2 shadow-[0_1px_0.5px_rgba(11,20,26,0.08)]">
+            <Search className="w-4 h-4 text-[#54656F] shrink-0" strokeWidth={2} />
+            <input
+              value={query}
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder={searchPlaceholder}
+              className="w-full text-[14px] text-[#111b21] outline-none bg-transparent placeholder:text-[#667781]"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => setFilterOpen((open) => !open)}
+            className={`relative w-10 h-10 rounded-full flex items-center justify-center shrink-0 cursor-pointer ${
+              filterActive || filterOpen
+                ? 'bg-[#D9FDD3] text-[#008069]'
+                : 'text-[#54656F] hover:bg-black/5'
+            }`}
+            aria-label="Filter messages"
+            aria-expanded={filterOpen}
+          >
+            <SlidersHorizontal className="w-[18px] h-[18px]" strokeWidth={1.75} />
+            {filterActive ? (
+              <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#25D366]" />
+            ) : null}
+          </button>
+          <MessageFilterMenu
+            open={filterOpen}
+            listFilter={listFilter}
+            onSelect={onListFilterChange}
+            onClose={() => setFilterOpen(false)}
           />
         </div>
-        <button
-          type="button"
-          onClick={() => setFilterOpen((open) => !open)}
-          className={`relative w-11 h-11 rounded-xl border flex items-center justify-center shrink-0 cursor-pointer ${
-            filterActive || filterOpen
-              ? 'bg-teal-light border-teal text-teal'
-              : 'bg-white border-[#3D4A5C]/45 text-body-gray hover:bg-bg-gray'
-          }`}
-          aria-label="Filter messages"
-          aria-expanded={filterOpen}
-        >
-          <SlidersHorizontal className="w-4 h-4" strokeWidth={1.75} />
-          {filterActive ? (
-            <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-teal" />
-          ) : null}
-        </button>
-        <MessageFilterMenu
-          open={filterOpen}
-          listFilter={listFilter}
-          onSelect={onListFilterChange}
-          onClose={() => setFilterOpen(false)}
-        />
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto flex flex-col gap-2 mt-3 pr-0.5 overscroll-y-contain">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain bg-white">
         {items.length === 0 && patientResults.length === 0 ? (
-          <div className="rounded-2xl bg-bg-gray p-6 text-center">
-            <p className="text-sm font-semibold text-navy">No conversations</p>
-            <p className="text-xs text-body-gray mt-1">{emptyHint}</p>
+          <div className="p-8 text-center">
+            <p className="text-[15px] font-normal text-[#111b21]">No conversations</p>
+            <p className="text-[13px] text-[#667781] mt-1">{emptyHint}</p>
           </div>
         ) : (
           <>
             {items.map((item, index) => {
               const showDivider = item.pinnedAt && items[index + 1] && !items[index + 1].pinnedAt
               return (
-                <div key={item.id} className="flex flex-col gap-2">
+                <div key={item.id}>
                   <ConversationListItem
                     item={item}
                     isActive={selectedId === item.id}
                     onSelect={onSelect}
                     onOpenMenu={openPinMenu}
                   />
-                  {showDivider ? <div className="h-px bg-border-gray mx-1" /> : null}
+                  {showDivider ? (
+                    <div className="px-4 py-2 bg-[#F0F2F5] border-b border-[#E9EDEF]">
+                      <p className="text-[12px] font-medium text-[#008069] uppercase tracking-wide">
+                        All chats
+                      </p>
+                    </div>
+                  ) : null}
                 </div>
               )
             })}
-            {patientResults.length > 0 ? (
-              <>
-                <p className="text-[11px] font-semibold uppercase tracking-wide text-body-gray px-1 pt-2">
-                  Start a chat
-                </p>
-                {patientResults.map((patient) => (
-                  <PatientChatResult key={patient.id} patient={patient} onChat={onStartPatientChat} />
-                ))}
-              </>
-            ) : null}
+            {patientResults.map((patient) => (
+              <PatientChatResult
+                key={patient.id}
+                patient={patient}
+                onStart={() => onStartPatientChat?.(patient)}
+              />
+            ))}
           </>
         )}
       </div>
 
-      <ConversationPinMenu
-        open={Boolean(pinMenu)}
-        x={pinMenu?.x}
-        y={pinMenu?.y}
-        pinned={pinMenu?.pinned}
-        locked={pinMenu?.locked}
-        onPin={() => {
-          onTogglePin?.(pinMenu.id)
-          setPinMenu(null)
-        }}
-        onUnpin={() => {
-          onTogglePin?.(pinMenu.id)
-          setPinMenu(null)
-        }}
-        onClose={() => setPinMenu(null)}
-      />
-      <PinLimitToast open={pinNotice} />
+      {pinMenu ? (
+        <ConversationPinMenu
+          pinned={pinMenu.pinned}
+          locked={pinMenu.locked}
+          x={pinMenu.x}
+          y={pinMenu.y}
+          onClose={() => setPinMenu(null)}
+          onToggle={() => {
+            onTogglePin?.(pinMenu.id)
+            setPinMenu(null)
+          }}
+        />
+      ) : null}
+
+      {pinNotice ? <PinLimitToast /> : null}
     </aside>
   )
 }

@@ -2,29 +2,11 @@ import { Download, X } from 'lucide-react'
 import { downloadHealthReport } from '../../utils/downloadRecord'
 import LabReportDetail from '../lab/LabReportDetail'
 
-function reportNumber(report) {
-  if (report.bookingRef) return report.bookingRef
-  if (report.testCode && report.sample?.reportDate) {
-    return `${report.testCode}-${String(report.sample.reportDate).replace(/\s+/g, '')}`
-  }
-  return report.testCode || 'CS-RPT'
-}
-
 export default function DoctorPatientLabReportViewer({ report, onClose }) {
   if (!report) return null
 
   function handleDownload() {
-    downloadHealthReport({
-      title: report.testName,
-      reportId: reportNumber(report),
-      dateLabel: report.sample?.reportDate,
-      timeLabel: report.sample?.reportTime,
-      doctorName: report.doctorName,
-      hospital: report.lab?.name,
-      interpretation: report.interpretation,
-      parameters: report.parameters,
-      verifiedBy: report.verifiedBy || report.doctorName,
-    })
+    downloadHealthReport(report)
   }
 
   return (

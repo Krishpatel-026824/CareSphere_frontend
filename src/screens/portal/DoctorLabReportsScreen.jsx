@@ -90,18 +90,7 @@ export default function DoctorLabReportsScreen({
 
   function handleDownload() {
     if (!selected?.report) return
-    const report = selected.report
-    downloadHealthReport({
-      title: report.testName,
-      reportId: report.bookingRef || report.id,
-      dateLabel: report.sample?.reportDate,
-      timeLabel: report.sample?.reportTime,
-      doctorName: report.doctorName,
-      hospital: report.lab?.name,
-      interpretation: report.interpretation,
-      parameters: report.parameters,
-      verifiedBy: report.doctorName,
-    })
+    downloadHealthReport(selected.report)
     setFeedback('Report download started.')
   }
 

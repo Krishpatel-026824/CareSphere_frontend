@@ -51,17 +51,7 @@ export default function LabReportDetail({ report, hideDownload = false, embedded
   if (!report) return null
 
   function handleDownload() {
-    downloadHealthReport({
-      title: report.testName,
-      reportId: reportNumber(report),
-      dateLabel: report.sample?.reportDate,
-      timeLabel: report.sample?.reportTime,
-      doctorName: report.doctorName,
-      hospital: report.lab?.name,
-      interpretation: report.interpretation,
-      parameters: report.parameters,
-      verifiedBy: report.verifiedBy || report.doctorName,
-    })
+    downloadHealthReport(report)
   }
 
   const body = (

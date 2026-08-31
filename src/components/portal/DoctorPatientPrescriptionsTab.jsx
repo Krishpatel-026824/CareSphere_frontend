@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ArrowLeft, Check, X } from 'lucide-react'
+import { ArrowLeft, Check } from 'lucide-react'
 import { formatDateLabel } from '../../utils/appointmentFormat'
 import {
   generateRxScheduleDefaults,
@@ -13,16 +13,25 @@ import {
   selectPatientRoutine,
 } from '../../store/slices/doctorPatientRxSlice'
 import { addPatientAuditEvent } from '../../store/slices/doctorPatientAuditSlice'
-import ChartSelectMark from './ChartSelectMark'
-import { matchesRxQuery, RxMedicineCell } from './DoctorPatientPrescriptionsTabParts'
+import ChartSelectMark, { ChartRowStatusBadge } from './ChartSelectMark'
+import {
+  ADD_RX_COLUMNS,
+  matchesRxQuery,
+  RxAddMedicineCell,
+  RxAddRowDetailsCell,
+  RxAddScheduleBar,
+  RxMedicineCell,
+} from './DoctorPatientPrescriptionsTabParts'
 import {
   PatientChartAddButton,
   PatientChartEmpty,
+  PatientChartFooter,
   PatientChartPanel,
   PatientChartSearch,
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
+  PatientChartToolbar,
 } from './PatientChartTable'
 
 export default function DoctorPatientPrescriptionsTab({
@@ -41,20 +50,36 @@ export default function DoctorPatientPrescriptionsTab({
 
   const routineIds = useMemo(() => new Set(routine.map((item) => item.id)), [routine])
 
-  const selectedItems = useMemo(
-    () => catalog.filter((item) => selectedIds.includes(item.id)),
-    [catalog, selectedIds],
+  const selectableIds = useMemo(
+    () => selectedIds.filter((id) => !routineIds.has(id)),
+    [selectedIds, routineIds],
   )
+
+  const routineMap = useMemo(() => {
+    const map = new Map()
+    routine.forEach((item) => map.set(item.id, item))
+    return map
+  }, [routine])
 
   const addRows = useMemo(
     () =>
       catalog
         .filter((item) => matchesRxQuery(item, query))
-        .map((item) => ({
-          ...item,
-          alreadyInRoutine: routineIds.has(item.id),
-        })),
-    [catalog, query, routineIds],
+        .map((item) => {
+          const inRoutine = routineMap.get(item.id)
+          return {
+            ...item,
+            alreadyInRoutine: Boolean(inRoutine),
+            routineSchedule: inRoutine
+              ? {
+                  dose: inRoutine.dose,
+                  frequency: inRoutine.frequency,
+                  duration: inRoutine.duration,
+                }
+              : null,
+          }
+        }),
+    [catalog, query, routineMap],
   )
 
   const routineRows = useMemo(() => {
@@ -83,15 +108,16 @@ export default function DoctorPatientPrescriptionsTab({
   }
 
   function toggleOne(id) {
+    if (routineIds.has(id)) return
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
     )
   }
 
   function handleAddToRoutine() {
-    if (!patientId || !selectedIds.length) return
+    if (!patientId || !selectableIds.length) return
     const medicines = catalog
-      .filter((item) => selectedIds.includes(item.id) && !routineIds.has(item.id))
+      .filter((item) => selectableIds.includes(item.id))
       .map((item) => {
         const defaults = generateRxScheduleDefaults(item)
         const chosenDose = dose || defaults.dose
@@ -125,7 +151,12 @@ export default function DoctorPatientPrescriptionsTab({
   return (
     <PatientChartPanel
       title={mode === 'add' ? 'Add medicines' : 'Prescriptions'}
-      count={mode === 'add' ? selectedIds.length : routineRows.length}
+      subtitle={
+        mode === 'add'
+          ? 'Select medicines below, then add to routine'
+          : 'Previous prescriptions and active routine for this patient'
+      }
+      count={mode === 'add' ? selectableIds.length : routineRows.length}
       fill
       action={
         mode === 'routine' ? (
@@ -143,15 +174,17 @@ export default function DoctorPatientPrescriptionsTab({
             <button
               type="button"
               onClick={handleAddToRoutine}
-              disabled={!selectedIds.length}
+              disabled={!selectableIds.length}
               className={`shrink-0 min-h-9 px-3 rounded-xl text-[12px] font-semibold inline-flex items-center gap-1.5 shadow-sm ${
-                selectedIds.length
+                selectableIds.length
                   ? 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
                   : 'bg-[#E6EBF1] text-body-gray cursor-not-allowed'
               }`}
             >
               <Check className="w-3.5 h-3.5" strokeWidth={2.25} />
-              {selectedIds.length ? `Add to routine (${selectedIds.length})` : 'Add to routine'}
+              {selectableIds.length
+                ? `Add to routine (${selectableIds.length})`
+                : 'Add to routine'}
             </button>
           </div>
         )
@@ -159,20 +192,21 @@ export default function DoctorPatientPrescriptionsTab({
     >
       {mode === 'routine' ? (
         <>
-          <div className="shrink-0 px-4 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC]">
+          <PatientChartToolbar>
             <PatientChartSearch
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search previous prescriptions"
               aria-label="Search previous prescriptions"
             />
-          </div>
+          </PatientChartToolbar>
 
           {!routineRows.length ? (
             <PatientChartEmpty text="No previous prescriptions for this patient. Tap New to add medicines to their routine." />
           ) : (
-            <PatientChartTable fill>
-              <thead className="bg-[#E8F7F6] sticky top-0 z-10">
+            <>
+              <PatientChartTable fill>
+                <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
                 <tr>
                   {['No.', 'Medicine', 'Dose', 'Schedule', 'Duration', 'Type'].map(
                     (label, index) => (
@@ -212,12 +246,18 @@ export default function DoctorPatientPrescriptionsTab({
                   </tr>
                 ))}
               </tbody>
-            </PatientChartTable>
+              </PatientChartTable>
+              <PatientChartFooter
+                showing={routineRows.length}
+                total={routine.length + existing.length}
+                label="prescriptions"
+              />
+            </>
           )}
         </>
       ) : (
         <>
-          <div className="shrink-0 px-4 py-3 border-b border-[#E6EBF1] bg-[#F8FAFC] space-y-3">
+          <PatientChartToolbar compact>
             <PatientChartSearch
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -225,165 +265,103 @@ export default function DoctorPatientPrescriptionsTab({
               aria-label="Search medicines"
             />
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <label className="flex flex-col gap-1 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] px-3 py-2">
-              <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark">
-                Dose
-              </span>
-              <select
-                value={dose}
-                onChange={(event) => setDose(event.target.value)}
-                className="bg-transparent text-sm font-semibold text-navy outline-none cursor-pointer"
-              >
-                {rxDoseOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-1 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] px-3 py-2">
-              <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark">
-                How often
-              </span>
-              <select
-                value={frequency}
-                onChange={(event) => setFrequency(event.target.value)}
-                className="bg-transparent text-sm font-semibold text-navy outline-none cursor-pointer"
-              >
-                {rxFrequencyOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-1 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] px-3 py-2">
-              <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-teal-dark">
-                Duration
-              </span>
-              <select
-                value={duration}
-                onChange={(event) => setDuration(event.target.value)}
-                className="bg-transparent text-sm font-semibold text-navy outline-none cursor-pointer"
-              >
-                {rxDurationOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            </label>
-            </div>
-          </div>
-
-          {selectedItems.length ? (
-            <div className="shrink-0 mx-4 my-3 rounded-xl border border-teal/20 bg-[#E8F7F6] px-3.5 py-3">
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <p className="text-[12px] font-bold text-teal-dark">
-                  Selected for routine ({selectedItems.length})
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setSelectedIds([])}
-                  className="text-[11px] font-semibold text-body-gray hover:text-navy cursor-pointer inline-flex items-center gap-1"
-                >
-                  <X className="w-3 h-3" strokeWidth={2} />
-                  Clear
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedItems.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => toggleOne(item.id)}
-                    className="inline-flex items-center gap-1 max-w-full rounded-full bg-white border border-teal/20 px-2.5 py-1 text-[12px] font-semibold text-navy cursor-pointer hover:border-teal"
-                  >
-                    <span className="truncate">{item.name}</span>
-                    <X className="w-3 h-3 shrink-0 text-body-gray" strokeWidth={2} />
-                  </button>
-                ))}
-              </div>
-              <p className="text-[12px] text-navy mt-2">
-                Patient will take these as:{' '}
-                <span className="font-semibold">{dose}</span> ·{' '}
-                <span className="font-semibold">{frequency}</span> ·{' '}
-                <span className="font-semibold">{duration}</span>
-              </p>
-            </div>
-          ) : null}
+            <RxAddScheduleBar
+              dose={dose}
+              frequency={frequency}
+              duration={duration}
+              doseOptions={rxDoseOptions}
+              frequencyOptions={rxFrequencyOptions}
+              durationOptions={rxDurationOptions}
+              onDoseChange={setDose}
+              onFrequencyChange={setFrequency}
+              onDurationChange={setDuration}
+            />
+          </PatientChartToolbar>
 
           {!addRows.length ? (
             <PatientChartEmpty text="No medicines match your search." />
           ) : (
-            <PatientChartTable fill>
-              <thead className="bg-[#E8F7F6] sticky top-0 z-10">
+            <>
+              <PatientChartTable minWidth="100%" fill fixed className="text-[15px]">
+                <colgroup>
+                  {ADD_RX_COLUMNS.map((column) => (
+                    <col key={column.key} style={{ width: column.width }} />
+                  ))}
+                </colgroup>
+                <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
                 <tr>
-                  {['', 'No.', 'Medicine', 'Pack dose', 'Use for', 'Status'].map((label, index) => (
-                    <PatientChartTh key={`${label}-${index}`} center={index !== 2}>
-                      {label}
+                  {ADD_RX_COLUMNS.map((column) => (
+                    <PatientChartTh
+                      key={column.key}
+                      center={column.center}
+                      className="!text-[13px] !py-3.5"
+                    >
+                      {column.label}
                     </PatientChartTh>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {addRows.map((item, index) => {
-                  const selected = selectedIds.includes(item.id)
                   const locked = item.alreadyInRoutine
+                  const selected = selectedIds.includes(item.id)
                   return (
                     <tr
                       key={item.id}
-                      onClick={() => {
-                        if (!locked) toggleOne(item.id)
-                      }}
                       className={`transition-colors ${
                         locked
-                          ? 'bg-[#F8FAFC]'
+                          ? 'bg-[#F8FAFC]/90'
                           : selected
-                            ? 'bg-[#E8F7F6] cursor-pointer'
+                            ? 'bg-[#E8F7F6] shadow-[inset_3px_0_0_0_#0EA5A0]'
                             : index % 2
-                              ? 'bg-[#FAFCFD] cursor-pointer hover:bg-[#F0FAF9]'
-                              : 'bg-white cursor-pointer hover:bg-[#F0FAF9]'
+                              ? 'bg-[#FAFCFD] hover:bg-[#F0FAF9]'
+                              : 'bg-white hover:bg-[#F0FAF9]'
                       }`}
                     >
-                      <PatientChartTd center>
-                        <ChartSelectMark selected={selected} locked={locked} />
+                      <PatientChartTd className="py-3 px-3 sm:px-4">
+                        <RxAddMedicineCell
+                          item={item}
+                          statusBadge={
+                            locked ? (
+                              <ChartRowStatusBadge tone="success">In routine</ChartRowStatusBadge>
+                            ) : null
+                          }
+                        />
                       </PatientChartTd>
-                      <PatientChartTd center>
-                        <span className="text-[13px] font-semibold text-body-gray tabular-nums">
-                          {index + 1}
-                        </span>
+                      <PatientChartTd className="py-3 px-3 sm:px-4">
+                        <RxAddRowDetailsCell
+                          useFor={item.useFor}
+                          active={selected && !locked}
+                        />
                       </PatientChartTd>
-                      <PatientChartTd>
-                        <RxMedicineCell item={item} />
-                      </PatientChartTd>
-                      <PatientChartTd center>{item.dose || '—'}</PatientChartTd>
-                      <PatientChartTd center>
-                        <span className="inline-flex max-w-full truncate text-[12px] font-semibold text-teal-dark bg-[#E8F7F6] border border-teal/15 px-2 py-0.5 rounded-full">
-                          {item.useFor || 'As advised'}
-                        </span>
-                      </PatientChartTd>
-                      <PatientChartTd center>
-                        {locked ? (
-                          <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
-                            In routine
-                          </span>
-                        ) : selected ? (
-                          <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-teal text-white">
-                            Selected
-                          </span>
-                        ) : (
-                          <span className="inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#F1F5F9] text-body-gray">
-                            Tap to select
-                          </span>
-                        )}
+                      <PatientChartTd className="py-3 px-3 sm:px-4 w-[1%] whitespace-nowrap">
+                        <div className="flex justify-end">
+                          <ChartSelectMark
+                            selected={selected}
+                            locked={locked}
+                            lockedLabel="In routine"
+                            label="Select"
+                            selectedLabel="Selected"
+                            onToggle={() => toggleOne(item.id)}
+                          />
+                        </div>
                       </PatientChartTd>
                     </tr>
                   )
                 })}
               </tbody>
-            </PatientChartTable>
+              </PatientChartTable>
+              <PatientChartFooter
+                showing={addRows.length}
+                total={catalog.length}
+                label="medicines"
+                extra={
+                  selectableIds.length
+                    ? `${selectableIds.length} selected for routine`
+                    : null
+                }
+              />
+            </>
           )}
         </>
       )}

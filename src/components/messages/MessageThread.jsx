@@ -91,7 +91,7 @@ export default function MessageThread({
   }
 
   return (
-    <div className="chat-panel h-full min-h-0 flex-1 rounded-2xl border border-border-gray bg-[#e5ddd5] shadow-sm flex flex-col overflow-hidden">
+    <div className="chat-panel h-full min-h-0 flex-1 flex flex-col overflow-hidden bg-[#E5DDD5]">
       {picked ? (
         <div className="shrink-0 h-[59px] px-3 sm:px-4 bg-[#075E54] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -129,7 +129,7 @@ export default function MessageThread({
 
       <div ref={boardRef} className="relative flex-1 min-h-0 flex flex-col">
         <div className="chat-wallpaper absolute inset-0 pointer-events-none" />
-        <div className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-4 sm:px-5 py-3 flex flex-col gap-1 overscroll-y-contain">
+        <div className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-[4.5%] sm:px-[6%] py-2 flex flex-col gap-0.5 overscroll-y-contain">
           {conversation.messages.filter((message) => !message.removed).length === 0 && !isTyping ? (
             <div className="flex-1 flex items-center justify-center px-4">
               <p className="text-sm text-[#667781] text-center">No messages yet. Send a message to start.</p>

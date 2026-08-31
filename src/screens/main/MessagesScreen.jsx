@@ -71,22 +71,34 @@ export default function MessagesScreen() {
       }`}
     >
       <div
-        className={`w-full max-w-[1400px] mx-auto page-pad flex flex-col h-full min-h-0 ${
-          isDesktop ? 'py-3 gap-0' : showChatPanel ? 'py-0 gap-0' : 'py-4 gap-4'
+        className={`w-full max-w-[1600px] mx-auto flex flex-col h-full min-h-0 ${
+          isDesktop
+            ? 'h-full px-3 py-3'
+            : showChatPanel
+              ? 'h-full'
+              : 'page-pad py-4 gap-4'
         }`}
       >
         {!isDesktop && showListPanel ? <MessagesHeader subtitle={headerSubtitle} /> : null}
 
         <div
-          className={`grid min-h-0 flex-1 ${
+          className={`min-h-0 flex-1 ${
             isDesktop
-              ? 'grid-cols-[minmax(280px,1fr)_minmax(0,2fr)] grid-rows-[minmax(0,1fr)] items-stretch gap-4'
-              : 'grid-cols-1 h-full'
+              ? 'flex h-full overflow-hidden rounded-lg border border-[#D1D7DB] shadow-[0_1px_3px_rgba(11,20,26,0.08)]'
+              : 'grid grid-cols-1 h-full'
           }`}
         >
           {showListPanel ? (
-            <div className="min-w-0 min-h-0 h-full flex flex-col gap-3">
-              {isDesktop ? <MessagesHeader subtitle={headerSubtitle} /> : null}
+            <div
+              className={`min-w-0 min-h-0 h-full flex flex-col ${
+                isDesktop ? 'w-[32%] min-w-[300px] max-w-[420px] shrink-0' : ''
+              }`}
+            >
+              {isDesktop ? (
+                <div className="shrink-0 h-[60px] px-4 flex items-center bg-[#F0F2F5] border-b border-[#E9EDEF]">
+                  <h1 className="text-[20px] font-normal text-[#111b21]">Chats</h1>
+                </div>
+              ) : null}
               <div className="min-h-0 flex-1">
                 <ConversationList
                   items={filtered}
@@ -112,7 +124,7 @@ export default function MessagesScreen() {
           ) : null}
 
           {showChatPanel || isDesktop ? (
-            <section className="min-h-0 h-full flex flex-col">
+            <section className="min-h-0 h-full flex flex-col flex-1 min-w-0 bg-[#E5DDD5]">
               <MessageThread
                 conversation={selected}
                 onBack={isDesktop ? undefined : closeConversation}
