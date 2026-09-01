@@ -128,12 +128,13 @@ export function PatientChartPanel({
   action = null,
   children,
   fill = false,
+  className = '',
 }) {
   return (
     <section
       className={`rounded-2xl border border-[#E6EBF1] bg-white shadow-sm overflow-hidden flex flex-col ${
         fill ? 'flex-1 min-h-0' : ''
-      }`}
+      } ${className}`}
     >
       <div className="shrink-0 h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
 
