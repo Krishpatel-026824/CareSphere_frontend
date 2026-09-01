@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import { Search, SlidersHorizontal } from 'lucide-react'
+import { MessageSquarePlus, Search, SlidersHorizontal } from 'lucide-react'
+import { messageFilterOptions } from '../../data/mocks/messageFilters'
+import ChatSecurityBanner from './ChatSecurityBanner'
 import ConversationListItem from './ConversationListItem'
 import ConversationPinMenu from './ConversationPinMenu'
 import MessageFilterMenu from './MessageFilterMenu'
@@ -20,10 +22,11 @@ export default function ConversationList({
   patientResults = [],
   onStartPatientChat,
   emptyHint = 'Try another search or filter.',
+  title,
+  unreadCount = 0,
 }) {
-  const [filterOpen, setFilterOpen] = useState(false)
   const [pinMenu, setPinMenu] = useState(null)
-  const filterActive = listFilter && listFilter !== 'all'
+  const [filterOpen, setFilterOpen] = useState(false)
 
   function openPinMenu(item, event) {
     const x = Math.min(event.clientX, window.innerWidth - 188)
@@ -32,51 +35,78 @@ export default function ConversationList({
   }
 
   return (
-    <aside className="chat-panel relative min-h-0 flex flex-col h-full bg-white border-r border-[#E9EDEF] overflow-hidden">
-      <div className="shrink-0 px-3 pt-3 pb-2 bg-[#F0F2F5]">
-        <div className="relative flex items-center gap-2">
-          <div className="flex-1 min-w-0 rounded-lg bg-white px-3 py-2 flex items-center gap-2 shadow-[0_1px_0.5px_rgba(11,20,26,0.08)]">
-            <Search className="w-4 h-4 text-[#54656F] shrink-0" strokeWidth={2} />
+    <aside className="chat-panel relative min-h-0 flex flex-col h-full bg-white border-r border-[#E6EBF1] overflow-hidden">
+      <div className="shrink-0 px-4 pt-4 pb-3">
+        {title ? (
+          <h1 className="text-[22px] font-bold text-navy tracking-tight leading-none mb-4">{title}</h1>
+        ) : null}
+
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0 h-11 rounded-full border border-[#E6EBF1] bg-[#F8FAFC] px-4 flex items-center gap-2.5 focus-within:border-teal/50 focus-within:ring-2 focus-within:ring-teal/15 transition-all">
+            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
             <input
               value={query}
               onChange={(event) => onQueryChange(event.target.value)}
               placeholder={searchPlaceholder}
-              className="w-full text-[14px] text-[#111b21] outline-none bg-transparent placeholder:text-[#667781]"
+              className="w-full text-[14px] text-navy outline-none bg-transparent placeholder:text-body-gray/60"
             />
           </div>
-          <button
-            type="button"
-            onClick={() => setFilterOpen((open) => !open)}
-            className={`relative w-10 h-10 rounded-full flex items-center justify-center shrink-0 cursor-pointer ${
-              filterActive || filterOpen
-                ? 'bg-[#D9FDD3] text-[#008069]'
-                : 'text-[#54656F] hover:bg-black/5'
-            }`}
-            aria-label="Filter messages"
-            aria-expanded={filterOpen}
-          >
-            <SlidersHorizontal className="w-[18px] h-[18px]" strokeWidth={1.75} />
-            {filterActive ? (
-              <span className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full bg-[#25D366]" />
-            ) : null}
-          </button>
-          <MessageFilterMenu
-            open={filterOpen}
-            listFilter={listFilter}
-            onSelect={onListFilterChange}
-            onClose={() => setFilterOpen(false)}
-          />
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => setFilterOpen((open) => !open)}
+              className="w-11 h-11 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-center text-body-gray hover:text-teal hover:border-teal/30 cursor-pointer transition-colors"
+              aria-label="Filter conversations"
+              aria-expanded={filterOpen}
+            >
+              <SlidersHorizontal className="w-[18px] h-[18px]" strokeWidth={2} />
+            </button>
+            <MessageFilterMenu
+              open={filterOpen}
+              listFilter={listFilter}
+              onSelect={onListFilterChange}
+              onClose={() => setFilterOpen(false)}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 mt-3">
+          {messageFilterOptions.map((option) => {
+            const active = listFilter === option.id
+            return (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => onListFilterChange?.(option.id)}
+                className={`h-9 px-4 rounded-full text-[13px] font-semibold cursor-pointer transition-colors inline-flex items-center ${
+                  active
+                    ? 'bg-teal text-white shadow-sm'
+                    : 'bg-[#F4F6F8] text-body-gray hover:bg-[#EEF2F6]'
+                }`}
+              >
+                {option.chip || option.label}
+                {option.id === 'unread' && unreadCount > 0 ? (
+                  <span className="ml-2 min-w-[18px] h-[18px] px-1 rounded-full bg-[#3B82F6] text-white text-[10px] font-bold inline-flex items-center justify-center tabular-nums">
+                    {unreadCount}
+                  </span>
+                ) : null}
+              </button>
+            )
+          })}
         </div>
       </div>
 
-      <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain bg-white">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-y-contain px-2 pb-2">
         {items.length === 0 && patientResults.length === 0 ? (
-          <div className="p-8 text-center">
-            <p className="text-[15px] font-normal text-[#111b21]">No conversations</p>
-            <p className="text-[13px] text-[#667781] mt-1">{emptyHint}</p>
+          <div className="h-full flex flex-col items-center justify-center gap-2 px-6 py-10 text-center">
+            <span className="w-11 h-11 rounded-xl bg-[#F4F7FA] border border-[#E6EBF1] text-teal flex items-center justify-center">
+              <MessageSquarePlus className="w-5 h-5" strokeWidth={1.75} />
+            </span>
+            <p className="text-[14px] font-semibold text-navy">No conversations</p>
+            <p className="text-[12px] text-body-gray leading-relaxed">{emptyHint}</p>
           </div>
         ) : (
-          <>
+          <div className="flex flex-col gap-0.5">
             {items.map((item, index) => {
               const showDivider = item.pinnedAt && items[index + 1] && !items[index + 1].pinnedAt
               return (
@@ -88,11 +118,9 @@ export default function ConversationList({
                     onOpenMenu={openPinMenu}
                   />
                   {showDivider ? (
-                    <div className="px-4 py-2 bg-[#F0F2F5] border-b border-[#E9EDEF]">
-                      <p className="text-[12px] font-medium text-[#008069] uppercase tracking-wide">
-                        All chats
-                      </p>
-                    </div>
+                    <p className="px-3 pt-3 pb-1 text-[11px] font-bold uppercase tracking-[0.08em] text-teal">
+                      All chats
+                    </p>
                   ) : null}
                 </div>
               )
@@ -104,9 +132,11 @@ export default function ConversationList({
                 onStart={() => onStartPatientChat?.(patient)}
               />
             ))}
-          </>
+          </div>
         )}
       </div>
+
+      <ChatSecurityBanner />
 
       {pinMenu ? (
         <ConversationPinMenu
@@ -122,7 +152,7 @@ export default function ConversationList({
         />
       ) : null}
 
-      {pinNotice ? <PinLimitToast /> : null}
+      {pinNotice ? <PinLimitToast open /> : null}
     </aside>
   )
 }

@@ -156,7 +156,7 @@ export default function HealthRecordDetail({ record }) {
               className="min-h-10 px-4 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" strokeWidth={1.75} />
-              Download report
+              Download PDF
             </button>
           </div>
         </div>

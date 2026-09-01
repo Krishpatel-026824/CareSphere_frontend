@@ -37,7 +37,7 @@ export default function DoctorLabReportActions({
           className="inline-flex items-center justify-center gap-2 min-h-10 px-3.5 rounded-xl text-[13px] font-semibold cursor-pointer bg-white border border-[#D5DEE8] text-navy hover:border-teal/40"
         >
           <Download className="w-4 h-4" strokeWidth={2} />
-          Download
+          Download PDF
         </button>
       </div>
     </div>

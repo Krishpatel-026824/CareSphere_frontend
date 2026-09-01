@@ -1,14 +1,11 @@
 import { downloadLabReportPdf } from './downloadLabReportPdf'
+import {
+  downloadImageDocumentPdf,
+  downloadTextDocumentPdf,
+  toPdfFileName,
+} from './downloadSimplePdf'
 
-function fileName(title, ext = 'txt') {
-  const slug = `${title || 'caresphere-record'}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-|-$/g, '')
-  return `${slug}.${ext}`
-}
-
-function recordText(record) {
+function recordTextLines(record) {
   return [
     record.title,
     `Doctor: ${record.doctorName || ''}`,
@@ -19,24 +16,7 @@ function recordText(record) {
     record.summary || 'No summary available.',
     '',
     'CareSphere health record',
-  ]
-    .filter((line) => line !== '')
-    .join('\n')
-}
-
-function saveBlob(blob, name) {
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = name
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  URL.revokeObjectURL(url)
-}
-
-function saveTextFile(name, text) {
-  saveBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), name)
+  ].filter((line) => line !== '')
 }
 
 function isLabReportPayload(record = {}) {
@@ -51,24 +31,11 @@ function isLabReportPayload(record = {}) {
 }
 
 export async function downloadReportImage(url, title) {
-  if (!url) return
-
-  try {
-    const response = await fetch(url)
-    if (!response.ok) throw new Error('image fetch failed')
-    const blob = await response.blob()
-    const subtype = blob.type.split('/')[1] || 'jpg'
-    const ext = subtype === 'jpeg' ? 'jpg' : subtype
-    saveBlob(blob, fileName(title, ext))
-  } catch {
-    const link = document.createElement('a')
-    link.href = url
-    link.download = fileName(title, 'jpg')
-    link.rel = 'noreferrer'
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-  }
+  await downloadImageDocumentPdf({
+    title: title || 'CareSphere Image Report',
+    imageUrl: url,
+    fileName: toPdfFileName(title || 'image-report'),
+  })
 }
 
 export function downloadHealthReport(record) {
@@ -79,25 +46,31 @@ export function downloadHealthReport(record) {
     return
   }
 
-  const text = [
-    'CareSphere health report',
-    record.title,
-    `Report ID: ${record.reportId || ''}`,
-    `Date: ${record.dateLabel || record.date || ''} ${record.timeLabel || ''}`.trim(),
-    `Doctor: ${record.doctorName || ''}`,
-    `Facility: ${record.hospital || ''}`,
-    '',
-    'Interpretation',
-    record.interpretation || '—',
-    '',
-    `Verified by: ${record.verifiedBy || ''}`,
-  ].join('\n')
-
-  saveTextFile(fileName(record.title, 'txt'), text)
+  downloadTextDocumentPdf({
+    title: record.title || 'CareSphere health report',
+    lines: [
+      `Report ID: ${record.reportId || '—'}`,
+      `Date: ${record.dateLabel || record.date || '—'} ${record.timeLabel || ''}`.trim(),
+      `Doctor: ${record.doctorName || '—'}`,
+      `Facility: ${record.hospital || '—'}`,
+      '',
+      'Interpretation',
+      record.interpretation || '—',
+      '',
+      `Verified by: ${record.verifiedBy || '—'}`,
+    ],
+    fileName: toPdfFileName(record.title || 'health-report'),
+    footer: 'CareSphere · Confidential health report',
+  })
 }
 
 export function downloadRecordFile(record) {
-  saveTextFile(fileName(record.title), recordText(record))
+  downloadTextDocumentPdf({
+    title: record.title || 'CareSphere record',
+    lines: recordTextLines(record),
+    fileName: toPdfFileName(record.title || 'caresphere-record'),
+    footer: 'CareSphere · Confidential health record',
+  })
 }
 
 export function downloadRecordFiles(records, doctorName) {
@@ -108,9 +81,15 @@ export function downloadRecordFiles(records, doctorName) {
     return
   }
 
-  const text = records.map((record) => recordText(record)).join('\n\n-----\n\n')
-  const name = fileName(`${doctorName || 'caresphere'}-records`)
-  saveTextFile(name, text)
+  downloadTextDocumentPdf({
+    title: `${doctorName || 'CareSphere'} records`,
+    lines: records.flatMap((record, index) => {
+      if (index > 0) return ['', '-----', '', ...recordTextLines(record)]
+      return recordTextLines(record)
+    }),
+    fileName: toPdfFileName(`${doctorName || 'caresphere'}-records`),
+    footer: 'CareSphere · Confidential health records',
+  })
 }
 
 export { downloadLabReportPdf } from './downloadLabReportPdf'

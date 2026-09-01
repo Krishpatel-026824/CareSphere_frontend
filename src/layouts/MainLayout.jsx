@@ -36,6 +36,11 @@ export default function MainLayout() {
       activeTab={activeTab}
       onTabChange={handleTabChange}
       messagesBadge={messagesBadge}
+      pageSurface={
+        location.pathname.startsWith('/messages')
+          ? 'page-surface page-surface--messages'
+          : 'page-surface'
+      }
     >
       <Outlet />
     </AppShell>

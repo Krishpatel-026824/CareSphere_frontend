@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Mic, Paperclip, Send } from 'lucide-react'
+import { Paperclip, Send, Smile } from 'lucide-react'
 
 export default function ChatComposer({ draft, onDraftChange, onSend, onAttach, inputRef }) {
   const fileRef = useRef(null)
@@ -13,7 +13,7 @@ export default function ChatComposer({ draft, onDraftChange, onSend, onAttach, i
 
   return (
     <form
-      className="w-full min-w-0 flex items-end gap-2 px-3 py-[5px] bg-[#F0F2F5] shrink-0"
+      className="w-full min-w-0 flex items-center gap-2.5 px-4 py-3 bg-gradient-to-r from-[#EFF9F8] to-white border-t border-teal/15 shrink-0"
       onSubmit={(event) => {
         event.preventDefault()
         if (canSend) onSend()
@@ -30,40 +30,42 @@ export default function ChatComposer({ draft, onDraftChange, onSend, onAttach, i
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
-        className="w-10 h-10 mb-0.5 flex items-center justify-center text-[#54656F] hover:bg-black/5 rounded-full shrink-0 cursor-pointer"
+        className="w-11 h-11 flex items-center justify-center text-teal border border-teal/25 bg-teal-light/40 hover:bg-teal-light hover:border-teal/40 rounded-full shrink-0 cursor-pointer transition-colors"
         aria-label="Attach file"
       >
-        <Paperclip className="w-[22px] h-[22px] -rotate-45" strokeWidth={1.7} />
+        <Paperclip className="w-5 h-5" strokeWidth={1.85} />
       </button>
 
-      <div className="flex-1 min-w-0 rounded-lg bg-white px-3 py-[9px] shadow-[0_1px_0.5px_rgba(11,20,26,0.13)]">
+      <div className="flex-1 min-w-0 h-11 rounded-full border border-teal/20 bg-white px-4 flex items-center gap-2 shadow-sm focus-within:border-teal/50 focus-within:ring-2 focus-within:ring-teal/15 transition-all">
         <input
           ref={inputRef}
           value={draft}
           onChange={(event) => onDraftChange(event.target.value)}
-          placeholder="Type a message"
-          className="w-full bg-transparent text-[15px] leading-5 text-[#111b21] outline-none placeholder:text-[#667781]"
+          placeholder="Type a message..."
+          className="w-full bg-transparent text-[14px] leading-5 text-navy outline-none placeholder:text-body-gray/60"
         />
-      </div>
-
-      {canSend ? (
-        <button
-          type="submit"
-          className="w-10 h-10 mb-0.5 rounded-full bg-[#00A884] text-white flex items-center justify-center cursor-pointer hover:bg-[#017561] shrink-0"
-          aria-label="Send message"
-        >
-          <Send className="w-[18px] h-[18px] translate-x-[1px]" strokeWidth={2} />
-        </button>
-      ) : (
         <button
           type="button"
-          disabled
-          className="w-10 h-10 mb-0.5 rounded-full text-[#54656F] flex items-center justify-center shrink-0 opacity-70 cursor-default"
-          aria-label="Voice message"
+          tabIndex={-1}
+          className="w-8 h-8 flex items-center justify-center text-body-gray/70 hover:text-teal rounded-full shrink-0"
+          aria-label="Insert emoji"
         >
-          <Mic className="w-[22px] h-[22px]" strokeWidth={1.7} />
+          <Smile className="w-5 h-5" strokeWidth={1.75} />
         </button>
-      )}
+      </div>
+
+      <button
+        type="submit"
+        disabled={!canSend}
+        className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-colors shadow-sm ${
+          canSend
+            ? 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
+            : 'bg-[#E8EEF4] text-body-gray/45 cursor-default'
+        }`}
+        aria-label="Send message"
+      >
+        <Send className="w-[18px] h-[18px] translate-x-[1px]" strokeWidth={2} />
+      </button>
     </form>
   )
 }

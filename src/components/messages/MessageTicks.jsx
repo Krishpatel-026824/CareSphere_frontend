@@ -1,8 +1,8 @@
 const palettes = {
   onTeal: {
-    sent: '#C8EFEA',
-    delivered: '#C8EFEA',
-    read: '#B8F0FF',
+    sent: '#7A8B9A',
+    delivered: '#7A8B9A',
+    read: '#53BDEB',
   },
   light: {
     sent: '#8696A0',

@@ -197,7 +197,7 @@ export default function LabReportDetail({ report, hideDownload = false, embedded
             className="w-full min-h-12 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark inline-flex items-center justify-center gap-2 shadow-sm"
           >
             <Download className="w-5 h-5" strokeWidth={1.8} />
-            Download report
+            Download PDF
           </button>
         )}
       </div>

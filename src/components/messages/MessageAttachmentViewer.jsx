@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Download, FileText, X } from 'lucide-react'
 import { formatFileSize } from '../../utils/fileSize'
-import { loadAttachmentPreview } from '../../utils/messageAttachment'
+import { downloadChatAttachment, loadAttachmentPreview } from '../../utils/messageAttachment'
 
 function parseLabReport(text = '') {
   const lines = text
@@ -29,6 +29,7 @@ function parseLabReport(text = '') {
 
 export default function MessageAttachmentViewer({ attachment, senderName, onClose }) {
   const [preview, setPreview] = useState({ kind: 'loading' })
+  const [downloading, setDownloading] = useState(false)
 
   useEffect(() => {
     if (!attachment) return undefined
@@ -44,8 +45,19 @@ export default function MessageAttachmentViewer({ attachment, senderName, onClos
     }
   }, [attachment])
 
+  async function handleDownload() {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      await downloadChatAttachment(attachment, preview)
+    } finally {
+      setDownloading(false)
+    }
+  }
+
   if (!attachment) return null
   const parsedReport = preview.kind === 'text' ? parseLabReport(preview.text) : null
+  const canDownload = preview.kind !== 'loading' && preview.kind !== 'unsupported'
 
   return (
     <div
@@ -149,15 +161,16 @@ export default function MessageAttachmentViewer({ attachment, senderName, onClos
           >
             Close
           </button>
-          {preview.url || attachment.url ? (
-            <a
-              href={attachment.url}
-              download={attachment.name}
-              className="flex-1 min-h-10 inline-flex items-center justify-center gap-1.5 rounded-xl bg-navy text-sm font-semibold text-white hover:bg-[#36393F]"
+          {canDownload ? (
+            <button
+              type="button"
+              onClick={handleDownload}
+              disabled={downloading}
+              className="flex-1 min-h-10 inline-flex items-center justify-center gap-1.5 rounded-xl bg-navy text-sm font-semibold text-white hover:bg-[#36393F] disabled:opacity-60 cursor-pointer"
             >
               <Download className="h-4 w-4" strokeWidth={1.8} />
-              Download
-            </a>
+              {downloading ? 'Preparing PDF…' : 'Download PDF'}
+            </button>
           ) : null}
         </div>
       </div>

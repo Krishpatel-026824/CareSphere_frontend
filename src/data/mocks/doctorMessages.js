@@ -14,6 +14,7 @@ export const doctorMessagesMock = [
     unread: true,
     unreadCount: 1,
     online: true,
+    pinnedAt: Date.now(),
     messages: [
       {
         id: 'dk-1',
@@ -50,9 +51,10 @@ export const doctorMessagesMock = [
         attachment: {
           kind: 'file',
           name: 'lipid-report-summary.pdf',
+          reportKey: 'lipid-report-summary.pdf',
           size: 24800,
           type: 'application/pdf',
-          url: 'data:application/pdf;base64,',
+          url: '',
         },
       },
     ],

@@ -5,6 +5,7 @@ export const messageActionOptions = [
 ]
 
 export const messageFilterOptions = [
-  { id: 'all', label: 'All messages', hint: 'Every conversation' },
-  { id: 'unread', label: 'Unread', hint: 'New or unanswered chats' },
+  { id: 'all', label: 'All messages', chip: 'All', hint: 'Every conversation' },
+  { id: 'unread', label: 'Unread', chip: 'Unread', hint: 'New or unanswered chats' },
+  { id: 'starred', label: 'Starred', chip: 'Starred', hint: 'Pinned conversations' },
 ]

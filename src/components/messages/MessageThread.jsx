@@ -76,7 +76,7 @@ export default function MessageThread({
 
   if (!conversation) {
     return (
-      <div className="chat-panel h-full min-h-[280px] lg:min-h-0 flex-1 rounded-2xl border border-border-gray bg-white shadow-sm flex flex-col items-center justify-center gap-3 px-6 text-center">
+      <div className="chat-panel h-full min-h-0 flex flex-col items-center justify-center gap-3 px-6 text-center bg-[#F4F7FA]">
         <div className="w-14 h-14 rounded-2xl bg-teal-light text-teal flex items-center justify-center">
           <MessageSquareText className="w-6 h-6" strokeWidth={1.75} />
         </div>
@@ -91,9 +91,9 @@ export default function MessageThread({
   }
 
   return (
-    <div className="chat-panel h-full min-h-0 flex-1 flex flex-col overflow-hidden bg-[#E5DDD5]">
+    <div className="chat-panel h-full min-h-0 flex flex-col overflow-hidden bg-[#EFF9F8]">
       {picked ? (
-        <div className="shrink-0 h-[59px] px-3 sm:px-4 bg-[#075E54] text-white flex items-center justify-between">
+        <div className="shrink-0 h-14 px-3 sm:px-4 bg-white border-b border-[#E6EBF1] text-navy flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -101,7 +101,7 @@ export default function MessageThread({
                 setPicked(null)
                 setSheet(null)
               }}
-              className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/15"
+              className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-[#F4F7FA]"
               aria-label="Clear selection"
             >
               <X className="w-5 h-5" strokeWidth={2} />
@@ -111,7 +111,7 @@ export default function MessageThread({
           <button
             type="button"
             onClick={handleDeleteSelected}
-            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-white/15"
+            className="w-9 h-9 rounded-full flex items-center justify-center cursor-pointer hover:bg-rose-50 text-rose-600"
             aria-label="Delete selected message"
           >
             <Trash2 className="w-5 h-5" strokeWidth={2} />
@@ -127,17 +127,19 @@ export default function MessageThread({
         />
       )}
 
-      <div ref={boardRef} className="relative flex-1 min-h-0 flex flex-col">
+      <div ref={boardRef} className="relative flex-1 min-h-0 overflow-hidden">
         <div className="chat-wallpaper absolute inset-0 pointer-events-none" />
-        <div className="relative z-[1] flex-1 min-h-0 overflow-y-auto overflow-x-hidden px-[4.5%] sm:px-[6%] py-2 flex flex-col gap-0.5 overscroll-y-contain">
+        <div className="relative z-[1] h-full overflow-y-auto overflow-x-hidden px-4 sm:px-6 overscroll-y-contain">
           {conversation.messages.filter((message) => !message.removed).length === 0 && !isTyping ? (
-            <div className="flex-1 flex items-center justify-center px-4">
-              <p className="text-sm text-[#667781] text-center">No messages yet. Send a message to start.</p>
+            <div className="min-h-full flex items-center justify-center px-4">
+              <p className="text-sm text-body-gray text-center">No messages yet. Send a message to start.</p>
             </div>
           ) : (
-            <>
-              <div className="flex justify-center py-2">
-                <span className="wa-date-chip">Today</span>
+            <div className="pt-4 pb-6 flex flex-col gap-2.5">
+              <div className="flex justify-center pb-1">
+                <span className="text-[12px] font-semibold text-teal-dark bg-teal-light/70 border border-teal/20 px-4 py-1.5 rounded-full shadow-sm">
+                  Today
+                </span>
               </div>
               {conversation.messages
                 .filter((message) => !message.removed)
@@ -156,7 +158,7 @@ export default function MessageThread({
                 ))}
               {isTyping ? (
                 <div className="flex justify-start">
-                  <div className="wa-bubble wa-bubble-in wa-typing" aria-label="Typing">
+                  <div className="chat-typing rounded-2xl rounded-bl-md bg-white border border-teal/20 shadow-sm">
                     <span />
                     <span />
                     <span />
@@ -164,7 +166,7 @@ export default function MessageThread({
                 </div>
               ) : null}
               <div ref={messagesEndRef} aria-hidden="true" />
-            </>
+            </div>
           )}
         </div>
 

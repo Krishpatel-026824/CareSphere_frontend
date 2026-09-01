@@ -54,6 +54,7 @@ export function useMessages() {
   const filtered = sortConversationsByPin(
     conversations.filter((item) => {
       if (listFilter === 'unread' && !item.unread) return false
+      if (listFilter === 'starred' && !item.pinnedAt) return false
       const q = query.trim().toLowerCase()
       if (!q) return true
       return (
@@ -145,9 +146,9 @@ export function useMessages() {
       const blob = new Blob([labSummary], { type: 'text/plain' })
       return {
         kind: 'file',
-        name: 'lab-report-summary.txt',
+        name: 'lab-report-summary.pdf',
         size: blob.size,
-        type: blob.type,
+        type: 'application/pdf',
         url: URL.createObjectURL(blob),
       }
     }

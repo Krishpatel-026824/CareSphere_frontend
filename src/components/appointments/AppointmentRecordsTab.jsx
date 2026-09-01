@@ -33,7 +33,7 @@ export default function AppointmentRecordsTab({ appointment }) {
             className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#1E2124] px-3 py-2 text-[12px] font-semibold text-white cursor-pointer hover:bg-[#36393F] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Download className="h-3.5 w-3.5" strokeWidth={1.8} />
-            Download {type === 'All types' ? 'all' : type}
+            Download PDF {type === 'All types' ? '(all)' : ''}
           </button>
         </div>
 

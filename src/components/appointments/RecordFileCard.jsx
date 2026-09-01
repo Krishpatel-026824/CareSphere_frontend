@@ -35,7 +35,7 @@ export default function RecordFileCard({ record, onView, onDownload }) {
         type="button"
         onClick={() => onDownload?.(record)}
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[#E6E8EC] text-[#1E2124] cursor-pointer hover:bg-[#EBF5FF]"
-        aria-label={`Download ${record.title}`}
+        aria-label={`Download ${record.title} as PDF`}
       >
         <Download className="h-4 w-4" strokeWidth={1.8} />
       </button>

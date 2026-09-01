@@ -18,29 +18,30 @@ export default function MessageInfoSheet({ message, onClose }) {
         className="w-full max-w-sm rounded-2xl bg-white shadow-xl overflow-hidden flex flex-col max-h-[min(36rem,calc(100dvh-2rem))]"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="px-3 py-3 bg-[#008069] flex items-center gap-3 shrink-0">
+        <div className="h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-[#0D9488]" />
+        <div className="px-3 py-3 bg-white border-b border-[#E6EBF1] flex items-center gap-3 shrink-0">
           <button
             type="button"
             onClick={onClose}
             aria-label="Back"
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-white/15 cursor-pointer"
+            className="w-9 h-9 rounded-full flex items-center justify-center text-navy hover:bg-[#F4F7FA] cursor-pointer"
           >
             <ArrowLeft className="w-5 h-5" strokeWidth={1.75} />
           </button>
-          <h2 id="message-info-title" className="text-[17px] font-semibold text-white">
+          <h2 id="message-info-title" className="text-[16px] font-bold text-navy">
             Message info
           </h2>
         </div>
 
         <div className="chat-wallpaper px-4 py-5 min-h-[7.5rem] flex items-end justify-end">
-          <div className="wa-bubble wa-bubble-out">
-            <p className="chat-message-text after:clear-both after:table after:content-['']">
-              {preview}
-              <span className="chat-meta">
-                <span className="chat-time-label">{receipts.sent || message.time}</span>
-                <MessageTicks status={receipts.status} variant="light" />
+          <div className="max-w-[85%] rounded-2xl rounded-br-md bg-[#E8F7F6] px-3.5 py-2.5 shadow-sm">
+            <p className="text-[14px] leading-snug text-navy">{preview}</p>
+            <span className="flex items-center justify-end gap-1 mt-1.5">
+              <span className="text-[11px] tabular-nums text-body-gray">
+                {receipts.sent || message.time}
               </span>
-            </p>
+              <MessageTicks status={receipts.status} variant="onTeal" />
+            </span>
           </div>
         </div>
 
@@ -51,7 +52,7 @@ export default function MessageInfoSheet({ message, onClose }) {
             time={receipts.read}
             empty="Waiting for this message to be read"
           />
-          <div className="mx-5 border-t border-border-gray" />
+          <div className="mx-5 border-t border-[#E6EBF1]" />
           <ReceiptRow
             label="Delivered"
             status="delivered"
@@ -68,7 +69,7 @@ function ReceiptRow({ label, status, time, empty }) {
   return (
     <div className="px-5 py-3.5 flex items-start gap-3">
       <div className="mt-1">
-        <MessageTicks status={status} variant="light" />
+        <MessageTicks status={status} variant="onTeal" />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-[15px] font-medium text-navy">{label}</p>

@@ -38,6 +38,7 @@ export default function MessagesScreen() {
     confirmDeleteChat,
     togglePin,
     pinNotice,
+    unreadCount,
     sendMessage,
     sendAttachment,
     deleteForMe,
@@ -64,19 +65,15 @@ export default function MessagesScreen() {
 
   return (
     <div
-      className={`messages-screen w-full bg-transparent ${
+      className={`messages-screen w-full h-full min-h-0 flex flex-col overflow-hidden bg-transparent ${
         showChatPanel && !isDesktop
-          ? 'fixed inset-x-0 top-0 z-20 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] overflow-hidden lg:static lg:inset-auto lg:bottom-auto lg:z-auto lg:overflow-visible lg:h-full'
-          : 'min-h-full lg:h-[100dvh] lg:max-h-[100dvh] lg:overflow-hidden'
+          ? 'fixed inset-x-0 top-0 z-20 bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] lg:static lg:inset-auto lg:bottom-auto lg:z-auto'
+          : ''
       }`}
     >
       <div
         className={`w-full max-w-[1600px] mx-auto flex flex-col h-full min-h-0 ${
-          isDesktop
-            ? 'h-full px-3 py-3'
-            : showChatPanel
-              ? 'h-full'
-              : 'page-pad py-4 gap-4'
+          isDesktop ? 'h-full px-3 py-3' : showChatPanel ? 'h-full' : 'page-pad py-4 gap-4'
         }`}
       >
         {!isDesktop && showListPanel ? <MessagesHeader subtitle={headerSubtitle} /> : null}
@@ -84,7 +81,7 @@ export default function MessagesScreen() {
         <div
           className={`min-h-0 flex-1 ${
             isDesktop
-              ? 'flex h-full overflow-hidden rounded-lg border border-[#D1D7DB] shadow-[0_1px_3px_rgba(11,20,26,0.08)]'
+              ? 'flex h-full overflow-hidden rounded-[20px] border border-[#E6EBF1] shadow-[0_8px_30px_rgba(7,26,47,0.06)] bg-white'
               : 'grid grid-cols-1 h-full'
           }`}
         >
@@ -94,37 +91,30 @@ export default function MessagesScreen() {
                 isDesktop ? 'w-[32%] min-w-[300px] max-w-[420px] shrink-0' : ''
               }`}
             >
-              {isDesktop ? (
-                <div className="shrink-0 h-[60px] px-4 flex items-center bg-[#F0F2F5] border-b border-[#E9EDEF]">
-                  <h1 className="text-[20px] font-normal text-[#111b21]">Chats</h1>
-                </div>
-              ) : null}
-              <div className="min-h-0 flex-1">
-                <ConversationList
-                  items={filtered}
-                  selectedId={selectedId}
-                  query={query}
-                  onQueryChange={setQuery}
-                  onSelect={openConversation}
-                  listFilter={listFilter}
-                  onListFilterChange={setListFilter}
-                  onTogglePin={togglePin}
-                  pinNotice={pinNotice}
-                  searchPlaceholder={isDoctor ? 'Search patients...' : 'Search messages...'}
-                  patientResults={patientMatches}
-                  onStartPatientChat={startPatientChat}
-                  emptyHint={
-                    isDoctor
-                      ? 'Search a patient name to start a chat.'
-                      : 'Try another search or filter.'
-                  }
-                />
-              </div>
+              <ConversationList
+                items={filtered}
+                selectedId={selectedId}
+                query={query}
+                onQueryChange={setQuery}
+                onSelect={openConversation}
+                listFilter={listFilter}
+                onListFilterChange={setListFilter}
+                onTogglePin={togglePin}
+                pinNotice={pinNotice}
+                title={isDesktop ? 'Chats' : undefined}
+                unreadCount={unreadCount}
+                searchPlaceholder={isDoctor ? 'Search patients...' : 'Search messages...'}
+                patientResults={patientMatches}
+                onStartPatientChat={startPatientChat}
+                emptyHint={
+                  isDoctor ? 'Search a patient name to start a chat.' : 'Try another search or filter.'
+                }
+              />
             </div>
           ) : null}
 
           {showChatPanel || isDesktop ? (
-            <section className="min-h-0 h-full flex flex-col flex-1 min-w-0 bg-[#E5DDD5]">
+            <section className="min-h-0 h-full flex flex-col flex-1 min-w-0 bg-[#EFF9F8]">
               <MessageThread
                 conversation={selected}
                 onBack={isDesktop ? undefined : closeConversation}

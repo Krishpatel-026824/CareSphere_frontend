@@ -90,7 +90,7 @@ export default function RecordPreviewModal({ record, onClose, onDownload }) {
             className="flex-1 min-h-10 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#1E2124] text-sm font-semibold text-white cursor-pointer hover:bg-[#36393F]"
           >
             <Download className="h-4 w-4" strokeWidth={1.8} />
-            Download
+            Download PDF
           </button>
         </div>
       </div>
