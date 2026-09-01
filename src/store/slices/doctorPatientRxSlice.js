@@ -4,6 +4,7 @@ const doctorPatientRxSlice = createSlice({
   name: 'doctorPatientRx',
   initialState: {
     byPatientId: {},
+    notesByPatientId: {},
   },
   reducers: {
     prescribePatientRoutine(state, action) {
@@ -36,16 +37,28 @@ const doctorPatientRxSlice = createSlice({
 
       state.byPatientId[patientId] = next
     },
+    addPatientPrescriptionNote(state, action) {
+      const { patientId, note } = action.payload || {}
+      if (!patientId || !note?.id) return
+      const list = state.notesByPatientId[patientId] || []
+      state.notesByPatientId[patientId] = [note, ...list]
+    },
   },
 })
 
-export const { prescribePatientRoutine } = doctorPatientRxSlice.actions
+export const { prescribePatientRoutine, addPatientPrescriptionNote } = doctorPatientRxSlice.actions
 
 const EMPTY_RX = []
+const EMPTY_NOTES = []
 
 export function selectPatientRoutine(state, patientId) {
   if (!patientId) return EMPTY_RX
   return state.doctorPatientRx.byPatientId[patientId] || EMPTY_RX
+}
+
+export function selectPatientPrescriptionNotes(state, patientId) {
+  if (!patientId) return EMPTY_NOTES
+  return state.doctorPatientRx.notesByPatientId[patientId] || EMPTY_NOTES
 }
 
 export default doctorPatientRxSlice.reducer

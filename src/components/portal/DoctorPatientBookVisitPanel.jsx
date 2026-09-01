@@ -1,11 +1,12 @@
 import { CalendarDays, Clock3, X } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import {
-  generateBookVisitDateOptions,
   generateBookVisitTimeOptions,
+  getBookVisitDateSummary,
+  getDefaultBookVisitDate,
 } from '../../data/generators/doctorBookVisitGenerator'
-
-const VISIBLE_DAYS = 8
+import { parseAppointmentDate } from '../../utils/appointmentFormat'
+import BookVisitCalendar from './BookVisitCalendar'
 
 function SectionLabel({ icon: Icon, children }) {
   return (
@@ -13,29 +14,6 @@ function SectionLabel({ icon: Icon, children }) {
       <Icon className="w-4 h-4 text-teal shrink-0" strokeWidth={2} />
       <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-teal-dark">{children}</p>
     </div>
-  )
-}
-
-function DateChip({ date, active, onSelect }) {
-  const primary = date.isToday ? 'Today' : date.isTomorrow ? 'Tomorrow' : date.weekday
-
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`h-[52px] rounded-xl border px-2 flex flex-col items-center justify-center gap-1 cursor-pointer transition-colors ${
-        active
-          ? 'bg-teal text-white border-teal shadow-[0_6px_16px_-8px_rgba(14,165,160,0.75)]'
-          : 'bg-white text-navy border-[#E6EBF1] hover:border-teal/35 hover:bg-[#F7FCFB]'
-      }`}
-    >
-      <span className={`text-[11px] font-medium leading-none ${active ? 'text-white/92' : 'text-body-gray'}`}>
-        {primary}
-      </span>
-      <span className={`text-[13px] font-bold leading-none tabular-nums tracking-tight ${active ? 'text-white' : 'text-navy'}`}>
-        {date.day} {date.month}
-      </span>
-    </button>
   )
 }
 
@@ -56,13 +34,22 @@ function TimeChip({ slot, active, onSelect }) {
 }
 
 export default function DoctorPatientBookVisitPanel({ patientName, onClose, onBook }) {
-  const dates = useMemo(() => generateBookVisitDateOptions(VISIBLE_DAYS), [])
   const times = useMemo(() => generateBookVisitTimeOptions(), [])
-  const [dateLabel, setDateLabel] = useState(dates[1]?.label || dates[0]?.label || '')
+  const [dateLabel, setDateLabel] = useState(() => getDefaultBookVisitDate())
+  const [viewDate, setViewDate] = useState(() => {
+    const parsed = parseAppointmentDate(getDefaultBookVisitDate(), '', new Date())
+    return parsed || new Date()
+  })
   const [timeLabel, setTimeLabel] = useState(times[0]?.label || '')
 
   const canBook = Boolean(dateLabel && timeLabel)
-  const selectedDate = dates.find((date) => date.label === dateLabel)
+  const selectedDate = useMemo(() => getBookVisitDateSummary(dateLabel), [dateLabel])
+
+  function handleSelectDate(label) {
+    setDateLabel(label)
+    const parsed = parseAppointmentDate(label, '', new Date())
+    if (parsed) setViewDate(parsed)
+  }
 
   return (
     <div className="fixed inset-0 z-[1300] flex items-end sm:items-center justify-center p-4 sm:p-6">
@@ -113,16 +100,12 @@ export default function DoctorPatientBookVisitPanel({ patientName, onClose, onBo
         <div className="px-6 py-5 flex flex-col gap-5">
           <section>
             <SectionLabel icon={CalendarDays}>Date</SectionLabel>
-            <div className="grid grid-cols-4 gap-2">
-              {dates.map((date) => (
-                <DateChip
-                  key={date.id}
-                  date={date}
-                  active={date.label === dateLabel}
-                  onSelect={() => setDateLabel(date.label)}
-                />
-              ))}
-            </div>
+            <BookVisitCalendar
+              viewDate={viewDate}
+              selectedLabel={dateLabel}
+              onViewDateChange={setViewDate}
+              onSelectDate={handleSelectDate}
+            />
           </section>
 
           <section>
