@@ -46,6 +46,8 @@ export const DOCTOR_PATHS = {
   visit: '/doctor/schedule/:id',
   patients: '/doctor/patients',
   patient: '/doctor/patients/:patientId',
+  patientLabBook: '/doctor/patients/:patientId/labs/new',
+  patientLabBooked: '/doctor/patients/:patientId/labs/booked',
   messages: '/doctor/messages',
   profile: '/doctor/profile',
   notifications: '/doctor/notifications',
@@ -96,6 +98,14 @@ export function doctorPortalVisitPath(id) {
 
 export function doctorPortalPatientPath(patientId) {
   return `/doctor/patients/${patientId}`
+}
+
+export function doctorPortalPatientLabBookPath(patientId) {
+  return `/doctor/patients/${patientId}/labs/new`
+}
+
+export function doctorPortalPatientLabBookedPath(patientId) {
+  return `/doctor/patients/${patientId}/labs/booked`
 }
 
 export function doctorClinicToolPath(tool) {

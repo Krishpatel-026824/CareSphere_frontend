@@ -67,14 +67,12 @@ export default function LabBookTestCard({
       </button>
 
       {selected && !locked ? (
-        <div className="pl-7">
-          <LabBookOptionsPicker
-            options={options}
-            collectionOptions={labCollectionOptions}
-            priorityOptions={labPriorityOptions}
-            onChange={onChangeOption}
-          />
-        </div>
+        <LabBookOptionsPicker
+          options={options}
+          collectionOptions={labCollectionOptions}
+          priorityOptions={labPriorityOptions}
+          onChange={onChangeOption}
+        />
       ) : null}
     </div>
   )

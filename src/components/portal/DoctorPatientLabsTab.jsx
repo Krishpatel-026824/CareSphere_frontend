@@ -1,8 +1,12 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { Eye } from 'lucide-react'
+import {
+  doctorPortalPatientLabBookPath,
+  doctorPortalPatientLabBookedPath,
+} from '../../routes/paths'
 import { selectOrderedLabsForPatient } from '../../store/slices/doctorPatientLabsSlice'
-import DoctorPatientLabBookModal from './DoctorPatientLabBookModal'
 import DoctorPatientLabReportViewer from './DoctorPatientLabReportViewer'
 import { LabTestCell, matchesLabQuery } from './DoctorPatientLabsTabParts'
 import {
@@ -18,33 +22,19 @@ import {
   PatientChartToolbar,
 } from './PatientChartTable'
 
-export default function DoctorPatientLabsTab({
-  catalog = [],
-  previousReports = [],
-  patientId,
-}) {
+export default function DoctorPatientLabsTab({ previousReports = [], patientId }) {
+  const navigate = useNavigate()
   const ordered = useSelector((state) => selectOrderedLabsForPatient(state, patientId))
   const [query, setQuery] = useState('')
   const [viewReport, setViewReport] = useState(null)
-  const [bookOpen, setBookOpen] = useState(false)
-
-  const orderedMap = useMemo(() => {
-    const map = new Map()
-    ordered.forEach((item) => map.set(item.id, item))
-    return map
-  }, [ordered])
 
   const previousRows = useMemo(
     () => previousReports.filter((item) => matchesLabQuery(item, query)),
     [previousReports, query],
   )
 
-  const pendingRows = useMemo(
-    () => ordered.filter((item) => matchesLabQuery(item, query)),
-    [ordered, query],
-  )
-
   const previousScroll = previousRows.length > 8
+  const bookedCount = ordered.length
 
   return (
     <>
@@ -52,7 +42,26 @@ export default function DoctorPatientLabsTab({
         title="Lab reports"
         subtitle="Previous results for this patient"
         fill
-        action={<PatientChartAddButton label="New lab report" onClick={() => setBookOpen(true)} />}
+        action={
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => navigate(doctorPortalPatientLabBookedPath(patientId))}
+              className="shrink-0 min-h-9 px-3.5 rounded-xl border border-teal/25 bg-[#E8F7F6] text-teal-dark text-[12px] sm:text-[13px] font-semibold cursor-pointer hover:bg-teal hover:text-white hover:border-teal transition-colors inline-flex items-center gap-1.5"
+            >
+              Booked reports
+              {bookedCount ? (
+                <span className="min-w-[20px] h-5 px-1 rounded-full bg-white/80 text-teal-dark text-[11px] font-bold inline-flex items-center justify-center tabular-nums border border-teal/15">
+                  {bookedCount}
+                </span>
+              ) : null}
+            </button>
+            <PatientChartAddButton
+              label="New lab report"
+              onClick={() => navigate(doctorPortalPatientLabBookPath(patientId))}
+            />
+          </div>
+        }
       >
         <PatientChartToolbar>
           <PatientChartSearch
@@ -62,24 +71,6 @@ export default function DoctorPatientLabsTab({
             aria-label="Search lab reports"
           />
         </PatientChartToolbar>
-
-        {pendingRows.length ? (
-          <div className="shrink-0 px-4 sm:px-5 pt-3">
-            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-teal mb-2">
-              Booked reports
-            </p>
-            <div className="rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] divide-y divide-[#E6EBF1]">
-              {pendingRows.map((item) => (
-                <div key={item.id} className="px-3 py-2.5 flex items-center justify-between gap-3">
-                  <LabTestCell item={item} />
-                  <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-1 rounded-full shrink-0">
-                    Booked · {item.dateLabel}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
 
         {!previousRows.length ? (
           <PatientChartEmpty text="No previous lab reports yet. Tap New lab report to book tests for this patient." />
@@ -142,14 +133,6 @@ export default function DoctorPatientLabsTab({
           </>
         )}
       </PatientChartPanel>
-
-      <DoctorPatientLabBookModal
-        open={bookOpen}
-        onClose={() => setBookOpen(false)}
-        catalog={catalog}
-        orderedMap={orderedMap}
-        patientId={patientId}
-      />
 
       <DoctorPatientLabReportViewer report={viewReport} onClose={() => setViewReport(null)} />
     </>

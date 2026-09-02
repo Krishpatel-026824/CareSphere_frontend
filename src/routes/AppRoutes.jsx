@@ -30,6 +30,8 @@ import {
   DoctorLabReportsPage,
   DoctorMessagesPage,
   DoctorNotificationsPage,
+  DoctorPatientLabBookedPage,
+  DoctorPatientLabBookPage,
   DoctorPatientPage,
   DoctorPatientsPage,
   DoctorProfilePage as DoctorPortalProfilePage,
@@ -156,6 +158,8 @@ export default function AppRoutes() {
         <Route path={DOCTOR_PATHS.schedule} element={<DoctorSchedulePage />} />
         <Route path={DOCTOR_PATHS.visit} element={<DoctorSchedulePage />} />
         <Route path={DOCTOR_PATHS.patients} element={<DoctorPatientsPage />} />
+        <Route path={DOCTOR_PATHS.patientLabBook} element={<DoctorPatientLabBookPage />} />
+        <Route path={DOCTOR_PATHS.patientLabBooked} element={<DoctorPatientLabBookedPage />} />
         <Route path={DOCTOR_PATHS.patient} element={<DoctorPatientPage />} />
         <Route path={DOCTOR_PATHS.messages} element={<DoctorMessagesPage />} />
         <Route path={DOCTOR_PATHS.profile} element={<DoctorPortalProfilePage />} />

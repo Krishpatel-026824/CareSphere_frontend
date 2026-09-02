@@ -9,9 +9,9 @@ export default function DoctorPatientPrescriptionDetailModal({ open, note, onClo
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
-      PaperProps={{ sx: { borderRadius: '16px', overflow: 'hidden' } }}
+      PaperProps={{ sx: { borderRadius: '16px', overflow: 'hidden', maxWidth: 640 } }}
     >
       <div className="max-h-[85dvh] flex flex-col bg-[#F4FAF9]">
         <div className="shrink-0 h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
@@ -27,18 +27,8 @@ export default function DoctorPatientPrescriptionDetailModal({ open, note, onClo
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto scroll-y p-4 sm:p-5 bg-[#F0F7F6]">
+        <div className="flex-1 min-h-0 overflow-y-auto scroll-y p-3 sm:p-4 bg-[#F0F7F6]">
           <PrescriptionNotePaper note={note} />
-        </div>
-
-        <div className="shrink-0 px-4 sm:px-5 py-3 border-t border-teal/15 bg-white">
-          <button
-            type="button"
-            onClick={onClose}
-            className="w-full min-h-10 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark transition-colors shadow-sm"
-          >
-            Close
-          </button>
         </div>
       </div>
     </Dialog>

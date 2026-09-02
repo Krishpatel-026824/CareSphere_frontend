@@ -1,16 +1,30 @@
-function OptionChip({ label, active, onClick }) {
+import { ChevronDown } from 'lucide-react'
+
+function LabOptionSelect({ label, value, options, onChange }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`h-7 px-2 rounded-md text-[11px] font-medium border transition-colors cursor-pointer whitespace-nowrap ${
-        active
-          ? 'bg-teal border-teal text-white'
-          : 'bg-white border-[#E6EBF1] text-navy hover:border-teal/40 hover:bg-[#F8FAFC]'
-      }`}
-    >
-      {label}
-    </button>
+    <label className="block min-w-0">
+      <span className="text-[9px] font-bold uppercase tracking-[0.06em] text-body-gray mb-0.5 block">
+        {label}
+      </span>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full appearance-none h-8 rounded-lg border border-[#E6EBF1] bg-white pl-2.5 pr-7 text-[11px] font-semibold text-navy outline-none cursor-pointer focus:border-teal focus:ring-1 focus:ring-teal/30"
+        >
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-body-gray"
+          strokeWidth={2.25}
+          aria-hidden
+        />
+      </div>
+    </label>
   )
 }
 
@@ -21,38 +35,22 @@ export default function LabBookOptionsPicker({
   priorityOptions,
 }) {
   return (
-    <div className="mt-2.5 rounded-lg border border-[#E6EBF1] bg-[#FAFCFD] px-2.5 py-2.5 space-y-2.5">
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.06em] text-body-gray mb-1">
-          Collection
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {collectionOptions.map((option) => (
-            <OptionChip
-              key={option}
-              label={option}
-              active={options.collectionType === option}
-              onClick={() => onChange('collectionType', option)}
-            />
-          ))}
-        </div>
+    <div className="mt-2 ml-6 rounded-md border border-[#E6EBF1] bg-[#FAFCFD] px-2 py-2 space-y-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <LabOptionSelect
+          label="Collection"
+          value={options.collectionType}
+          options={collectionOptions}
+          onChange={(value) => onChange('collectionType', value)}
+        />
+        <LabOptionSelect
+          label="Priority"
+          value={options.priority}
+          options={priorityOptions}
+          onChange={(value) => onChange('priority', value)}
+        />
       </div>
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.06em] text-body-gray mb-1">
-          Priority
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {priorityOptions.map((option) => (
-            <OptionChip
-              key={option}
-              label={option}
-              active={options.priority === option}
-              onClick={() => onChange('priority', option)}
-            />
-          ))}
-        </div>
-      </div>
-      <p className="text-[11px] text-teal font-medium pt-1 border-t border-dashed border-[#E6EBF1] leading-snug">
+      <p className="text-[10px] text-teal font-medium pt-1 border-t border-dashed border-[#E6EBF1] leading-snug">
         {[options.collectionType, options.priority].filter(Boolean).join(' · ')}
       </p>
     </div>

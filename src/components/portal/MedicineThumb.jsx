@@ -2,7 +2,8 @@ import { Pill } from 'lucide-react'
 
 const sizes = {
   sm: 'w-9 h-9 rounded-lg',
-  md: 'w-10 h-10 rounded-xl',
+  md: 'w-11 h-11 rounded-xl',
+  lg: 'w-14 h-14 rounded-xl',
 }
 
 export default function MedicineThumb({ src, size = 'md', className = '' }) {

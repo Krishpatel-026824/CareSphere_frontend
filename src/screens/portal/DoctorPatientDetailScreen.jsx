@@ -10,8 +10,8 @@ import DoctorPatientPrescriptionsTab from '../../components/portal/DoctorPatient
 import { generateDoctorPatientChart } from '../../data/generators/doctorPatientChartGenerator'
 import { selectPatientAudit } from '../../store/slices/doctorPatientAuditSlice'
 
-export default function DoctorPatientDetailScreen({ patient, visits = [], onBack }) {
-  const [tab, setTab] = useState('prescription')
+export default function DoctorPatientDetailScreen({ patient, visits = [], onBack, initialTab }) {
+  const [tab, setTab] = useState(initialTab || 'prescription')
   const liveAudit = useSelector((state) => selectPatientAudit(state, patient?.id))
   const chart = useMemo(
     () => generateDoctorPatientChart(patient, visits),
@@ -49,11 +49,7 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
             <DoctorPatientAppointmentsTab visits={chart.visits} patient={patient} />
           ) : null}
           {tab === 'labs' ? (
-            <DoctorPatientLabsTab
-              catalog={chart.labCatalog}
-              previousReports={chart.labs}
-              patientId={patient.id}
-            />
+            <DoctorPatientLabsTab previousReports={chart.labs} patientId={patient.id} />
           ) : null}
           {tab === 'medicine' ? <DoctorPatientMedicineTab items={chart.medicines} /> : null}
           {tab === 'audit' ? <DoctorPatientAuditTab items={auditItems} /> : null}

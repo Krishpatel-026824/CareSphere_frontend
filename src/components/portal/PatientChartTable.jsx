@@ -17,7 +17,7 @@ export function PatientChartTable({
   return (
     <div className={wrapperClass}>
       <table
-        className={`w-full border-collapse text-left text-[14px] ${fixed ? 'table-fixed' : ''} ${className}`}
+        className={`patient-chart-table w-full border-separate border-spacing-0 text-left text-[14px] ${fixed ? 'table-fixed' : ''} ${className}`}
         style={{ minWidth }}
       >
         {children}
@@ -37,7 +37,7 @@ export function PatientChartThead({ children, className = '' }) {
 export function PatientChartTh({ children, center = false, className = '' }) {
   return (
     <th
-      className={`px-3 sm:px-4 py-3.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white border-b-2 border-[#0A5C58] border-r border-white/15 last:border-r-0 whitespace-nowrap ${
+      className={`px-3 sm:px-4 py-3 text-[12px] font-bold uppercase tracking-[0.08em] text-white bg-teal-dark border-b-2 border-b-[#0A5C58] border-r border-r-white/25 last:border-r-0 whitespace-nowrap ${
         center ? 'text-center' : 'text-left'
       } ${className}`}
     >
@@ -49,7 +49,7 @@ export function PatientChartTh({ children, center = false, className = '' }) {
 export function PatientChartTd({ children, center = false, className = '' }) {
   return (
     <td
-      className={`px-3 sm:px-4 py-3 border-b border-[#E6EBF1] border-r border-[#E6EBF1] last:border-r-0 align-middle ${
+      className={`px-3 sm:px-4 py-3.5 border-b border-b-border-gray border-r border-r-border-gray last:border-r-0 align-middle ${
         center ? 'text-center' : 'text-left'
       } ${className}`}
     >

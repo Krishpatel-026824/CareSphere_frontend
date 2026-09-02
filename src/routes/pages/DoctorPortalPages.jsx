@@ -8,12 +8,15 @@ import DoctorConsultScreen from '../../screens/portal/DoctorConsultScreen'
 import DoctorHomeScreen from '../../screens/portal/DoctorHomeScreen'
 import DoctorLabReportsScreen from '../../screens/portal/DoctorLabReportsScreen'
 import DoctorPatientDetailScreen from '../../screens/portal/DoctorPatientDetailScreen'
+import DoctorPatientLabBookScreen from '../../screens/portal/DoctorPatientLabBookScreen'
+import DoctorPatientLabBookedScreen from '../../screens/portal/DoctorPatientLabBookedScreen'
 import DoctorPatientsScreen from '../../screens/portal/DoctorPatientsScreen'
 import DoctorScheduleScreen from '../../screens/portal/DoctorScheduleScreen'
 import DoctorSignedRxScreen from '../../screens/portal/DoctorSignedRxScreen'
 import { generateDoctorClinicTool } from '../../data/generators/doctorClinicToolsGenerator'
 import { generateDoctorPatientLabReports } from '../../data/generators/doctorLabReportsGenerator'
 import { doctorHomeStatFilters, filterDoctorHomeQueue } from '../../data/generators/doctorHomeGenerator'
+import { generateDoctorPatientChart } from '../../data/generators/doctorPatientChartGenerator'
 import { generatePatientChartVisits } from '../../data/generators/doctorPatientHistoryGenerator'
 import { generateDoctorPatients } from '../../data/generators/doctorPatientsGenerator'
 import { useDoctorProfile } from '../../hooks/useDoctorProfile'
@@ -26,6 +29,8 @@ import {
 import {
   DOCTOR_PATHS,
   PATHS,
+  doctorPortalPatientLabBookPath,
+  doctorPortalPatientLabBookedPath,
   doctorPortalPatientPath,
   doctorPortalVisitPath,
 } from '../paths'
@@ -108,6 +113,7 @@ export function DoctorPatientsPage() {
 
 export function DoctorPatientPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { patientId } = useParams()
   const schedule = useDoctorSchedule()
   const patients = generateDoctorPatients(schedule.visits)
@@ -121,7 +127,65 @@ export function DoctorPatientPage() {
     <DoctorPatientDetailScreen
       patient={patient}
       visits={generatePatientChartVisits(schedule.visits, patient)}
+      initialTab={location.state?.tab}
       onBack={() => navigate(DOCTOR_PATHS.patients)}
+    />
+  )
+}
+
+export function DoctorPatientLabBookPage() {
+  const navigate = useNavigate()
+  const { patientId } = useParams()
+  const schedule = useDoctorSchedule()
+  const patients = generateDoctorPatients(schedule.visits)
+  const patient = patients.find((item) => item.id === patientId)
+
+  if (!patient) {
+    return <Navigate to={DOCTOR_PATHS.patients} replace />
+  }
+
+  const chart = generateDoctorPatientChart(patient, generatePatientChartVisits(schedule.visits, patient))
+
+  function returnToLabs() {
+    navigate(doctorPortalPatientPath(patientId), { state: { tab: 'labs' } })
+  }
+
+  function goToBooked() {
+    navigate(doctorPortalPatientLabBookedPath(patientId))
+  }
+
+  return (
+    <DoctorPatientLabBookScreen
+      patient={patient}
+      catalog={chart.labCatalog}
+      patientId={patientId}
+      onBack={returnToLabs}
+      onBooked={goToBooked}
+    />
+  )
+}
+
+export function DoctorPatientLabBookedPage() {
+  const navigate = useNavigate()
+  const { patientId } = useParams()
+  const schedule = useDoctorSchedule()
+  const patients = generateDoctorPatients(schedule.visits)
+  const patient = patients.find((item) => item.id === patientId)
+
+  if (!patient) {
+    return <Navigate to={DOCTOR_PATHS.patients} replace />
+  }
+
+  function returnToLabs() {
+    navigate(doctorPortalPatientPath(patientId), { state: { tab: 'labs' } })
+  }
+
+  return (
+    <DoctorPatientLabBookedScreen
+      patient={patient}
+      patientId={patientId}
+      onBack={returnToLabs}
+      onBookNew={() => navigate(doctorPortalPatientLabBookPath(patientId))}
     />
   )
 }

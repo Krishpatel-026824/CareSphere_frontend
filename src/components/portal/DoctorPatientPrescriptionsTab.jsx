@@ -54,12 +54,12 @@ function mapLegacyPrescription(item) {
 }
 
 const PRESCRIPTION_COLUMNS = [
-  { label: 'No.', width: '52px', center: true },
-  { label: 'Date', width: '96px', center: true },
-  { label: 'Time', width: '108px', center: true },
-  { label: 'Visit', width: 'auto', center: false },
-  { label: 'Clinic', width: '172px', center: true },
-  { label: 'View', width: '96px', center: true },
+  { label: 'No.', width: '5%', center: true },
+  { label: 'Date', width: '11%', center: true },
+  { label: 'Time', width: '12%', center: true },
+  { label: 'Visit', width: '38%', center: false },
+  { label: 'Clinic', width: '24%', center: true },
+  { label: 'View', width: '10%', center: true },
 ]
 
 export default function DoctorPatientPrescriptionsTab({
@@ -125,15 +125,12 @@ export default function DoctorPatientPrescriptionsTab({
               fit={!tableScroll}
               fill={tableScroll}
               fixed
-              minWidth="760px"
-              className="text-[16px]"
+              minWidth="820px"
+              className="text-[15px]"
             >
               <colgroup>
                 {PRESCRIPTION_COLUMNS.map((column) => (
-                  <col
-                    key={column.label}
-                    style={column.width === 'auto' ? undefined : { width: column.width }}
-                  />
+                  <col key={column.label} style={{ width: column.width }} />
                 ))}
               </colgroup>
               <PatientChartThead>
@@ -157,30 +154,30 @@ export default function DoctorPatientPrescriptionsTab({
                   return (
                     <tr
                       key={item.id}
-                      className="transition-colors bg-white even:bg-[#FAFCFD] hover:bg-[#F0FAF9]"
+                      className="transition-colors bg-white even:bg-[#F8FAFC] hover:bg-[#F0FAF9]"
                     >
-                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy">
+                      <PatientChartTd center className="!py-3.5 text-[15px] font-bold text-teal-dark tabular-nums">
                         {index + 1}
                       </PatientChartTd>
-                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                      <PatientChartTd center className="!py-3.5 text-[15px] font-semibold text-navy whitespace-nowrap tabular-nums">
                         {rx.dateLabel}
                       </PatientChartTd>
-                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                      <PatientChartTd center className="!py-3.5 text-[15px] font-semibold text-navy whitespace-nowrap tabular-nums">
                         {rx.timeLabel}
                       </PatientChartTd>
-                      <PatientChartTd className="!py-4">
-                        <p className="text-[16px] font-semibold text-navy leading-snug line-clamp-2">
+                      <PatientChartTd className="!py-3.5">
+                        <p className="text-[15px] font-medium text-navy leading-snug line-clamp-2">
                           {visit}
                         </p>
                       </PatientChartTd>
-                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                      <PatientChartTd center className="!py-3.5 text-[15px] font-medium text-body-gray whitespace-nowrap">
                         {rx.clinic}
                       </PatientChartTd>
-                      <PatientChartTd center className="!py-4">
+                      <PatientChartTd center className="!py-3.5">
                         <button
                           type="button"
                           onClick={() => setSelectedNote(item)}
-                          className="min-h-10 px-4 rounded-xl text-[14px] font-semibold text-teal-dark bg-[#E8F7F6] border border-teal/15 hover:bg-teal hover:text-white hover:border-teal transition-colors cursor-pointer"
+                          className="min-h-9 min-w-[72px] px-3.5 rounded-lg text-[13px] font-semibold text-teal-dark bg-[#E8F7F6] border border-teal/20 hover:bg-teal hover:text-white hover:border-teal transition-colors cursor-pointer"
                         >
                           View
                         </button>

@@ -6,6 +6,7 @@ import {
 import { doctorPatientsMock } from '../mocks/doctorPatients'
 import { labTestsMock } from '../mocks/labTests'
 import { pharmacyItemsMock } from '../mocks/quickActions'
+import { getMedicineUseFor } from '../mocks/medicineUseFor'
 import { generateCatalogLabReport, generateDoctorLabReport } from './doctorLabReportsGenerator'
 import { resolveMedicineImage, withPharmacyMedicineImage } from './medicineImageResolver'
 
@@ -18,22 +19,6 @@ function parseDoseFromName(name = '') {
   return match ? match[1].replace(/\s+/g, '') : '—'
 }
 
-function parseUseFor(subtitle = '', category = '') {
-  const fromSubtitle = String(subtitle).split('•')[0].trim()
-  if (fromSubtitle) return fromSubtitle
-
-  const byCategory = {
-    analgesics: 'Fever & pain',
-    cetirizines: 'Allergy',
-    allergies: 'Allergy & cold',
-    antibiotics: 'Infection',
-    metformins: 'Blood sugar',
-    syrups: 'Cough & fever',
-    fluids: 'Rehydration',
-    others: 'As advised',
-  }
-  return byCategory[category] || 'As advised'
-}
 
 export function generatePatientPrescriptions(patientId) {
   const fromTasks = doctorPrescribeTasksMock
@@ -69,8 +54,8 @@ export function generatePatientPrescriptions(patientId) {
         duration: index === 2 ? 'Ongoing' : '7 days',
         visitLabel: index === 0 ? '12 Mar 2026' : '08 Nov 2025',
         instructions: `Continue ${item.name} as previously advised.`,
-        subtitle: parseUseFor(item.subtitle, item.category),
-        useFor: parseUseFor(item.subtitle, item.category),
+        subtitle: getMedicineUseFor(item),
+        useFor: getMedicineUseFor(item),
         image: item.image || resolveMedicineImage(item.name, item.id),
       }
     })
@@ -88,7 +73,7 @@ export function generatePatientMedicines() {
       frequency: /syrup|ml|gel|spray|cream|drops/i.test(item.subtitle || item.name)
         ? 'As directed'
         : 'Once daily',
-      useFor: parseUseFor(item.subtitle, item.category),
+      useFor: getMedicineUseFor(item),
       category: item.category,
       image: item.image || resolveMedicineImage(item.name, item.id),
     }
