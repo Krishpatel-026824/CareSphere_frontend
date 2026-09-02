@@ -22,7 +22,7 @@ export default function DoctorScheduleVisitModal({
         onClick={onClose}
       />
       <div
-        className="relative w-full max-w-[760px] max-h-[min(92dvh,820px)] rounded-3xl overflow-hidden bg-white shadow-[0_24px_64px_-20px_rgba(7,26,47,0.45)] flex flex-col"
+        className="relative w-full max-w-[520px] max-h-[min(90dvh,720px)] rounded-2xl overflow-hidden bg-white shadow-[0_24px_64px_-20px_rgba(7,26,47,0.45)] flex flex-col"
         role="dialog"
         aria-modal="true"
       >

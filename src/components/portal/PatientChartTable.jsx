@@ -9,10 +9,10 @@ export function PatientChartTable({
   className = '',
 }) {
   const wrapperClass = fit
-    ? 'shrink-0 overflow-auto bg-white'
+    ? 'shrink-0 overflow-auto bg-white border-x border-[#E6EBF1]'
     : fill
-      ? 'flex-1 min-h-0 overflow-auto bg-[#FAFCFD]'
-      : 'max-h-[min(420px,calc(100dvh-300px))] overflow-auto'
+      ? 'flex-1 min-h-0 overflow-auto bg-[#FAFCFD] border-x border-[#E6EBF1]'
+      : 'max-h-[min(420px,calc(100dvh-300px))] overflow-auto border-x border-[#E6EBF1]'
 
   return (
     <div className={wrapperClass}>
@@ -26,10 +26,18 @@ export function PatientChartTable({
   )
 }
 
+export function PatientChartThead({ children, className = '' }) {
+  return (
+    <thead className={`bg-teal-dark sticky top-0 z-10 ${className}`}>
+      {children}
+    </thead>
+  )
+}
+
 export function PatientChartTh({ children, center = false, className = '' }) {
   return (
     <th
-      className={`px-3 sm:px-4 py-3 text-[11px] font-bold uppercase tracking-[0.07em] text-teal-dark border-b border-teal/20 whitespace-nowrap ${
+      className={`px-3 sm:px-4 py-3.5 text-[12px] font-bold uppercase tracking-[0.08em] text-white border-b-2 border-[#0A5C58] border-r border-white/15 last:border-r-0 whitespace-nowrap ${
         center ? 'text-center' : 'text-left'
       } ${className}`}
     >
@@ -41,7 +49,7 @@ export function PatientChartTh({ children, center = false, className = '' }) {
 export function PatientChartTd({ children, center = false, className = '' }) {
   return (
     <td
-      className={`px-3 sm:px-4 py-3 border-b border-[#EEF2F6] align-middle ${
+      className={`px-3 sm:px-4 py-3 border-b border-[#E6EBF1] border-r border-[#E6EBF1] last:border-r-0 align-middle ${
         center ? 'text-center' : 'text-left'
       } ${className}`}
     >
@@ -94,15 +102,22 @@ export function PatientChartSearch({
   onChange,
   placeholder,
   'aria-label': ariaLabel,
+  compact = false,
 }) {
   return (
-    <label className="shrink-0 flex items-center gap-3 rounded-xl bg-white border border-[#E6EBF1] px-3.5 min-h-11 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow">
+    <label
+      className={`shrink-0 flex items-center gap-2.5 rounded-xl bg-white border border-[#E6EBF1] px-3 shadow-sm focus-within:border-teal/40 focus-within:ring-2 focus-within:ring-teal/10 transition-shadow ${
+        compact ? 'min-h-9' : 'min-h-11'
+      }`}
+    >
       <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
       <input
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="w-full bg-transparent text-[14px] sm:text-[15px] text-navy outline-none placeholder:text-body-gray/60"
+        className={`w-full bg-transparent text-navy outline-none placeholder:text-body-gray/60 ${
+          compact ? 'text-[13px]' : 'text-[14px] sm:text-[15px]'
+        }`}
         aria-label={ariaLabel || placeholder}
       />
     </label>
@@ -129,6 +144,7 @@ export function PatientChartPanel({
   children,
   fill = false,
   className = '',
+  titleClassName = '',
 }) {
   return (
     <section
@@ -138,10 +154,12 @@ export function PatientChartPanel({
     >
       <div className="shrink-0 h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
 
-      <div className="shrink-0 px-4 sm:px-5 py-3.5 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex items-center justify-between gap-3">
-        <div className="min-w-0">
+      <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1] bg-gradient-to-b from-[#F8FAFC] to-white flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+        <div className="min-w-0 shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
-            <h3 className="text-lg sm:text-xl font-bold text-navy tracking-tight truncate">
+            <h3
+              className={`text-lg sm:text-xl font-bold text-navy tracking-tight truncate ${titleClassName}`}
+            >
               {title}
             </h3>
             {count != null ? (

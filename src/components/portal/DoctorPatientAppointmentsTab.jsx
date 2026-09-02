@@ -13,6 +13,7 @@ import {
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
+  PatientChartThead,
   PatientChartToolbar,
 } from './PatientChartTable'
 
@@ -75,7 +76,6 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
       <PatientChartPanel
         title="Appointment list"
         subtitle="Upcoming and past visits for this patient"
-        count={filtered.length}
         fill
         action={
           <PatientChartAddButton label="Add appointment" onClick={() => setBookingOpen(true)} />
@@ -97,7 +97,7 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
         ) : (
           <>
             <PatientChartTable fill>
-              <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
+              <PatientChartThead>
                 <tr>
                   {['No.', 'Patient', 'Date', 'Time', 'Visit reason', 'Status'].map((label, index) => (
                     <PatientChartTh key={label} center={index !== 1 && index !== 4}>
@@ -105,7 +105,7 @@ export default function DoctorPatientAppointmentsTab({ visits = [], patient }) {
                     </PatientChartTh>
                   ))}
                 </tr>
-              </thead>
+              </PatientChartThead>
               <tbody>
                 {filtered.map((visit, index) => {
                   const style =

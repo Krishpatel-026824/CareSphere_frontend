@@ -7,8 +7,10 @@ import {
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
+  PatientChartThead,
   PatientChartToolbar,
 } from './PatientChartTable'
+import { parseVisitLabel } from '../../utils/prescriptionNoteFormat'
 
 const TYPE_STYLE = {
   visit: 'bg-sky-100 text-sky-800',
@@ -18,12 +20,22 @@ const TYPE_STYLE = {
   edit: 'bg-slate-100 text-slate-700',
 }
 
+const TABLE_COLUMNS = ['No.', 'Date', 'Time', 'Action', 'Detail', 'By']
+
 function matchesAuditQuery(item, query) {
   const q = query.trim().toLowerCase()
   if (!q) return true
   return [item.at, item.action, item.detail, item.actor, item.type]
     .filter(Boolean)
     .some((value) => String(value).toLowerCase().includes(q))
+}
+
+function splitAuditWhen(at = '') {
+  const parsed = parseVisitLabel(at)
+  return {
+    dateLabel: parsed.dateLabel || at || '—',
+    timeLabel: parsed.timeLabel || '—',
+  }
 }
 
 export default function DoctorPatientAuditTab({ items = [] }) {
@@ -34,11 +46,13 @@ export default function DoctorPatientAuditTab({ items = [] }) {
     [items, query],
   )
 
+  const tableScroll = filtered.length > 8
+
   return (
     <PatientChartPanel
       title="Audit trail"
       subtitle="Chronological log of visits, prescriptions, labs, and notes"
-      count={filtered.length}
+      titleClassName="!text-xl sm:!text-2xl"
       fill
     >
       <PatientChartToolbar>
@@ -56,53 +70,67 @@ export default function DoctorPatientAuditTab({ items = [] }) {
         <PatientChartEmpty text="No audit entries match your search." />
       ) : (
         <>
-          <PatientChartTable minWidth="720px" fill>
-            <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
+          <PatientChartTable
+            fit={!tableScroll}
+            fill={tableScroll}
+            fixed
+            minWidth="880px"
+            className="text-[14px]"
+          >
+            <PatientChartThead>
               <tr>
-                {['No.', 'When', 'Action', 'Detail', 'By'].map((label, index) => (
-                  <PatientChartTh key={label} center={index === 0}>
+                {TABLE_COLUMNS.map((label, index) => (
+                  <PatientChartTh
+                    key={label}
+                    center={index !== 4}
+                    className="!text-[12px]"
+                  >
                     {label}
                   </PatientChartTh>
                 ))}
               </tr>
-            </thead>
+            </PatientChartThead>
             <tbody>
-              {filtered.map((item, index) => (
-                <tr
-                  key={item.id}
-                  className={`transition-colors hover:bg-[#F0FAF9] ${
-                    index % 2 ? 'bg-[#FAFCFD]' : 'bg-white'
-                  }`}
-                >
-                  <PatientChartTd center>
-                    <span className="text-[13px] font-semibold text-body-gray tabular-nums">
+              {filtered.map((item, index) => {
+                const { dateLabel, timeLabel } = splitAuditWhen(item.at)
+
+                return (
+                  <tr
+                    key={item.id}
+                    className="transition-colors bg-white even:bg-[#FAFCFD] hover:bg-[#F0FAF9]"
+                  >
+                    <PatientChartTd center className="!py-3 text-[14px] font-semibold text-navy">
                       {index + 1}
-                    </span>
-                  </PatientChartTd>
-                  <PatientChartTd>
-                    <p className="text-[13px] font-semibold text-navy whitespace-nowrap tabular-nums">
-                      {item.at}
-                    </p>
-                  </PatientChartTd>
-                  <PatientChartTd>
-                    <span
-                      className={`inline-flex text-[11px] font-semibold px-2.5 py-1 rounded-full ${
-                        TYPE_STYLE[item.type] || TYPE_STYLE.note
-                      }`}
-                    >
-                      {item.action}
-                    </span>
-                  </PatientChartTd>
-                  <PatientChartTd>
-                    <p className="text-[13px] text-navy truncate max-w-[320px]" title={item.detail}>
-                      {item.detail}
-                    </p>
-                  </PatientChartTd>
-                  <PatientChartTd>
-                    <p className="text-[13px] text-body-gray truncate">{item.actor}</p>
-                  </PatientChartTd>
-                </tr>
-              ))}
+                    </PatientChartTd>
+                    <PatientChartTd center className="!py-3 text-[14px] font-semibold text-navy whitespace-nowrap">
+                      {dateLabel}
+                    </PatientChartTd>
+                    <PatientChartTd center className="!py-3 text-[14px] font-semibold text-navy whitespace-nowrap">
+                      {timeLabel}
+                    </PatientChartTd>
+                    <PatientChartTd center className="!py-3">
+                      <span
+                        className={`inline-flex text-[12px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap ${
+                          TYPE_STYLE[item.type] || TYPE_STYLE.note
+                        }`}
+                      >
+                        {item.action}
+                      </span>
+                    </PatientChartTd>
+                    <PatientChartTd className="!py-3">
+                      <p
+                        className="text-[14px] font-medium text-navy leading-snug line-clamp-2"
+                        title={item.detail}
+                      >
+                        {item.detail}
+                      </p>
+                    </PatientChartTd>
+                    <PatientChartTd center className="!py-3 text-[14px] font-medium text-body-gray whitespace-nowrap">
+                      {item.actor}
+                    </PatientChartTd>
+                  </tr>
+                )
+              })}
             </tbody>
           </PatientChartTable>
           <PatientChartFooter showing={filtered.length} total={items.length} label="events" />

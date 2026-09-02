@@ -7,16 +7,24 @@ import {
 } from '../../store/slices/doctorPatientRxSlice'
 import DoctorPatientPrescriptionModal from './DoctorPatientPrescriptionModal'
 import DoctorPatientPrescriptionDetailModal from './DoctorPatientPrescriptionDetailModal'
-import DoctorPatientPrescriptionNoteCard from './DoctorPatientPrescriptionNoteCard'
 import {
   PatientChartAddButton,
   PatientChartEmpty,
   PatientChartFooter,
   PatientChartPanel,
   PatientChartSearch,
+  PatientChartTable,
+  PatientChartTd,
+  PatientChartTh,
+  PatientChartThead,
   PatientChartToolbar,
 } from './PatientChartTable'
-import { parseVisitLabel, prescriptionMatchesQuery } from '../../utils/prescriptionNoteFormat'
+import {
+  buildVisitSummary,
+  normalizePrescriptionNote,
+  parseVisitLabel,
+  prescriptionMatchesQuery,
+} from '../../utils/prescriptionNoteFormat'
 
 function mapLegacyPrescription(item) {
   const parsed = parseVisitLabel(item.visitLabel)
@@ -45,6 +53,15 @@ function mapLegacyPrescription(item) {
   }
 }
 
+const PRESCRIPTION_COLUMNS = [
+  { label: 'No.', width: '52px', center: true },
+  { label: 'Date', width: '96px', center: true },
+  { label: 'Time', width: '108px', center: true },
+  { label: 'Visit', width: 'auto', center: false },
+  { label: 'Clinic', width: '172px', center: true },
+  { label: 'View', width: '96px', center: true },
+]
+
 export default function DoctorPatientPrescriptionsTab({
   catalog = [],
   existing = [],
@@ -59,12 +76,15 @@ export default function DoctorPatientPrescriptionsTab({
 
   const legacyNotes = useMemo(() => existing.map(mapLegacyPrescription), [existing])
 
+  const allNotes = useMemo(() => [...savedNotes, ...legacyNotes], [savedNotes, legacyNotes])
+
   const notes = useMemo(() => {
-    const merged = [...savedNotes, ...legacyNotes]
     const q = query.trim().toLowerCase()
-    if (!q) return merged
-    return merged.filter((item) => prescriptionMatchesQuery(item, q))
-  }, [savedNotes, legacyNotes, query])
+    if (!q) return allNotes
+    return allNotes.filter((item) => prescriptionMatchesQuery(item, q))
+  }, [allNotes, query])
+
+  const tableScroll = notes.length > 8
 
   function handleSave(note) {
     if (!patientId) return
@@ -84,8 +104,7 @@ export default function DoctorPatientPrescriptionsTab({
     <>
       <PatientChartPanel
         title="Prescriptions"
-        subtitle="Prescription notes written for this patient"
-        count={notes.length}
+        subtitle="Previous prescription records for this patient"
         fill
         action={<PatientChartAddButton label="Add prescription" onClick={() => setModalOpen(true)} />}
       >
@@ -99,19 +118,83 @@ export default function DoctorPatientPrescriptionsTab({
         </PatientChartToolbar>
 
         {!notes.length ? (
-          <PatientChartEmpty text="No prescription notes yet. Tap Add prescription to write a new note." />
+          <PatientChartEmpty text="No prescription records yet. Tap Add prescription to write a new note." />
         ) : (
           <>
-            <div className="flex-1 min-h-0 overflow-y-auto scroll-y p-3 sm:p-4 flex flex-col gap-2 bg-[#FAFCFD]">
-              {notes.map((item) => (
-                <DoctorPatientPrescriptionNoteCard
-                  key={item.id}
-                  note={item}
-                  onOpen={setSelectedNote}
-                />
-              ))}
-            </div>
-            <PatientChartFooter showing={notes.length} total={notes.length} label="prescriptions" />
+            <PatientChartTable
+              fit={!tableScroll}
+              fill={tableScroll}
+              fixed
+              minWidth="760px"
+              className="text-[16px]"
+            >
+              <colgroup>
+                {PRESCRIPTION_COLUMNS.map((column) => (
+                  <col
+                    key={column.label}
+                    style={column.width === 'auto' ? undefined : { width: column.width }}
+                  />
+                ))}
+              </colgroup>
+              <PatientChartThead>
+                <tr>
+                  {PRESCRIPTION_COLUMNS.map((column) => (
+                    <PatientChartTh
+                      key={column.label}
+                      center={column.center}
+                      className="!text-[13px]"
+                    >
+                      {column.label}
+                    </PatientChartTh>
+                  ))}
+                </tr>
+              </PatientChartThead>
+              <tbody>
+                {notes.map((item, index) => {
+                  const rx = normalizePrescriptionNote(item)
+                  const visit = buildVisitSummary(rx)
+
+                  return (
+                    <tr
+                      key={item.id}
+                      className="transition-colors bg-white even:bg-[#FAFCFD] hover:bg-[#F0FAF9]"
+                    >
+                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy">
+                        {index + 1}
+                      </PatientChartTd>
+                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                        {rx.dateLabel}
+                      </PatientChartTd>
+                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                        {rx.timeLabel}
+                      </PatientChartTd>
+                      <PatientChartTd className="!py-4">
+                        <p className="text-[16px] font-semibold text-navy leading-snug line-clamp-2">
+                          {visit}
+                        </p>
+                      </PatientChartTd>
+                      <PatientChartTd center className="!py-4 text-[16px] font-semibold text-navy whitespace-nowrap">
+                        {rx.clinic}
+                      </PatientChartTd>
+                      <PatientChartTd center className="!py-4">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedNote(item)}
+                          className="min-h-10 px-4 rounded-xl text-[14px] font-semibold text-teal-dark bg-[#E8F7F6] border border-teal/15 hover:bg-teal hover:text-white hover:border-teal transition-colors cursor-pointer"
+                        >
+                          View
+                        </button>
+                      </PatientChartTd>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </PatientChartTable>
+            <PatientChartFooter
+              showing={notes.length}
+              total={allNotes.length}
+              label="prescriptions"
+            />
           </>
         )}
       </PatientChartPanel>

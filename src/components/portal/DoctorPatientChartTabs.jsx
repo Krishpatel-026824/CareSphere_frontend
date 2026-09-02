@@ -11,16 +11,10 @@ const TABS = [
   { id: 'appointments', label: 'Appointments', short: 'Visits', Icon: CalendarDays },
   { id: 'labs', label: 'Lab reports', short: 'Labs', Icon: FlaskConical },
   { id: 'medicine', label: 'Medicine', short: 'Meds', Icon: Pill },
-  { id: 'audit', label: 'Activity', short: 'Log', Icon: History },
+  { id: 'audit', label: 'Audit', short: 'Audit', Icon: History },
 ]
 
-function formatCount(count) {
-  if (count == null || count <= 0) return null
-  if (count > 99) return '99+'
-  return String(count)
-}
-
-export default function DoctorPatientChartTabs({ value, counts = {}, onChange }) {
+export default function DoctorPatientChartTabs({ value, onChange }) {
   return (
     <nav
       aria-label="Patient chart sections"
@@ -30,7 +24,6 @@ export default function DoctorPatientChartTabs({ value, counts = {}, onChange })
         {TABS.map((tab) => {
           const active = value === tab.id
           const Icon = tab.Icon
-          const badge = formatCount(counts[tab.id])
 
           return (
             <button
@@ -51,17 +44,6 @@ export default function DoctorPatientChartTabs({ value, counts = {}, onChange })
               />
               <span className="truncate sm:hidden">{tab.short}</span>
               <span className="truncate hidden sm:inline">{tab.label}</span>
-              {badge ? (
-                <span
-                  className={`min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-bold inline-flex items-center justify-center tabular-nums shrink-0 ${
-                    active
-                      ? 'bg-white/20 text-white'
-                      : 'bg-white text-navy border border-border-gray'
-                  }`}
-                >
-                  {badge}
-                </span>
-              ) : null}
             </button>
           )
         })}

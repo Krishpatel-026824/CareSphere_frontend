@@ -9,14 +9,9 @@ import DoctorPatientMedicineTab from '../../components/portal/DoctorPatientMedic
 import DoctorPatientPrescriptionsTab from '../../components/portal/DoctorPatientPrescriptionsTab'
 import { generateDoctorPatientChart } from '../../data/generators/doctorPatientChartGenerator'
 import { selectPatientAudit } from '../../store/slices/doctorPatientAuditSlice'
-import { selectOrderedLabsForPatient } from '../../store/slices/doctorPatientLabsSlice'
-import { selectPatientPrescriptionNotes, selectPatientRoutine } from '../../store/slices/doctorPatientRxSlice'
 
 export default function DoctorPatientDetailScreen({ patient, visits = [], onBack }) {
   const [tab, setTab] = useState('prescription')
-  const orderedLabs = useSelector((state) => selectOrderedLabsForPatient(state, patient?.id))
-  const routine = useSelector((state) => selectPatientRoutine(state, patient?.id))
-  const prescriptionNotes = useSelector((state) => selectPatientPrescriptionNotes(state, patient?.id))
   const liveAudit = useSelector((state) => selectPatientAudit(state, patient?.id))
   const chart = useMemo(
     () => generateDoctorPatientChart(patient, visits),
@@ -32,26 +27,13 @@ export default function DoctorPatientDetailScreen({ patient, visits = [], onBack
 
   if (!patient) return null
 
-  const prescribedNames = new Set(routine.map((item) => item.name))
-  const prescriptionCount = prescriptionNotes.length + chart.prescriptions.filter(
-    (item) => !prescribedNames.has(item.name),
-  ).length
-
-  const counts = {
-    prescription: prescriptionCount,
-    appointments: chart.visits.length,
-    labs: orderedLabs.length + chart.labs.length,
-    medicine: chart.medicines.length,
-    audit: auditItems.length,
-  }
-
   return (
     <div className="w-full h-full min-h-0 bg-[#F4F7FA] flex flex-col overflow-hidden">
       <div className="flex-1 min-h-0 page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto w-full">
         <div className="shrink-0 flex flex-col gap-3">
           <DoctorPatientDetailBack onBack={onBack} />
           <DoctorPatientHeader patient={patient} />
-          <DoctorPatientChartTabs value={tab} counts={counts} onChange={setTab} />
+          <DoctorPatientChartTabs value={tab} onChange={setTab} />
         </div>
 
         <div className="flex-1 min-h-0 flex flex-col">

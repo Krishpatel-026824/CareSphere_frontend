@@ -13,28 +13,29 @@ export default function DoctorPatientPrescriptionDetailModal({ open, note, onClo
       fullWidth
       PaperProps={{ sx: { borderRadius: '16px', overflow: 'hidden' } }}
     >
-      <div className="max-h-[85dvh] flex flex-col bg-white">
-        <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-[#E6EBF1] flex items-center justify-between gap-3">
-          <p className="text-sm font-bold text-navy">Prescription form</p>
+      <div className="max-h-[85dvh] flex flex-col bg-[#F4FAF9]">
+        <div className="shrink-0 h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark" />
+        <div className="shrink-0 px-4 sm:px-5 py-3 border-b border-teal/15 bg-gradient-to-b from-[#E8F7F6] to-white flex items-center justify-between gap-3">
+          <p className="text-sm font-bold text-teal-dark">Prescription form</p>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-bg-gray cursor-pointer shrink-0"
+            className="p-2 rounded-xl hover:bg-teal-light/60 cursor-pointer shrink-0"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-body-gray" />
+            <X className="w-5 h-5 text-teal-dark" />
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto scroll-y p-4 sm:p-5 bg-[#FAFCFD]">
+        <div className="flex-1 min-h-0 overflow-y-auto scroll-y p-4 sm:p-5 bg-[#F0F7F6]">
           <PrescriptionNotePaper note={note} />
         </div>
 
-        <div className="shrink-0 px-4 sm:px-5 py-3 border-t border-[#E6EBF1] bg-white">
+        <div className="shrink-0 px-4 sm:px-5 py-3 border-t border-teal/15 bg-white">
           <button
             type="button"
             onClick={onClose}
-            className="w-full min-h-10 rounded-xl border border-[#E6EBF1] bg-white text-sm font-semibold text-navy cursor-pointer hover:bg-bg-gray transition-colors"
+            className="w-full min-h-10 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark transition-colors shadow-sm"
           >
             Close
           </button>

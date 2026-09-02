@@ -149,3 +149,14 @@ export function matchesRxQuery(item, query) {
     .filter(Boolean)
     .some((value) => String(value).toLowerCase().includes(q))
 }
+
+export function formatPrescriptionMedicinesSummary(note) {
+  const medicines = note?.medicines || []
+  if (!medicines.length) return '—'
+
+  const first = medicines[0]?.name
+  if (!first) return '—'
+  if (medicines.length === 1) return first
+
+  return `${first} +${medicines.length - 1}`
+}

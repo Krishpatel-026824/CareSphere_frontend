@@ -8,10 +8,10 @@ function stepClass(state) {
   return 'bg-[#F4F7FA] text-body-gray'
 }
 
-export default function DoctorVisitTimeline({ steps = [], tasks = [], compact = false }) {
+export default function DoctorVisitTimeline({ steps = [], tasks = [], compact = false, showHint = true }) {
   if (!steps.length) return null
 
-  const hint = getDoctorVisitTimelineHint(steps, tasks)
+  const hint = showHint ? getDoctorVisitTimelineHint(steps, tasks) : ''
 
   return (
     <div className="shrink-0">

@@ -22,8 +22,8 @@ export default function DoctorVisitActions({
 
   return (
     <div
-      className={`shrink-0 ${compact ? 'gap-1.5' : 'gap-2.5'} pt-0 ${
-        stacked ? 'flex flex-col' : 'grid grid-cols-1 sm:grid-cols-3'
+      className={`shrink-0 pt-0 ${
+        stacked ? 'flex flex-col gap-1.5' : 'grid grid-cols-1 sm:grid-cols-2 gap-2'
       }`}
     >
       {canAccept ? (

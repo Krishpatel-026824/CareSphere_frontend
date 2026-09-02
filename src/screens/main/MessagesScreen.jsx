@@ -135,7 +135,11 @@ export default function MessagesScreen() {
       </div>
 
       {showChatInfo && selected ? (
-        <ChatInfoPanel conversation={selected} onClose={() => setShowChatInfo(false)} />
+        <ChatInfoPanel
+          conversation={selected}
+          isDoctor={isDoctor}
+          onClose={() => setShowChatInfo(false)}
+        />
       ) : null}
 
       {showDeleteConfirm && selected ? (

@@ -14,6 +14,7 @@ import {
   PatientChartTable,
   PatientChartTd,
   PatientChartTh,
+  PatientChartThead,
   PatientChartToolbar,
 } from './PatientChartTable'
 
@@ -44,14 +45,12 @@ export default function DoctorPatientLabsTab({
   )
 
   const previousScroll = previousRows.length > 8
-  const reportCount = previousReports.length + ordered.length
 
   return (
     <>
       <PatientChartPanel
         title="Lab reports"
         subtitle="Previous results for this patient"
-        count={reportCount}
         fill
         action={<PatientChartAddButton label="New lab report" onClick={() => setBookOpen(true)} />}
       >
@@ -87,7 +86,7 @@ export default function DoctorPatientLabsTab({
         ) : (
           <>
             <PatientChartTable fit={!previousScroll} fill={previousScroll}>
-              <thead className="bg-[#E8F7F6]/95 backdrop-blur-sm sticky top-0 z-10">
+              <PatientChartThead>
                 <tr>
                   {['No.', 'Report', 'Date', 'Status', 'View'].map((label, index) => (
                     <PatientChartTh key={label} center={index !== 1}>
@@ -95,7 +94,7 @@ export default function DoctorPatientLabsTab({
                     </PatientChartTh>
                   ))}
                 </tr>
-              </thead>
+              </PatientChartThead>
               <tbody>
                 {previousRows.map((item, index) => (
                   <tr
