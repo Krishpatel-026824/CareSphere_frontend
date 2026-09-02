@@ -48,17 +48,19 @@ const icons = {
   'trending-up': TrendingUp,
 }
 
-export default function ExpertiseChips({ chips = [] }) {
+export default function ExpertiseChips({ chips = [], compact = false }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(148px,1fr))] gap-2">
+    <div className={`grid ${compact ? 'grid-cols-2 gap-1.5' : 'grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(148px,1fr))] gap-2'}`}>
       {chips.map((chip) => {
         const Icon = icons[chip.icon] || Stethoscope
         return (
           <span
             key={chip.label}
-            className="inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-full bg-[#EBF5FF] px-3 py-2 text-[12px] font-medium text-[#1E2124]"
+            className={`inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-teal-light/70 font-semibold text-navy ${
+              compact ? 'min-h-8 px-2.5 py-1.5 text-[12px]' : 'min-h-[44px] px-3.5 py-2.5 text-[13px] sm:text-sm'
+            }`}
           >
-            <Icon className="h-3.5 w-3.5 shrink-0 text-[#2F80ED]" strokeWidth={1.9} />
+            <Icon className={`shrink-0 text-teal ${compact ? 'h-3.5 w-3.5' : 'h-4 w-4'}`} strokeWidth={1.9} />
             <span className="truncate">{chip.label}</span>
           </span>
         )

@@ -1,3 +1,5 @@
+import { getProfilePhotoDisplayUrl } from '../../utils/profilePhotoUrl'
+
 const doctorRohan = 'https://randomuser.me/api/portraits/men/32.jpg'
 const doctorAmit = 'https://randomuser.me/api/portraits/men/45.jpg'
 const doctorKavya = 'https://randomuser.me/api/portraits/women/44.jpg'
@@ -61,9 +63,11 @@ export function resolveAppointmentImages(appointment) {
   const images =
     doctorAppointmentImageMap[appointment.doctorId] || appointmentImageMap[appointment.id] || {}
 
+  const doctorPhoto = images.doctorPhoto || appointment.doctorPhoto
+
   return {
     ...appointment,
-    doctorPhoto: images.doctorPhoto || appointment.doctorPhoto,
+    doctorPhoto: doctorPhoto ? getProfilePhotoDisplayUrl(doctorPhoto) : doctorPhoto,
   }
 }
 

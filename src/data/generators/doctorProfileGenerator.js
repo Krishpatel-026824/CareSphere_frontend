@@ -50,6 +50,9 @@ export function generateDoctorProfile(appointment, doctor) {
         value: (doctor?.languages || []).join(', '),
         tags: doctor?.languages || [],
       },
+      doctor?.distanceKm
+        ? { id: 'distance', icon: 'distance', label: 'Distance', value: `${doctor.distanceKm} km from you` }
+        : null,
       nextDate && nextTime
         ? { id: 'nextVisit', icon: 'calendar', label: 'Next visit', value: `${nextDate} · ${nextTime}` }
         : null,

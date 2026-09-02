@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { CalendarDays, Clock, DoorOpen, MapPin, Phone, X } from 'lucide-react'
+import { CalendarDays, Clock, DoorOpen, MapPin, Phone } from 'lucide-react'
 import { getPatientAppointmentStatusLabel, getPatientAppointmentStatusStyle } from '../../data/mocks/appointmentActions'
+import ProfilePhotoLightbox from './ProfilePhotoLightbox'
 
 function doctorInitials(name = '') {
   return name
@@ -12,47 +13,58 @@ function doctorInitials(name = '') {
     .toUpperCase()
 }
 
-export default function AppointmentDetailHero({ appointment }) {
-  const [showPhoto, setShowPhoto] = useState(false)
+export default function AppointmentDetailHero({ appointment, showPhoto = true }) {
+  const [photoPreviewOpen, setPhotoPreviewOpen] = useState(false)
   const photo = appointment.doctorPhoto || appointment.clinicImage
   const clinic = appointment.clinicDetail || appointment.clinic
+  const visitType = appointment.visitType || 'In-clinic'
 
   return (
-    <div className="rounded-xl bg-gradient-to-br from-[#F3FBFA] via-white to-[#EEF6F8] border border-teal/15 p-3 sm:p-4">
-      <div className="flex gap-3 sm:gap-4 items-start">
-        <div className="relative shrink-0">
-          <div
-            className="w-[80px] h-[80px] sm:w-[96px] sm:h-[96px] rounded-xl overflow-hidden ring-2 ring-white shadow-md bg-[#EEF2F6] cursor-pointer"
-            onClick={() => photo && setShowPhoto(true)}
-          >
-            {photo ? (
-              <img src={photo} alt={appointment.doctorName} className="w-full h-full object-cover object-top" />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-lg font-bold text-teal bg-teal-light">
-                {doctorInitials(appointment.doctorName)}
-              </div>
-            )}
+    <div className="rounded-2xl bg-gradient-to-br from-[#F3FBFA] via-white to-[#EEF6F8] border border-teal/15 p-4 sm:p-5">
+      <div className="flex gap-4 items-start">
+        {showPhoto ? (
+          <div className="relative shrink-0">
+            <div
+              className="w-[88px] h-[88px] sm:w-[100px] sm:h-[100px] rounded-2xl overflow-hidden ring-2 ring-white shadow-md bg-[#EEF2F6] cursor-pointer"
+              onClick={() => photo && setPhotoPreviewOpen(true)}
+            >
+              {photo ? (
+                <img src={photo} alt={appointment.doctorName} className="w-full h-full object-cover object-top" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-xl font-bold text-teal bg-teal-light">
+                  {doctorInitials(appointment.doctorName)}
+                </div>
+              )}
+            </div>
+            <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-teal text-white text-[10px] sm:text-[11px] font-bold shadow-sm whitespace-nowrap">
+              {visitType}
+            </span>
           </div>
-          <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 py-px rounded-full bg-teal text-white text-[9px] font-semibold shadow-sm whitespace-nowrap">
-            {appointment.visitType || 'In-clinic'}
-          </span>
-        </div>
+        ) : null}
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-base sm:text-lg font-bold text-navy leading-tight">{appointment.doctorName}</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-navy leading-tight">{appointment.doctorName}</h3>
+            {!showPhoto ? (
+              <span className="text-[10px] sm:text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-teal text-white whitespace-nowrap">
+                {visitType}
+              </span>
+            ) : null}
             {appointment.status ? (
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${getPatientAppointmentStatusStyle(appointment.status)}`}>
+              <span
+                className={`text-xs font-semibold px-2.5 py-1 rounded-full ${getPatientAppointmentStatusStyle(appointment.status)}`}
+              >
                 {getPatientAppointmentStatusLabel(appointment.status)}
               </span>
             ) : null}
           </div>
-          <p className="text-xs text-body-gray mt-0.5">
-            {appointment.specialty}{clinic ? ` • ${clinic}` : ''}
+          <p className="text-sm sm:text-[15px] text-body-gray mt-1 leading-snug">
+            {appointment.specialty}
+            {clinic ? ` · ${clinic}` : ''}
           </p>
 
-          <div className="mt-2 grid grid-cols-2 gap-1.5">
-            <InfoItem icon={MapPin} text={appointment.fullAddress || appointment.address} className="col-span-2" />
+          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <InfoItem icon={MapPin} text={appointment.fullAddress || appointment.address} className="sm:col-span-2" />
             <InfoItem icon={Phone} text={appointment.phone} />
             <InfoItem icon={DoorOpen} text={appointment.room} />
             <InfoItem icon={CalendarDays} text={appointment.dateLabel} />
@@ -61,29 +73,29 @@ export default function AppointmentDetailHero({ appointment }) {
         </div>
       </div>
 
-      {showPhoto && (
-        <div className="fixed inset-0 z-[9999] bg-black/80 flex items-center justify-center" onClick={() => setShowPhoto(false)}>
-          <button
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/20 flex items-center justify-center cursor-pointer hover:bg-white/40"
-            onClick={() => setShowPhoto(false)}
-          >
-            <X className="w-5 h-5 text-white" />
-          </button>
-          <img src={photo} alt={appointment.doctorName} className="w-[380px] h-[380px] sm:w-[450px] sm:h-[450px] rounded-2xl shadow-2xl object-cover" />
-        </div>
-      )}
+      {showPhoto ? (
+        <ProfilePhotoLightbox
+          open={photoPreviewOpen}
+          src={photo}
+          alt={appointment.doctorName}
+          onClose={() => setPhotoPreviewOpen(false)}
+        />
+      ) : null}
     </div>
   )
 }
 
 function InfoItem({ icon: Icon, text, className = '' }) {
   if (!text) return null
+
   return (
-    <div className={`flex items-center gap-1.5 rounded-lg bg-white/70 border border-white/80 px-2 py-1.5 ${className}`}>
-      <span className="w-6 h-6 rounded-md bg-teal-light text-teal flex items-center justify-center shrink-0">
-        <Icon className="w-3 h-3" strokeWidth={1.75} />
+    <div
+      className={`flex items-start gap-2.5 rounded-xl bg-white/80 border border-white px-3 py-2.5 ${className}`}
+    >
+      <span className="w-8 h-8 rounded-lg bg-teal-light text-teal flex items-center justify-center shrink-0">
+        <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
-      <p className="text-[11px] sm:text-xs text-navy leading-tight break-words">{text}</p>
+      <p className="text-[14px] sm:text-[15px] font-medium text-navy leading-snug break-words pt-0.5">{text}</p>
     </div>
   )
 }

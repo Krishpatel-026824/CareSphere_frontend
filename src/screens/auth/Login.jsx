@@ -4,7 +4,6 @@ import AuthBrandMark from '../../components/auth/AuthBrandMark'
 import AuthCardLayout from '../../components/auth/AuthCardLayout'
 import AuthInput from '../../components/auth/AuthInput'
 import RoleToggle from '../../components/auth/RoleToggle'
-import SocialAuthRow from '../../components/auth/SocialAuthRow'
 import Button from '../../components/Button'
 import { generateAuthSession } from '../../data/generators/authSessionGenerator'
 import { AUTH_ROLE_DOCTOR, AUTH_ROLE_PATIENT, authRoleOptions } from '../../data/mocks/authRoles'
@@ -88,9 +87,7 @@ export default function Login({ onLogin, onSignUp, onForgotPassword }) {
         </Button>
       </form>
 
-      <div className="animate-login-rise-delay-4">
-        <SocialAuthRow onGoogle={submitLogin} onApple={submitLogin} />
-
+      <div className="mt-4 animate-login-rise-delay-4">
         {isDoctor ? (
           <p className="mt-5 text-center text-[12px] text-body-gray">
             Clinic access for CareSphere doctors and care teams.

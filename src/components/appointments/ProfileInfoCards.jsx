@@ -4,6 +4,7 @@ import {
   DoorOpen,
   GraduationCap,
   Languages,
+  MapPin,
   Phone,
   School,
 } from 'lucide-react'
@@ -16,37 +17,52 @@ const icons = {
   clinic: Building2,
   room: DoorOpen,
   phone: Phone,
+  distance: MapPin,
 }
 
-export default function ProfileInfoCards({ cards = [] }) {
+export default function ProfileInfoCards({ cards = [], compact = false }) {
+  if (!cards.length) return null
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
+    <div
+      className={`grid ${
+        compact ? 'grid-cols-1 gap-1.5' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3'
+      }`}
+    >
       {cards.map((card) => {
         const Icon = icons[card.icon] || Languages
         return (
           <article
             key={card.id}
-            className="rounded-xl border border-[#E6E8EC] bg-[#F8FAFC] px-4 py-3"
+            className={`rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] ${compact ? 'px-3 py-2.5' : 'px-4 py-3.5'}`}
           >
-            <p className="mb-1.5 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.04em] text-[#8A8F98]">
-              <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#EBF5FF]">
-                <Icon className="h-3.5 w-3.5 text-[#2F80ED]" strokeWidth={1.8} />
+            <p
+              className={`inline-flex items-center gap-1.5 font-bold uppercase tracking-[0.06em] text-body-gray ${
+                compact ? 'mb-1.5 text-[10px]' : 'mb-2 text-[11px] sm:text-xs'
+              }`}
+            >
+              <span className={`flex items-center justify-center rounded-lg bg-teal-light ${compact ? 'h-6 w-6' : 'h-7 w-7'}`}>
+                <Icon className={`text-teal ${compact ? 'h-3.5 w-3.5' : 'h-4 w-4'}`} strokeWidth={1.85} />
               </span>
               {card.label}
             </p>
             {card.tags?.length ? (
-              <div className="flex flex-wrap gap-1.5">
+              <div className={`flex flex-wrap ${compact ? 'gap-1.5' : 'gap-2'}`}>
                 {card.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-white px-2.5 py-1 text-[12px] font-semibold text-[#1E2124] ring-1 ring-[#E6E8EC]"
+                    className={`rounded-full bg-white font-semibold text-navy ring-1 ring-[#E6EBF1] ${
+                      compact ? 'px-2 py-0.5 text-[12px]' : 'px-3 py-1 text-[13px]'
+                    }`}
                   >
                     {tag}
                   </span>
                 ))}
               </div>
             ) : (
-              <p className="text-[13px] font-semibold leading-snug text-[#1E2124]">{card.value}</p>
+              <p className={`font-semibold leading-snug text-navy ${compact ? 'text-[13px]' : 'text-[15px]'}`}>
+                {card.value}
+              </p>
             )}
           </article>
         )

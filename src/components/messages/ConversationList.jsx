@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { MessageSquarePlus, Search, SlidersHorizontal } from 'lucide-react'
+import { MessageSquarePlus, Search } from 'lucide-react'
 import { messageFilterOptions } from '../../data/mocks/messageFilters'
 import ChatSecurityBanner from './ChatSecurityBanner'
 import ConversationListItem from './ConversationListItem'
 import ConversationPinMenu from './ConversationPinMenu'
-import MessageFilterMenu from './MessageFilterMenu'
 import PatientChatResult from './PatientChatResult'
 import PinLimitToast from './PinLimitToast'
 
@@ -26,7 +25,6 @@ export default function ConversationList({
   unreadCount = 0,
 }) {
   const [pinMenu, setPinMenu] = useState(null)
-  const [filterOpen, setFilterOpen] = useState(false)
 
   function openPinMenu(item, event) {
     const x = Math.min(event.clientX, window.innerWidth - 188)
@@ -41,33 +39,15 @@ export default function ConversationList({
           <h1 className="text-[22px] font-bold text-navy tracking-tight leading-none mb-4">{title}</h1>
         ) : null}
 
-        <div className="flex items-center gap-2">
-          <div className="flex-1 min-w-0 h-11 rounded-full border border-[#E6EBF1] bg-[#F8FAFC] px-4 flex items-center gap-2.5 focus-within:border-teal/50 focus-within:ring-2 focus-within:ring-teal/15 transition-all">
-            <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
-            <input
-              value={query}
-              onChange={(event) => onQueryChange(event.target.value)}
-              placeholder={searchPlaceholder}
-              className="w-full text-[14px] text-navy outline-none bg-transparent placeholder:text-body-gray/60"
-            />
-          </div>
-          <div className="relative shrink-0">
-            <button
-              type="button"
-              onClick={() => setFilterOpen((open) => !open)}
-              className="w-11 h-11 rounded-xl border border-[#E6EBF1] bg-[#F8FAFC] flex items-center justify-center text-body-gray hover:text-teal hover:border-teal/30 cursor-pointer transition-colors"
-              aria-label="Filter conversations"
-              aria-expanded={filterOpen}
-            >
-              <SlidersHorizontal className="w-[18px] h-[18px]" strokeWidth={2} />
-            </button>
-            <MessageFilterMenu
-              open={filterOpen}
-              listFilter={listFilter}
-              onSelect={onListFilterChange}
-              onClose={() => setFilterOpen(false)}
-            />
-          </div>
+        <div className="w-full h-11 rounded-full border border-[#E6EBF1] bg-[#F8FAFC] px-4 flex items-center gap-2.5 focus-within:border-teal/50 focus-within:ring-2 focus-within:ring-teal/15 transition-all">
+          <Search className="w-4 h-4 text-body-gray shrink-0" strokeWidth={2} />
+          <input
+            value={query}
+            onChange={(event) => onQueryChange(event.target.value)}
+            placeholder={searchPlaceholder}
+            className="w-full min-w-0 text-[14px] text-navy outline-none bg-transparent placeholder:text-body-gray/60"
+            aria-label={searchPlaceholder}
+          />
         </div>
 
         <div className="flex items-center gap-2 mt-3">
