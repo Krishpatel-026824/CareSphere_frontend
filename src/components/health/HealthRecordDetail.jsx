@@ -14,7 +14,11 @@ export default function HealthRecordDetail({ record }) {
       <div className="px-4 sm:px-5 py-4 border-b border-border-gray bg-bg-gray/30">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-teal">{record.type} report</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-teal">
+              {record.type === 'Pharmacy' || String(record.title || '').toLowerCase().includes('prescription')
+                ? 'Prescription'
+                : `${record.type} report`}
+            </p>
             <h3 className="text-lg font-bold text-navy mt-1">{record.title}</h3>
             <p className="text-xs text-body-gray mt-1">
               Report ID: {record.reportId} · {record.dateLabel}

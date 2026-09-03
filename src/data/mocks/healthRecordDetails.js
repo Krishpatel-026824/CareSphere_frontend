@@ -19,7 +19,7 @@ export const healthRecordDetailsMock = {
       referredBy: 'Self / Preventive checkup',
     },
     patient: {
-      name: 'Rahul Sharma',
+      name: 'Krish Patel',
       age: 32,
       gender: 'Male',
       patientId: 'CS-PAT-10482',
@@ -64,7 +64,7 @@ export const healthRecordDetailsMock = {
       referredBy: 'Self consultation',
     },
     patient: {
-      name: 'Rahul Sharma',
+      name: 'Krish Patel',
       age: 32,
       gender: 'Male',
       patientId: 'CS-PAT-10482',
@@ -110,7 +110,7 @@ export const healthRecordDetailsMock = {
       referredBy: 'CareSphere wellness plan',
     },
     patient: {
-      name: 'Rahul Sharma',
+      name: 'Krish Patel',
       age: 32,
       gender: 'Male',
       patientId: 'CS-PAT-10482',
@@ -155,7 +155,7 @@ export const healthRecordDetailsMock = {
       referredBy: 'Self order via CareSphere app',
     },
     patient: {
-      name: 'Rahul Sharma',
+      name: 'Krish Patel',
       age: 32,
       gender: 'Male',
       patientId: 'CS-PAT-10482',

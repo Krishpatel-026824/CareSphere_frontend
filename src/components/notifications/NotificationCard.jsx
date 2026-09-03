@@ -14,13 +14,14 @@ export default function NotificationCard({ item, onRead, onDelete }) {
   const statusLabel = `${item.unread ? 'Marked as read' : 'Read'} · ${item.timeLabel}`
 
   function handleClick() {
-    if (item.unread) onRead(item.id)
-    setExpanded((prev) => !prev)
+    const opening = !expanded
+    if (opening && item.unread) onRead(item.id)
+    setExpanded(opening)
   }
 
   function handleDelete(e) {
     e.stopPropagation()
-    onDelete(item.id)
+    onDelete?.(item)
   }
 
   return (
@@ -34,58 +35,68 @@ export default function NotificationCard({ item, onRead, onDelete }) {
           handleClick()
         }
       }}
-      className={`group rounded-2xl border bg-white shadow-sm transition-all cursor-pointer ${
-        item.unread
-          ? 'border-teal/25 hover:border-teal/45'
-          : 'border-[#E6EBF1] hover:border-[#CBD5E1]'
-      } ${expanded ? 'shadow-md' : ''}`}
+      className={`group relative cursor-pointer transition-colors ${
+        item.unread ? 'bg-teal-light/55' : 'bg-white'
+      } ${expanded ? 'bg-teal-light/40' : 'hover:bg-[#F0F7F6]'}`}
     >
-      <div className="flex items-center gap-3 px-4 py-3">
-        {item.unread ? (
-          <span className="w-2 h-2 rounded-full bg-teal shrink-0" />
-        ) : (
-          <span className="w-2 h-2 shrink-0" />
-        )}
+      <span
+        className={`absolute left-0 top-0 bottom-0 w-1 ${item.unread ? 'bg-teal' : theme.accent || 'bg-border-gray'}`}
+        aria-hidden="true"
+      />
 
-        <div className={`w-9 h-9 rounded-lg ${theme.listBg} flex items-center justify-center shrink-0`}>
-          <Icon className={`w-[17px] h-[17px] ${theme.listIcon}`} strokeWidth={1.75} />
+      <div className="flex items-start gap-3.5 pl-4 sm:pl-5 pr-4 sm:pr-5 py-3.5">
+        <div
+          className={`w-10 h-10 rounded-xl ${theme.listBg} flex items-center justify-center shrink-0 mt-0.5 shadow-sm`}
+        >
+          <Icon className={`w-[18px] h-[18px] ${theme.listIcon}`} strokeWidth={1.85} />
         </div>
 
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <h3 className="text-[13px] font-bold text-navy truncate">{item.title}</h3>
-            {item.unread ? (
-              <span className="text-[9px] font-bold uppercase tracking-wide text-teal bg-teal-light px-1.5 py-0.5 rounded-full shrink-0">
-                New
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex items-center gap-2">
+              <h3
+                className={`text-[13px] sm:text-[14px] truncate ${
+                  item.unread ? 'font-bold text-navy' : 'font-semibold text-navy'
+                }`}
+              >
+                {item.title}
+              </h3>
+              {item.unread ? (
+                <span className="text-[9px] font-bold uppercase tracking-wide text-white bg-teal px-1.5 py-0.5 rounded shrink-0">
+                  New
+                </span>
+              ) : null}
+            </div>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <span className="text-[11px] font-semibold text-body-gray whitespace-nowrap">
+                {item.timeLabel}
               </span>
-            ) : null}
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-body-gray/50 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 cursor-pointer transition-all"
+                aria-label="Delete notification"
+              >
+                <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
+              </button>
+            </div>
           </div>
+
           {!expanded ? (
-            <p className="text-[12px] text-body-gray truncate mt-0.5">{item.message}</p>
-          ) : null}
-        </div>
-
-        <span className="text-[11px] text-body-gray/70 whitespace-nowrap shrink-0">{item.timeLabel}</span>
-
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 opacity-0 group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 cursor-pointer transition-all shrink-0"
-          aria-label="Delete notification"
-        >
-          <Trash2 className="w-3.5 h-3.5" strokeWidth={2} />
-        </button>
-      </div>
-
-      {expanded ? (
-        <div className="px-4 pb-3.5 pl-4 sm:pl-[4.25rem]">
-          {labDetails ? (
-            <LabBookingNotificationDetail details={labDetails} statusLabel={statusLabel} />
+            <p className="text-[12px] sm:text-[13px] text-body-gray leading-snug mt-1 line-clamp-2">
+              {item.message}
+            </p>
           ) : (
-            <NotificationDetailPanel item={item} statusLabel={statusLabel} />
+            <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+              {labDetails ? (
+                <LabBookingNotificationDetail details={labDetails} statusLabel={statusLabel} />
+              ) : (
+                <NotificationDetailPanel item={item} statusLabel={statusLabel} />
+              )}
+            </div>
           )}
         </div>
-      ) : null}
+      </div>
     </article>
   )
 }

@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+import { filterHealthRecordsForUser } from '../data/generators/healthRecordsGenerator'
 import { useAppDispatch, useAppSelector } from '../store/hooks'
 import {
   deleteForever,
@@ -9,8 +11,16 @@ import {
 
 export function useHealthRecords() {
   const dispatch = useAppDispatch()
-  const records = useAppSelector(selectHealthRecords)
+  const allRecords = useAppSelector(selectHealthRecords)
   const bin = useAppSelector(selectHealthBin)
+  const authUser = useAppSelector((state) => state.auth.user)
+
+  const records = useMemo(() => {
+    if (authUser?.roleType === 'patient' && authUser?.name) {
+      return filterHealthRecordsForUser(allRecords, authUser.name)
+    }
+    return allRecords
+  }, [allRecords, authUser])
 
   return {
     records,

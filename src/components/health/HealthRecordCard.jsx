@@ -6,7 +6,7 @@ import {
   recordTypeIcons,
   recordTypeTones,
 } from './healthIcons'
-import { isLabHealthRecord } from '../../data/generators/healthRecordsGenerator'
+import { isLabHealthRecord, isPrescriptionHealthRecord } from '../../data/generators/healthRecordsGenerator'
 
 export default function HealthRecordCard({ record, onSelect, onOpenMenu }) {
   const holdTimer = useRef(null)
@@ -16,7 +16,11 @@ export default function HealthRecordCard({ record, onSelect, onOpenMenu }) {
   const tone = recordTypeTones[iconKey] || recordTypeTones.lab
   const surface = recordCardSurfaces[iconKey] || recordCardSurfaces.lab
   const badge = recordBadgeTones[iconKey] || recordBadgeTones.lab
-  const kindLabel = isLabHealthRecord(record) ? 'Lab' : record.type || 'Record'
+  const kindLabel = isLabHealthRecord(record)
+    ? 'Lab'
+    : isPrescriptionHealthRecord(record)
+      ? 'Prescription'
+      : record.type || 'Record'
   const provider = [record.doctorName, record.specialty].filter(Boolean).join(' • ')
 
   function startHold(event) {

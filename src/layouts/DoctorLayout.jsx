@@ -6,6 +6,7 @@ import { doctorProfileDetailsMock } from '../data/mocks/doctorProfile'
 import { DOCTOR_PATHS, DOCTOR_TAB_PATHS, PATHS } from '../routes/paths'
 import { useAppSelector } from '../store/hooks'
 import { getDoctorPageSurface } from '../utils/doctorPageSurface'
+import { isPrefOn } from '../utils/notificationPrefs'
 import { DOCTOR_AVATAR_KEY, readStoredAvatar } from '../utils/profileAvatarStorage'
 
 function getActiveTab(pathname) {
@@ -36,8 +37,11 @@ export default function DoctorLayout() {
   const navigate = useNavigate()
   const user = useAppSelector((state) => state.auth.user)
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated)
+  const messagesPrefOn = useAppSelector((state) => isPrefOn(state.notifications.doctorPrefs, 'messages'))
   const messagesBadge = useAppSelector((state) =>
-    state.messages.doctorConversations.filter((item) => item.unread).length,
+    messagesPrefOn
+      ? state.messages.doctorConversations.filter((item) => item.unread).length
+      : 0,
   )
 
   if (!isAuthenticated || user?.roleType !== AUTH_ROLE_DOCTOR) {

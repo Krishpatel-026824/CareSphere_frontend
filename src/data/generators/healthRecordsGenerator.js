@@ -5,6 +5,7 @@ import {
   healthRecordsSummaryMetaMock,
 } from '../mocks/healthRecords'
 import { healthRecordsExtraMock } from '../mocks/healthRecordsExtra'
+import { labPatientMock } from '../mocks/labReportTemplates'
 import { buildHealthRecordReport, getHealthRecordImage } from './healthRecordReportGenerator'
 import { buildLabReportFromHealthRecord } from './labReportGenerator'
 
@@ -13,14 +14,48 @@ function parseRecordDate(dateLabel = '') {
   return Number.isNaN(parsed) ? null : new Date(parsed)
 }
 
+function resolveRecordPatientName(record) {
+  return (
+    record.patientName ||
+    record.patient?.name ||
+    healthRecordDetailsMock[record.id]?.patient?.name ||
+    labPatientMock.name
+  )
+}
+
+export function patientNameMatchesUser(patientName, userName) {
+  if (!userName) return true
+  if (!patientName) return false
+  const patient = String(patientName).toLowerCase().trim()
+  const user = String(userName).toLowerCase().trim()
+  if (!user) return true
+  return patient === user || patient.startsWith(`${user} `) || user.startsWith(`${patient} `)
+}
+
+export function filterHealthRecordsForUser(records = [], userName) {
+  if (!userName) return records
+  return records.filter((record) => {
+    const patientName =
+      record.patientName ||
+      record.patient?.name ||
+      record.detail?.patient?.name ||
+      record.report?.patient?.name
+    if (!patientName) return true
+    return patientNameMatchesUser(patientName, userName)
+  })
+}
+
 export function generateHealthRecordsData() {
   const records = [...healthRecordsMock, ...healthRecordsExtraMock]
     .map((record) => {
       const report = record.type === 'Lab' ? buildLabReportFromHealthRecord(record) : null
+      const detail = healthRecordDetailsMock[record.id] || null
+      const patientName = resolveRecordPatientName({ ...record, detail })
       return {
         ...record,
+        patientName,
         preview: record.preview || getHealthRecordImage(record),
-        detail: healthRecordDetailsMock[record.id] || null,
+        detail,
         report: report || record.report || null,
       }
     })
@@ -50,9 +85,29 @@ export function isLabHealthRecord(record = {}) {
   return record.type === 'Lab' || record.icon === 'lab' || Boolean(record.report?.parameters?.length)
 }
 
+export function isPrescriptionHealthRecord(record = {}) {
+  const type = String(record.type || '').toLowerCase()
+  const specialty = String(record.specialty || '').toLowerCase()
+  const title = String(record.title || '').toLowerCase()
+  const icon = String(record.icon || '').toLowerCase()
+
+  return (
+    icon === 'pharmacy' ||
+    type === 'pharmacy' ||
+    type === 'prescription' ||
+    specialty === 'pharmacy' ||
+    title.includes('prescription') ||
+    title.includes('medication refill') ||
+    title.includes('medicine refill')
+  )
+}
+
 export function filterHealthRecordsByKind(records = [], kind = 'all') {
   if (kind === 'lab') return records.filter(isLabHealthRecord)
-  if (kind === 'other') return records.filter((record) => !isLabHealthRecord(record))
+  if (kind === 'prescription') return records.filter(isPrescriptionHealthRecord)
+  if (kind === 'other') {
+    return records.filter((record) => !isLabHealthRecord(record) && !isPrescriptionHealthRecord(record))
+  }
   return records
 }
 

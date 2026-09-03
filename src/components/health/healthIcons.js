@@ -60,6 +60,11 @@ export const healthRecordFilterStyles = {
     idle: 'bg-teal-light text-teal hover:bg-[#C5EFEB]',
     countIdle: 'bg-white text-teal',
   },
+  prescription: {
+    active: 'bg-navy text-white shadow-md shadow-navy/20',
+    idle: 'bg-[#E8EEF4] text-navy hover:bg-[#DCE5EF]',
+    countIdle: 'bg-white text-navy',
+  },
   other: {
     active: 'bg-amber-500 text-white shadow-md shadow-amber-200',
     idle: 'bg-amber-50 text-amber-800 hover:bg-amber-100',

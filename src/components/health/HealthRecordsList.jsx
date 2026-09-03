@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Eye, FileText, FlaskConical, LayoutGrid, Search } from 'lucide-react'
+import { Eye, FileText, FlaskConical, LayoutGrid, Pill, Search } from 'lucide-react'
 import {
   filterHealthRecords,
   filterHealthRecordsByKind,
   isLabHealthRecord,
+  isPrescriptionHealthRecord,
 } from '../../data/generators/healthRecordsGenerator'
 import { healthRecordRowActionsMock } from '../../data/mocks/healthRecords'
 import HealthRecordRowActions from './HealthRecordRowActions'
@@ -12,8 +13,15 @@ import { healthRecordFilterStyles } from './healthIcons'
 const filters = [
   { id: 'all', label: 'All records', icon: LayoutGrid },
   { id: 'lab', label: 'Lab reports', icon: FlaskConical },
+  { id: 'prescription', label: 'Prescriptions', icon: Pill },
   { id: 'other', label: 'Other records', icon: FileText },
 ]
+
+function recordKindLabel(record) {
+  if (isLabHealthRecord(record)) return 'Lab'
+  if (isPrescriptionHealthRecord(record)) return 'Prescription'
+  return record.type || 'Record'
+}
 
 export default function HealthRecordsList({
   records = [],
@@ -28,8 +36,14 @@ export default function HealthRecordsList({
   const scoped = filterHealthRecordsByKind(records, activeFilter)
   const filtered = filterHealthRecords(scoped, query)
   const labCount = records.filter(isLabHealthRecord).length
-  const otherCount = records.length - labCount
-  const counts = { all: records.length, lab: labCount, other: otherCount }
+  const prescriptionCount = records.filter(isPrescriptionHealthRecord).length
+  const otherCount = records.length - labCount - prescriptionCount
+  const counts = {
+    all: records.length,
+    lab: labCount,
+    prescription: prescriptionCount,
+    other: otherCount,
+  }
   const options = healthRecordRowActionsMock[variant] || healthRecordRowActionsMock.list
 
   function openMenu(record, event) {
@@ -49,7 +63,7 @@ export default function HealthRecordsList({
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search records"
+              placeholder="Search records or prescriptions"
               className="w-full text-sm text-navy outline-none bg-transparent placeholder:text-body-gray"
             />
           </div>
@@ -91,7 +105,9 @@ export default function HealthRecordsList({
               {records.length === 0
                 ? emptyText
                 : scoped.length === 0
-                  ? 'No records in this category yet.'
+                  ? activeFilter === 'prescription'
+                    ? 'No prescriptions yet. Your doctor or pharmacy prescriptions will appear here.'
+                    : 'No records in this category yet.'
                   : 'No records match your search.'}
             </p>
           </div>
@@ -105,7 +121,7 @@ export default function HealthRecordsList({
                 <th className="px-4 sm:px-5 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy border-b-2 border-r border-[#94A3B8]">
                   Record
                 </th>
-                <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy w-[110px] border-b-2 border-r border-[#94A3B8]">
+                <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy w-[130px] border-b-2 border-r border-[#94A3B8]">
                   Type
                 </th>
                 <th className="px-3 py-3 text-[11px] font-bold uppercase tracking-[0.08em] text-navy hidden sm:table-cell border-b-2 border-r border-[#94A3B8]">
@@ -121,8 +137,9 @@ export default function HealthRecordsList({
             </thead>
             <tbody>
               {filtered.map((record, index) => {
-                const kindLabel = isLabHealthRecord(record) ? 'Lab' : record.type || 'Record'
+                const kindLabel = recordKindLabel(record)
                 const provider = [record.doctorName, record.specialty].filter(Boolean).join(' · ')
+                const isRx = isPrescriptionHealthRecord(record)
 
                 return (
                   <tr
@@ -141,7 +158,11 @@ export default function HealthRecordsList({
                       <p className="text-[12px] text-body-gray mt-0.5 sm:hidden truncate">{provider}</p>
                     </td>
                     <td className="px-3 py-3 border-b border-r border-[#D5DEE8]">
-                      <span className="text-[12px] font-semibold uppercase tracking-wide text-navy">
+                      <span
+                        className={`text-[12px] font-semibold uppercase tracking-wide ${
+                          isRx ? 'text-teal' : 'text-navy'
+                        }`}
+                      >
                         {kindLabel}
                       </span>
                     </td>
@@ -158,7 +179,8 @@ export default function HealthRecordsList({
                         type="button"
                         onClick={() => onSelect?.(record)}
                         className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-navy/60 hover:text-teal hover:bg-teal-light/50 cursor-pointer transition-colors"
-                        aria-label={`View ${record.title}`}
+                        aria-label={isRx ? `Show prescription ${record.title}` : `View ${record.title}`}
+                        title={isRx ? 'Show prescription' : 'View record'}
                       >
                         <Eye className="w-4 h-4" strokeWidth={2} />
                       </button>

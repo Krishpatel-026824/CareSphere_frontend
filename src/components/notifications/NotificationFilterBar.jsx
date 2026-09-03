@@ -8,7 +8,7 @@ const filters = [
 
 export default function NotificationFilterBar({ activeFilter, counts, onSelect }) {
   return (
-    <div className="flex flex-wrap items-center gap-2.5">
+    <div className="inline-flex w-full max-w-md p-1 rounded-xl bg-white border border-border-gray shadow-[0_1px_4px_rgba(7,26,47,0.05)]">
       {filters.map((filter) => {
         const isActive = activeFilter === filter.id
         const Icon = filter.icon
@@ -19,17 +19,17 @@ export default function NotificationFilterBar({ activeFilter, counts, onSelect }
             key={filter.id}
             type="button"
             onClick={() => onSelect(filter.id)}
-            className={`inline-flex items-center gap-2 h-10 px-4 rounded-full text-[13px] font-semibold cursor-pointer transition-all shadow-sm ${
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 h-9 px-3.5 rounded-lg text-[12px] font-semibold cursor-pointer transition-all ${
               isActive
-                ? 'bg-teal text-white'
-                : 'bg-white text-navy border border-[#E6EBF1] hover:border-teal/40 hover:shadow'
+                ? 'bg-teal text-white shadow-sm'
+                : 'text-body-gray hover:text-navy hover:bg-teal-light/60'
             }`}
           >
-            <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-navy'}`} strokeWidth={1.9} />
+            <Icon className="w-3.5 h-3.5" strokeWidth={1.9} />
             {filter.label}
             <span
-              className={`min-w-[22px] h-[22px] px-1.5 rounded-full text-[11px] font-bold tabular-nums flex items-center justify-center ${
-                isActive ? 'bg-white/20 text-white' : 'bg-[#EEF2F6] text-navy'
+              className={`min-w-[18px] h-[18px] px-1 rounded-md text-[10px] font-bold tabular-nums flex items-center justify-center ${
+                isActive ? 'bg-white/25 text-white' : 'bg-[#E8EEF4] text-navy'
               }`}
             >
               {count}

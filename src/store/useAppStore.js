@@ -20,6 +20,7 @@ import { addIncomingMessage, selectMessagesBadge } from './slices/messagesSlice'
 import { addNotification as addNotificationAction } from './slices/notificationsSlice'
 import { generateLabBookingNotification } from '../data/generators/labBookingNotificationGenerator'
 import { generateAppointmentUpdateNotice } from '../data/generators/appointmentUpdateNoticeGenerator'
+import { isPrefOn } from '../utils/notificationPrefs'
 
 export function useAppStore() {
   const dispatch = useAppDispatch()
@@ -30,7 +31,13 @@ export function useAppStore() {
   const recycleBin = useAppSelector(selectRecycleBin)
   const doctorFlowData = useAppSelector(selectDoctorFlow)
   const healthRecords = useAppSelector(selectHealthRecords)
-  const messagesBadge = useAppSelector(selectMessagesBadge)
+  const messagesPrefOn = useAppSelector((state) => {
+    const isDoctor = state.messages.workspace === 'doctor'
+    const prefs = isDoctor ? state.notifications.doctorPrefs : state.profile.prefs
+    return isPrefOn(prefs, 'messages')
+  })
+  const rawMessagesBadge = useAppSelector(selectMessagesBadge)
+  const messagesBadge = messagesPrefOn ? rawMessagesBadge : 0
   const doctors = useAppSelector((state) => state.doctors.flow.doctors)
 
   const findDoctorById = useCallback(

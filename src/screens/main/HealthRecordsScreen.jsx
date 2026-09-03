@@ -8,6 +8,7 @@ import LabReportDetail from '../../components/lab/LabReportDetail'
 import {
   getHealthRecordConfirm,
   getHealthRecordDetail,
+  isPrescriptionHealthRecord,
 } from '../../data/generators/healthRecordsGenerator'
 import { useHealthRecords } from '../../hooks/useHealthRecords'
 
@@ -43,7 +44,11 @@ export default function HealthRecordsScreen({ onBack }) {
               Back to records
             </button>
             <h1 className="font-display text-[32px] font-bold text-navy tracking-tight leading-tight">
-              {viewed.kind === 'lab' ? 'Lab report' : 'Health record'}
+              {viewed.kind === 'lab'
+                ? 'Lab report'
+                : isPrescriptionHealthRecord(selectedRecord)
+                  ? 'Prescription'
+                  : 'Health record'}
             </h1>
             <p className="text-sm text-body-gray mt-2">{viewed.data.title || selectedRecord.title}</p>
           </header>
@@ -74,7 +79,7 @@ export default function HealthRecordsScreen({ onBack }) {
             icon={FileHeart}
             tone="bg-teal text-white shadow-sm"
             title="Health Records"
-            subtitle="Your past and current lab reports stay here — open and review them anytime"
+            subtitle="Labs, prescriptions, and visit records stay here — open and review them anytime"
           />
         </header>
 

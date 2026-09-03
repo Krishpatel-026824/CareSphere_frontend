@@ -2,12 +2,15 @@ import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock3, Pill, Plus, Set
 import { useState } from 'react'
 import { usePager } from '../../hooks/usePager'
 import { useMedicineReminders } from '../../hooks/useMedicineReminders'
+import { useAppSelector } from '../../store/hooks'
+import { isPrefOn } from '../../utils/notificationPrefs'
 import MedicineFormModal from './MedicineFormModal'
 
 const iconStroke = 1.75
 
 export default function MedicineReminderCard() {
   const { medicines, takenById, startIndex, pendingCount, markAsTaken, addMedicine, updateMedicine, removeMedicine } = useMedicineReminders()
+  const medicineAlertsOn = useAppSelector((state) => isPrefOn(state.profile.prefs, 'medicine'))
   const [modalOpen, setModalOpen] = useState(false)
   const [editingMedicine, setEditingMedicine] = useState(null)
   const { item: medicine, index, count, canPage, goNext, goPrev } = usePager(medicines, startIndex)
@@ -17,7 +20,7 @@ export default function MedicineReminderCard() {
   const remainingCount = medicine.remainingCount
   const takenToday = Boolean(takenById[medicine.id])
   const refillPct = Math.round((remainingCount / medicine.remainingTotal) * 100)
-  const canMarkTaken = !takenToday && remainingCount > 0
+  const canMarkTaken = medicineAlertsOn && !takenToday && remainingCount > 0
 
   return (
     <section className="h-full min-h-0 bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col gap-3 w-full">
@@ -25,7 +28,7 @@ export default function MedicineReminderCard() {
         <div className="min-w-0">
           <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>
           <p className="text-[11px] text-body-gray mt-0.5">
-            {medicine.period} dose • {pendingCount} today
+            {medicineAlertsOn ? `${medicine.period} dose • ${pendingCount} today` : 'Reminders paused in Preferences'}
           </p>
         </div>
         <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white bg-navy px-3 py-1.5 rounded-full shrink-0">
@@ -96,7 +99,7 @@ export default function MedicineReminderCard() {
           >
             <Check className="w-3.5 h-3.5 text-current" strokeWidth={3} />
           </span>
-          {takenToday ? 'Taken today' : 'Mark as taken'}
+          {takenToday ? 'Taken today' : medicineAlertsOn ? 'Mark as taken' : 'Reminders off'}
         </button>
 
         <div className="flex items-center gap-2">

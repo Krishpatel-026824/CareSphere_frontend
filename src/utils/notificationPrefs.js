@@ -16,14 +16,20 @@ function prefTypeMap(workspace) {
   return workspace === 'doctor' ? DOCTOR_PREF_TYPES : PATIENT_PREF_TYPES
 }
 
+export function isPrefOn(prefs = [], id) {
+  const pref = prefs.find((item) => item.id === id)
+  if (!pref) return true
+  return pref.on !== false
+}
+
 function isTypeEnabled(type, prefs, workspace) {
   const map = prefTypeMap(workspace)
   const prefEntry = Object.entries(map).find(([, types]) => types.includes(type))
   if (!prefEntry) return true
-  const pref = prefs.find((item) => item.id === prefEntry[0])
-  return pref?.on !== false
+  return isPrefOn(prefs, prefEntry[0])
 }
 
 export function filterNotificationsByPrefs(notifications = [], prefs = [], workspace = 'patient') {
   return notifications.filter((item) => isTypeEnabled(item.type, prefs, workspace))
 }
+

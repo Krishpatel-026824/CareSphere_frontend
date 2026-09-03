@@ -17,7 +17,7 @@ export default function ProfilePrefsCard({ prefs = [], onToggle }) {
         Preferences
       </h2>
       <p className="text-xs sm:text-[13px] text-body-gray mt-1">
-        Manage how you receive updates and alerts.
+        Manage how you receive updates and alerts. Turn a switch off to hide that type from Notifications.
       </p>
 
       <ul className="mt-4 flex flex-col gap-2.5">
@@ -29,8 +29,8 @@ export default function ProfilePrefsCard({ prefs = [], onToggle }) {
               <button
                 type="button"
                 role="switch"
-                aria-checked={item.on}
-                aria-label={item.label}
+                aria-checked={Boolean(item.on)}
+                aria-label={`${item.label}, ${item.on ? 'on' : 'off'}`}
                 onClick={() => onToggle?.(item.id)}
                 className="w-full flex items-center gap-3 rounded-xl border border-border-gray bg-[#F8FAFC] px-3 py-3 text-left cursor-pointer transition-colors hover:border-teal/30 hover:bg-white"
               >
@@ -41,16 +41,21 @@ export default function ProfilePrefsCard({ prefs = [], onToggle }) {
                   <p className="text-sm font-semibold text-navy">{item.label}</p>
                   <p className="text-[11px] sm:text-xs text-body-gray mt-0.5 leading-snug">{item.hint}</p>
                 </div>
-                <span
-                  className={`relative h-6 w-11 shrink-0 rounded-full transition-colors ${
-                    item.on ? 'bg-teal' : 'bg-slate-300'
-                  }`}
-                >
+                <span className="flex items-center gap-2 shrink-0">
+                  <span className={`text-[11px] font-bold ${item.on ? 'text-teal' : 'text-slate-400'}`}>
+                    {item.on ? 'On' : 'Off'}
+                  </span>
                   <span
-                    className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm pointer-events-none transition-transform ${
-                      item.on ? 'translate-x-5' : 'translate-x-0'
+                    className={`relative h-6 w-11 rounded-full transition-colors ${
+                      item.on ? 'bg-teal' : 'bg-slate-300'
                     }`}
-                  />
+                  >
+                    <span
+                      className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm pointer-events-none transition-transform ${
+                        item.on ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </span>
                 </span>
               </button>
             </li>

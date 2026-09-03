@@ -222,6 +222,7 @@ export function labReportToHealthRecord(report) {
     timeLabel: report.sample?.reportTime || '',
     type: report.type,
     icon: 'lab',
+    patientName: report.patient?.name || report.patientName || '',
     report,
   }
 }

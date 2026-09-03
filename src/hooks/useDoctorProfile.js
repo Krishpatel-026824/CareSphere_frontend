@@ -51,6 +51,7 @@ export function useDoctorProfile() {
     setPrefs((current) => {
       const next = current.map((item) => (item.id === id ? { ...item, on: !item.on } : item))
       saveDoctorPrefs(next)
+      dispatch(setDoctorNotificationPrefs(next))
       return next
     })
   }

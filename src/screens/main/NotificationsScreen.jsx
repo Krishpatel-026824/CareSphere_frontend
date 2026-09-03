@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import NotificationDeleteConfirm from '../../components/notifications/NotificationDeleteConfirm'
 import NotificationFilterBar from '../../components/notifications/NotificationFilterBar'
 import NotificationGrid from '../../components/notifications/NotificationGrid'
 import NotificationHeader from '../../components/notifications/NotificationHeader'
@@ -17,10 +19,17 @@ export default function NotificationsScreen() {
     deleteNotification,
     handleRefresh,
   } = useNotifications()
+  const [pendingDelete, setPendingDelete] = useState(null)
+
+  function confirmDelete() {
+    if (!pendingDelete) return
+    deleteNotification(pendingDelete.id)
+    setPendingDelete(null)
+  }
 
   return (
     <div className="w-full min-h-full bg-transparent">
-      <div className="w-full max-w-[960px] mx-auto page-pad py-5 sm:py-6 flex flex-col gap-4">
+      <div className="w-full max-w-[1440px] page-pad py-4 sm:py-5 lg:py-6 flex flex-col gap-4 sm:gap-5">
         <NotificationHeader
           unreadCount={unreadCount}
           onMarkAllRead={markAllAsRead}
@@ -37,10 +46,16 @@ export default function NotificationsScreen() {
         <NotificationGrid
           items={filtered}
           onRead={markAsRead}
-          onDelete={deleteNotification}
+          onDelete={setPendingDelete}
           onShowAll={() => setActiveFilter('all')}
         />
       </div>
+
+      <NotificationDeleteConfirm
+        item={pendingDelete}
+        onCancel={() => setPendingDelete(null)}
+        onConfirm={confirmDelete}
+      />
     </div>
   )
 }

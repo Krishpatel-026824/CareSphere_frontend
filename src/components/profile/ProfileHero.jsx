@@ -8,7 +8,6 @@ import {
   Droplet,
   FileText,
   Languages,
-  Lock,
   Mail,
   MapPin,
   MessageSquare,
@@ -291,16 +290,6 @@ export default function ProfileHero({
               ))}
             </div>
           )}
-        </div>
-
-        <div className="flex items-center gap-2.5 rounded-xl border border-[#7DD3FC] bg-[#E0F2FE] px-3 py-2.5">
-          <span className="w-9 h-9 rounded-lg bg-white text-sky-600 flex items-center justify-center shrink-0 shadow-sm ring-1 ring-sky-200/80">
-            <Shield className="w-4 h-4" strokeWidth={1.85} />
-          </span>
-          <p className="text-[13px] sm:text-[14px] font-medium text-navy/75 leading-snug flex-1 min-w-0">
-            Your information is secure and encrypted. We never share your data with third parties.
-          </p>
-          <Lock className="w-4 h-4 text-sky-600 shrink-0" strokeWidth={1.85} />
         </div>
       </div>
     </section>
