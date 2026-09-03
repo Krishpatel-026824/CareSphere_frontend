@@ -105,25 +105,25 @@ export default function LabMyBookings({
               <table className="w-full min-w-[780px] border-collapse text-left">
                 <thead className="bg-[#CBD5E1]">
                   <tr>
-                    <th className="px-3 py-4 w-14 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                    <th className="px-3 py-4 w-14 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
                       No.
                     </th>
-                    <th className="px-4 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                    <th className="px-4 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
                       Test
                     </th>
-                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
+                    <th className="px-3 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle">
                       Patient
                     </th>
-                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                    <th className="px-3 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
                       Date
                     </th>
-                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
+                    <th className="px-3 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle whitespace-nowrap">
                       Time
                     </th>
-                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle hidden md:table-cell">
+                    <th className="px-3 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 border-r border-[#94A3B8] text-center align-middle hidden md:table-cell">
                       Collection
                     </th>
-                    <th className="px-3 py-4 text-[13px] font-bold uppercase tracking-[0.06em] text-navy border-b-2 text-center align-middle">
+                    <th className="px-3 py-4 text-sm font-bold uppercase tracking-[0.06em] text-navy border-b-2 text-center align-middle">
                       Price
                     </th>
                   </tr>
@@ -134,7 +134,7 @@ export default function LabMyBookings({
                     return (
                       <tr key={booking.id} className="hover:bg-[#F0FDFA] transition-colors">
                         <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] text-center align-middle">
-                          <span className="text-[13px] font-semibold text-navy tabular-nums">{index + 1}</span>
+                          <span className="text-sm font-semibold text-navy tabular-nums">{index + 1}</span>
                         </td>
                         <td className="px-4 py-3.5 border-b border-r border-[#D5DEE8] align-middle">
                           <div className="flex items-center gap-3 min-w-0">
@@ -147,32 +147,32 @@ export default function LabMyBookings({
                                 </div>
                               )}
                             </div>
-                            <p className="text-sm font-semibold text-navy truncate leading-snug">
+                            <p className="text-[15px] font-semibold text-navy truncate leading-snug">
                               {booking.test?.name || 'Lab test'}
                             </p>
                           </div>
                         </td>
                         <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                          <p className="text-[13px] font-semibold text-navy truncate">{booking.name}</p>
-                          <p className="text-[12px] text-body-gray mt-0.5 truncate">{booking.mobile || '—'}</p>
+                          <p className="text-sm font-semibold text-navy truncate">{booking.name}</p>
+                          <p className="text-[13px] text-body-gray mt-0.5 truncate">{booking.mobile || '—'}</p>
                         </td>
                         <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                          <p className="text-[13px] font-semibold text-navy whitespace-nowrap">
+                          <p className="text-sm font-semibold text-navy whitespace-nowrap">
                             {formatLabBookingDate(booking.date) || booking.date || '—'}
                           </p>
                         </td>
                         <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center">
-                          <p className="text-[13px] font-semibold text-navy whitespace-nowrap">
+                          <p className="text-sm font-semibold text-navy whitespace-nowrap">
                             {booking.timeSlot || '—'}
                           </p>
                         </td>
                         <td className="px-3 py-3.5 border-b border-r border-[#D5DEE8] align-middle text-center hidden md:table-cell">
-                          <p className="text-[13px] text-body-gray truncate">
+                          <p className="text-sm text-body-gray truncate">
                             {booking.collectionType || '—'}
                           </p>
                         </td>
                         <td className="px-3 py-3.5 border-b border-[#D5DEE8] align-middle text-center">
-                          <p className="text-[13px] font-bold text-navy">
+                          <p className="text-[15px] font-bold text-navy">
                             ₹{booking.test?.price ?? '—'}
                           </p>
                         </td>
