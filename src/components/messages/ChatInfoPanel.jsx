@@ -6,13 +6,13 @@ function InfoRow({ icon: Icon, label, value, valueClassName = 'text-navy' }) {
   if (!value) return null
 
   return (
-    <div className="flex items-center gap-3 px-3.5 py-3 border-b border-[#E6EBF1] last:border-b-0">
-      <span className="w-8 h-8 rounded-lg bg-[#E8F7F6] text-teal inline-flex items-center justify-center shrink-0">
+    <div className="flex items-center gap-3 px-3.5 py-3.5 border-b border-[#E6EBF1] last:border-b-0">
+      <span className="w-9 h-9 rounded-lg bg-[#E8F7F6] text-teal inline-flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-medium text-body-gray">{label}</p>
-        <p className={`text-sm font-semibold leading-snug truncate ${valueClassName}`}>{value}</p>
+        <p className="text-[13px] font-semibold text-[#4B5568]">{label}</p>
+        <p className={`text-[15px] font-bold leading-snug truncate mt-0.5 ${valueClassName}`}>{value}</p>
       </div>
     </div>
   )
@@ -70,10 +70,12 @@ export default function ChatInfoPanel({ conversation, onClose, isDoctor = false 
                 ) : null}
               </div>
               <div className="min-w-0">
-                <h2 id="chat-info-title" className="text-lg font-bold text-navy truncate">
+                <h2 id="chat-info-title" className="text-xl font-bold text-navy truncate">
                   {conversation.doctorName}
                 </h2>
-                <p className="text-sm text-body-gray truncate mt-0.5">{conversation.specialty}</p>
+                <p className="text-[15px] font-medium text-[#4B5568] truncate mt-0.5">
+                  {conversation.specialty}
+                </p>
               </div>
             </div>
             <button
@@ -82,7 +84,7 @@ export default function ChatInfoPanel({ conversation, onClose, isDoctor = false 
               aria-label="Close"
               className="w-8 h-8 rounded-lg border border-[#E6EBF1] flex items-center justify-center cursor-pointer hover:bg-[#F4FAF9] shrink-0"
             >
-              <X className="w-4 h-4 text-body-gray" strokeWidth={1.75} />
+              <X className="w-4 h-4 text-[#4B5568]" strokeWidth={1.75} />
             </button>
           </div>
         </div>
@@ -102,7 +104,7 @@ export default function ChatInfoPanel({ conversation, onClose, isDoctor = false 
               icon={BadgeCheck}
               label="Status"
               value={conversation.online ? 'Available' : 'Offline'}
-              valueClassName="text-teal"
+              valueClassName="text-teal-dark"
             />
           </div>
         </div>
@@ -112,7 +114,7 @@ export default function ChatInfoPanel({ conversation, onClose, isDoctor = false 
             <button
               type="button"
               onClick={openProfile}
-              className="w-full min-h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark transition-colors shadow-sm"
+              className="w-full min-h-12 rounded-xl bg-teal text-white text-[15px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors shadow-sm"
             >
               {profileLabel}
             </button>
