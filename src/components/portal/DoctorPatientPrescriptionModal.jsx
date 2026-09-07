@@ -191,7 +191,12 @@ export default function DoctorPatientPrescriptionModal({
                   >
                     {selected ? <Check className="w-3 h-3" strokeWidth={3} /> : null}
                   </span>
-                  <MedicineThumb src={item.image} size="sm" />
+                  <MedicineThumb
+                    src={item.image || resolveMedicineImage(item.name, item.id)}
+                    name={item.name}
+                    pharmacyId={item.id}
+                    size="sm"
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="text-sm font-bold text-navy block">{item.name}</span>
                     <span className="text-xs text-body-gray block">{item.useFor}</span>

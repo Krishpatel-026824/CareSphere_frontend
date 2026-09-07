@@ -30,7 +30,13 @@ export default function PrescriptionMedicineList({ medicines = [] }) {
               </span>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start gap-3">
-                  <MedicineThumb src={medicine.image} size="sm" className="mt-0.5 opacity-90" />
+                  <MedicineThumb
+                    src={medicine.image}
+                    name={medicine.name}
+                    pharmacyId={medicine.id}
+                    size="sm"
+                    className="mt-0.5"
+                  />
                   <div className="min-w-0 flex-1">
                     <p className="font-display text-[17px] font-bold text-navy leading-snug">
                       {medicine.name}
