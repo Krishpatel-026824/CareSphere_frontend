@@ -7,7 +7,16 @@ import TextField from '@mui/material/TextField'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { ChevronDown, X } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import {
+  BookingField,
+  BookingModalFooter,
+  BookingModalHeader,
+  bookingDatePickerSx,
+  bookingFieldSx,
+  bookingModalPaperSx,
+  bookingSelectSx,
+} from '../shared/bookingFormUi'
 
 const collectionTypes = ['Home Collection', 'Visit Lab']
 const timeSlots = [
@@ -20,26 +29,6 @@ const timeSlots = [
   '06:00 - 08:00 PM',
 ]
 
-const fieldSx = {
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '10px',
-    backgroundColor: '#F9FAFB',
-    fontSize: '0.925rem',
-    minHeight: '44px',
-    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0' },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0', borderWidth: '1.5px' },
-  },
-}
-
-const selectSx = {
-  borderRadius: '10px',
-  backgroundColor: '#F9FAFB',
-  fontSize: '0.925rem',
-  minHeight: '44px',
-  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0' },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0', borderWidth: '1.5px' },
-}
-
 const emptyForm = {
   name: 'Krish Patel',
   mobile: '',
@@ -48,16 +37,6 @@ const emptyForm = {
   collectionType: 'Home Collection',
   address: '',
   testId: '',
-}
-
-function Field({ label, error, children }) {
-  return (
-    <div>
-      <p className="text-[12px] font-semibold text-[#475569] mb-1.5">{label}</p>
-      {children}
-      {error ? <p className="mt-1 text-[11px] font-medium text-red-500">{error}</p> : null}
-    </div>
-  )
 }
 
 export default function LabBookingFormModal({
@@ -124,62 +103,52 @@ export default function LabBookingFormModal({
       fullWidth
       maxWidth="sm"
       scroll="paper"
-      PaperProps={{ sx: { borderRadius: '16px', maxHeight: '90vh', display: 'flex', flexDirection: 'column' } }}
+      PaperProps={{ sx: bookingModalPaperSx }}
     >
-      <div className="flex items-center justify-between px-6 py-4 border-b border-[#EEF2F6] shrink-0">
-        <div>
-          <h2 className="text-lg font-bold text-[#0F172A]">Book new lab test</h2>
-          {selectedTest ? (
-            <p className="text-[13px] text-[#64748B] mt-0.5">
-              {selectedTest.name} · ₹{selectedTest.price}
-            </p>
-          ) : null}
-        </div>
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-8 h-8 rounded-full hover:bg-[#F1F5F9] flex items-center justify-center cursor-pointer transition-colors"
-        >
-          <X className="w-4 h-4 text-[#64748B]" strokeWidth={2} />
-        </button>
-      </div>
+      <BookingModalHeader
+        title="Book new lab test"
+        subtitle={selectedTest ? `${selectedTest.name} · ₹${selectedTest.price}` : undefined}
+        onClose={onClose}
+      />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="px-6 py-6 flex flex-col gap-5 overflow-y-auto flex-1 min-h-0">
-          <Field label="Full Name" error={errors.name}>
-            <TextField
-              value={form.name}
-              onChange={(e) => {
-                update({ name: e.target.value })
-                setErrors((prev) => ({ ...prev, name: undefined }))
-              }}
-              placeholder="Enter your full name"
-              fullWidth
-              size="small"
-              sx={fieldSx}
-            />
-          </Field>
+        <div className="px-5 sm:px-6 py-5 flex flex-col gap-4 overflow-y-auto flex-1 min-h-0">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BookingField label="Full Name" error={errors.name}>
+              <TextField
+                value={form.name}
+                onChange={(e) => {
+                  update({ name: e.target.value })
+                  setErrors((prev) => ({ ...prev, name: undefined }))
+                }}
+                placeholder="Enter your full name"
+                fullWidth
+                size="small"
+                sx={bookingFieldSx}
+              />
+            </BookingField>
 
-          <Field label="Mobile Number" error={errors.mobile}>
-            <TextField
-              value={form.mobile}
-              onChange={(e) => {
-                update({ mobile: e.target.value })
-                setErrors((prev) => ({ ...prev, mobile: undefined }))
-              }}
-              placeholder="Enter 10-digit number"
-              fullWidth
-              size="small"
-              sx={fieldSx}
-            />
-          </Field>
+            <BookingField label="Mobile Number" error={errors.mobile}>
+              <TextField
+                value={form.mobile}
+                onChange={(e) => {
+                  update({ mobile: e.target.value })
+                  setErrors((prev) => ({ ...prev, mobile: undefined }))
+                }}
+                placeholder="Enter 10-digit number"
+                fullWidth
+                size="small"
+                sx={bookingFieldSx}
+              />
+            </BookingField>
+          </div>
 
-          <Field label="Lab test" error={errors.testId}>
-            <div className="rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] overflow-hidden">
+          <BookingField label="Lab test" error={errors.testId}>
+            <div className="rounded-xl border border-[#E2E8F0] bg-white overflow-hidden focus-within:border-teal hover:border-teal/70 transition-colors">
               <button
                 type="button"
                 onClick={() => setPickerOpen((prev) => !prev)}
-                className="w-full min-h-11 px-3 py-2 flex items-center gap-2.5 text-left cursor-pointer hover:bg-white transition-colors"
+                className="w-full min-h-[46px] px-3.5 py-2.5 flex items-center gap-2.5 text-left cursor-pointer hover:bg-[#F8FAFC] transition-colors"
               >
                 {selectedTest ? (
                   <>
@@ -193,7 +162,7 @@ export default function LabBookingFormModal({
                     </span>
                   </>
                 ) : (
-                  <span className="flex-1 text-[0.875rem] text-[#9CA3AF]">Select lab test</span>
+                  <span className="flex-1 text-[0.875rem] text-[#94A3B8]">Select lab test</span>
                 )}
                 <ChevronDown
                   className={`w-4 h-4 text-[#64748B] shrink-0 transition-transform ${pickerOpen ? 'rotate-180' : ''}`}
@@ -202,7 +171,7 @@ export default function LabBookingFormModal({
               </button>
 
               {pickerOpen ? (
-                <div className="border-t border-[#E5E7EB] bg-white">
+                <div className="border-t border-[#E2E8F0] bg-white">
                   <div className="max-h-40 overflow-y-auto overscroll-contain">
                     {tests.length === 0 ? (
                       <p className="px-3 py-4 text-[12px] text-[#64748B] text-center">No tests found</p>
@@ -241,52 +210,63 @@ export default function LabBookingFormModal({
                 </div>
               ) : null}
             </div>
-          </Field>
+          </BookingField>
 
-          <Field label="Collection date" error={errors.date}>
-            <DatePicker
-              value={form.date}
-              onChange={(value) => {
-                update({ date: value })
-                setErrors((prev) => ({ ...prev, date: undefined }))
-              }}
-              disablePast
-              slotProps={{ textField: { size: 'small', fullWidth: true, sx: fieldSx } }}
-            />
-          </Field>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BookingField label="Collection date" error={errors.date}>
+              <DatePicker
+                value={form.date}
+                onChange={(value) => {
+                  update({ date: value })
+                  setErrors((prev) => ({ ...prev, date: undefined }))
+                }}
+                format="DD/MM/YYYY"
+                disablePast
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    fullWidth: true,
+                    placeholder: 'DD/MM/YYYY',
+                    sx: bookingFieldSx,
+                  },
+                }}
+                sx={bookingDatePickerSx}
+              />
+            </BookingField>
 
-          <Field label="Time Slot" error={errors.timeSlot}>
-            <Select
-              fullWidth
-              size="small"
-              displayEmpty
-              value={form.timeSlot}
-              onChange={(e) => {
-                update({ timeSlot: e.target.value })
-                setErrors((prev) => ({ ...prev, timeSlot: undefined }))
-              }}
-              sx={selectSx}
-              MenuProps={{
-                disablePortal: true,
-                PaperProps: { style: { maxHeight: 180 } },
-              }}
-              renderValue={(v) => v || <span className="text-[#9CA3AF]">Select time slot</span>}
-            >
-              {timeSlots.map((slot) => (
-                <MenuItem key={slot} value={slot} sx={{ fontSize: '0.875rem' }}>
-                  {slot}
-                </MenuItem>
-              ))}
-            </Select>
-          </Field>
+            <BookingField label="Time Slot" error={errors.timeSlot}>
+              <Select
+                fullWidth
+                size="small"
+                displayEmpty
+                value={form.timeSlot}
+                onChange={(e) => {
+                  update({ timeSlot: e.target.value })
+                  setErrors((prev) => ({ ...prev, timeSlot: undefined }))
+                }}
+                sx={bookingSelectSx}
+                MenuProps={{
+                  disablePortal: true,
+                  PaperProps: { style: { maxHeight: 180 } },
+                }}
+                renderValue={(v) => v || <span className="text-[#94A3B8]">Select time slot</span>}
+              >
+                {timeSlots.map((slot) => (
+                  <MenuItem key={slot} value={slot} sx={{ fontSize: '0.875rem' }}>
+                    {slot}
+                  </MenuItem>
+                ))}
+              </Select>
+            </BookingField>
+          </div>
 
-          <Field label="Collection Type">
+          <BookingField label="Collection Type">
             <Select
               fullWidth
               size="small"
               value={form.collectionType}
               onChange={(e) => update({ collectionType: e.target.value })}
-              sx={selectSx}
+              sx={bookingSelectSx}
               MenuProps={{ disablePortal: true }}
             >
               {collectionTypes.map((type) => (
@@ -295,10 +275,10 @@ export default function LabBookingFormModal({
                 </MenuItem>
               ))}
             </Select>
-          </Field>
+          </BookingField>
 
           {form.collectionType === 'Home Collection' ? (
-            <Field label="Address" error={errors.address}>
+            <BookingField label="Address" error={errors.address}>
               <TextField
                 value={form.address}
                 onChange={(e) => {
@@ -310,29 +290,21 @@ export default function LabBookingFormModal({
                 size="small"
                 multiline
                 rows={2}
-                sx={fieldSx}
+                sx={{
+                  ...bookingFieldSx,
+                  '& .MuiOutlinedInput-root': {
+                    ...bookingFieldSx['& .MuiOutlinedInput-root'],
+                    minHeight: 'auto',
+                    alignItems: 'flex-start',
+                  },
+                }}
               />
-            </Field>
+            </BookingField>
           ) : null}
         </div>
       </LocalizationProvider>
 
-      <div className="px-6 py-4 border-t border-[#EEF2F6] flex gap-3 shrink-0">
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex-1 h-11 rounded-xl border border-[#E6EBF1] text-navy text-sm font-semibold cursor-pointer hover:bg-[#F8FAFC]"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="flex-1 h-11 rounded-xl bg-teal text-white text-sm font-semibold cursor-pointer hover:bg-teal-dark"
-        >
-          Confirm booking
-        </button>
-      </div>
+      <BookingModalFooter onCancel={onClose} onConfirm={handleSave} confirmLabel="Confirm booking" />
     </Dialog>
   )
 }

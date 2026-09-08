@@ -32,6 +32,7 @@ export function getPharmacyMedicineOptions() {
     subtitle: item.subtitle,
     image: item.image,
     price: item.price,
+    category: item.category,
   }))
 }
 

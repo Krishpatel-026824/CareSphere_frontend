@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronRight, Info, Pill } from 'lucide-react'
+import { Info, Pill } from 'lucide-react'
 
 function splitSubtitle(subtitle = '') {
   const parts = subtitle.split(/\s+[-•]\s+/)
@@ -47,10 +47,6 @@ export default function PharmacyItemCard({ item }) {
             {packSize || '\u00A0'}
           </p>
         </div>
-
-        <span className="w-6 h-6 rounded-full bg-teal/10 flex items-center justify-center shrink-0 self-center group-hover:bg-teal/20 transition-colors">
-          <ChevronRight className="w-3.5 h-3.5 text-teal" strokeWidth={2.5} />
-        </span>
       </div>
     </article>
   )

@@ -8,27 +8,15 @@ import TextField from '@mui/material/TextField'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { X } from 'lucide-react'
-
-const fieldSx = {
-  '& .MuiOutlinedInput-root': {
-    borderRadius: '10px',
-    backgroundColor: '#F9FAFB',
-    fontSize: '0.925rem',
-    minHeight: '44px',
-    '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0' },
-    '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0', borderWidth: '1.5px' },
-  },
-}
-
-const selectSx = {
-  borderRadius: '10px',
-  backgroundColor: '#F9FAFB',
-  fontSize: '0.925rem',
-  minHeight: '44px',
-  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0' },
-  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0EA5A0', borderWidth: '1.5px' },
-}
+import {
+  BookingField,
+  BookingModalFooter,
+  BookingModalHeader,
+  bookingDatePickerSx,
+  bookingFieldSx,
+  bookingModalPaperSx,
+  bookingSelectSx,
+} from '../shared/bookingFormUi'
 
 export default function NewAppointmentModal({
   open,
@@ -47,51 +35,44 @@ export default function NewAppointmentModal({
   const selectedDoctor = doctors.find((d) => d.id === booking.doctorId)
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{ sx: { borderRadius: '16px' } }}>
-      <div className="flex items-center justify-between px-6 py-4 border-b border-[#EEF2F6]">
-        <h2 className="text-lg font-bold text-[#0F172A]">New Appointment</h2>
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-8 h-8 rounded-full hover:bg-[#F1F5F9] flex items-center justify-center cursor-pointer transition-colors"
-        >
-          <X className="w-4 h-4 text-[#64748B]" strokeWidth={2} />
-        </button>
-      </div>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" PaperProps={{ sx: bookingModalPaperSx }}>
+      <BookingModalHeader title="New Appointment" onClose={onClose} />
 
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="px-6 py-6 flex flex-col gap-5 max-h-[74vh] overflow-y-auto">
-          <Field label="Full Name" error={errors.fullName}>
-            <TextField
-              value={booking.fullName}
-              onChange={(e) => onChange({ fullName: e.target.value })}
-              placeholder="Enter your full name"
-              fullWidth
-              size="small"
-              sx={fieldSx}
-            />
-          </Field>
+        <div className="px-5 sm:px-6 py-5 flex flex-col gap-4 overflow-y-auto flex-1 min-h-0 max-h-[min(68vh,560px)]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BookingField label="Full Name" error={errors.fullName}>
+              <TextField
+                value={booking.fullName}
+                onChange={(e) => onChange({ fullName: e.target.value })}
+                placeholder="Enter your full name"
+                fullWidth
+                size="small"
+                sx={bookingFieldSx}
+              />
+            </BookingField>
 
-          <Field label="Mobile Number" error={errors.mobile}>
-            <TextField
-              value={booking.mobile}
-              onChange={(e) => onChange({ mobile: e.target.value })}
-              placeholder="+91 98765 43210"
-              fullWidth
-              size="small"
-              sx={fieldSx}
-            />
-          </Field>
+            <BookingField label="Mobile Number" error={errors.mobile}>
+              <TextField
+                value={booking.mobile}
+                onChange={(e) => onChange({ mobile: e.target.value })}
+                placeholder="+91 98765 43210"
+                fullWidth
+                size="small"
+                sx={bookingFieldSx}
+              />
+            </BookingField>
+          </div>
 
-          <Field label="Category" error={errors.category}>
+          <BookingField label="Category" error={errors.category}>
             <Select
               fullWidth
               size="small"
               displayEmpty
               value={booking.category}
               onChange={(e) => onChange({ category: e.target.value, doctorId: '', timeSlot: '' })}
-              sx={selectSx}
-              renderValue={(v) => v || <span className="text-[#9CA3AF]">Select category</span>}
+              sx={bookingSelectSx}
+              renderValue={(v) => v || <span className="text-[#94A3B8]">Select category</span>}
             >
               {modalCategories.map((item) => (
                 <MenuItem key={item} value={item} sx={{ fontSize: '0.875rem' }}>
@@ -99,9 +80,9 @@ export default function NewAppointmentModal({
                 </MenuItem>
               ))}
             </Select>
-          </Field>
+          </BookingField>
 
-          <Field label="Doctor" error={errors.doctorId}>
+          <BookingField label="Doctor" error={errors.doctorId}>
             <Select
               fullWidth
               size="small"
@@ -109,9 +90,9 @@ export default function NewAppointmentModal({
               value={booking.doctorId}
               onChange={(e) => onChange({ doctorId: e.target.value, timeSlot: '' })}
               disabled={!booking.category}
-              sx={selectSx}
+              sx={bookingSelectSx}
               renderValue={(value) => {
-                if (!value) return <span className="text-[#9CA3AF]">Select doctor</span>
+                if (!value) return <span className="text-[#94A3B8]">Select doctor</span>
                 if (!selectedDoctor) return ''
                 return (
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -140,77 +121,55 @@ export default function NewAppointmentModal({
                 </MenuItem>
               ))}
             </Select>
-          </Field>
+          </BookingField>
 
-          <Field label="Appointment Date" error={errors.appointmentDate}>
-            <DatePicker
-              value={booking.appointmentDate}
-              onChange={(value) => onChange({ appointmentDate: value })}
-              format="DD/MM/YYYY"
-              minDate={dayjs()}
-              slotProps={{
-                textField: {
-                  size: 'small',
-                  fullWidth: true,
-                  placeholder: 'DD/MM/YYYY',
-                },
-              }}
-              sx={fieldSx}
-            />
-          </Field>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <BookingField label="Appointment Date" error={errors.appointmentDate}>
+              <DatePicker
+                value={booking.appointmentDate}
+                onChange={(value) => onChange({ appointmentDate: value })}
+                format="DD/MM/YYYY"
+                minDate={dayjs()}
+                slotProps={{
+                  textField: {
+                    size: 'small',
+                    fullWidth: true,
+                    placeholder: 'DD/MM/YYYY',
+                    sx: bookingFieldSx,
+                  },
+                }}
+                sx={bookingDatePickerSx}
+              />
+            </BookingField>
 
-          <Field label="Time Slot" error={errors.timeSlot}>
-            <Select
-              fullWidth
-              size="small"
-              displayEmpty
-              value={booking.timeSlot}
-              onChange={(e) => onChange({ timeSlot: e.target.value })}
-              disabled={!booking.doctorId}
-              sx={selectSx}
-              MenuProps={{
-                PaperProps: { sx: { maxHeight: 180 } },
-                anchorOrigin: { vertical: 'top', horizontal: 'left' },
-                transformOrigin: { vertical: 'bottom', horizontal: 'left' },
-              }}
-              renderValue={(v) => v || <span className="text-[#9CA3AF]">Select time slot</span>}
-            >
-              {availableTimes.map((time) => (
-                <MenuItem key={time} value={time} sx={{ fontSize: '0.875rem' }}>
-                  {time}
-                </MenuItem>
-              ))}
-            </Select>
-          </Field>
+            <BookingField label="Time Slot" error={errors.timeSlot}>
+              <Select
+                fullWidth
+                size="small"
+                displayEmpty
+                value={booking.timeSlot}
+                onChange={(e) => onChange({ timeSlot: e.target.value })}
+                disabled={!booking.doctorId}
+                sx={bookingSelectSx}
+                MenuProps={{
+                  PaperProps: { sx: { maxHeight: 180 } },
+                  anchorOrigin: { vertical: 'top', horizontal: 'left' },
+                  transformOrigin: { vertical: 'bottom', horizontal: 'left' },
+                }}
+                renderValue={(v) => v || <span className="text-[#94A3B8]">Select time slot</span>}
+              >
+                {availableTimes.map((time) => (
+                  <MenuItem key={time} value={time} sx={{ fontSize: '0.875rem' }}>
+                    {time}
+                  </MenuItem>
+                ))}
+              </Select>
+            </BookingField>
+          </div>
         </div>
       </LocalizationProvider>
 
-      <div className="px-6 py-4 border-t border-[#EEF2F6] flex items-center justify-end gap-3">
-        <button
-          type="button"
-          onClick={onClose}
-          className="h-11 px-6 rounded-xl border border-[#CBD5E1] text-sm font-semibold text-[#334155] cursor-pointer hover:bg-[#F1F5F9] transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          onClick={onSave}
-          className="h-11 px-6 rounded-xl bg-[#0EA5A0] text-white text-sm font-semibold cursor-pointer hover:bg-[#0D9490] transition-colors shadow-sm"
-        >
-          Book
-        </button>
-      </div>
+      <BookingModalFooter onCancel={onClose} onConfirm={onSave} confirmLabel="Book" />
     </Dialog>
-  )
-}
-
-function Field({ label, error, children }) {
-  return (
-    <div>
-      <label className="text-sm font-semibold text-[#1E293B] mb-2 block">{label}</label>
-      {children}
-      {error ? <p className="text-xs text-rose-500 mt-1.5 font-medium">{error}</p> : null}
-    </div>
   )
 }
