@@ -23,22 +23,22 @@ export default function MedicineReminderCard() {
   const canMarkTaken = medicineAlertsOn && !takenToday && remainingCount > 0
 
   return (
-    <section className="h-full min-h-0 bg-white rounded-2xl border border-border-gray shadow-sm p-5 sm:p-6 flex flex-col gap-3 w-full">
-      <div className="flex items-center justify-between gap-3 shrink-0">
+    <section className="h-full min-h-0 bg-white rounded-2xl border border-border-gray shadow-sm p-3.5 sm:p-4 flex flex-col gap-2.5 w-full">
+      <div className="flex items-center justify-between gap-2 shrink-0">
         <div className="min-w-0">
-          <h2 className="text-[15px] sm:text-base font-semibold text-navy tracking-tight">Medicine reminder</h2>
-          <p className="text-[11px] text-body-gray mt-0.5">
+          <h2 className="text-[15px] sm:text-[16px] font-semibold text-navy tracking-tight">Medicine reminder</h2>
+          <p className="text-[11px] text-body-gray">
             {medicineAlertsOn ? `${medicine.period} dose • ${pendingCount} today` : 'Reminders paused in Preferences'}
           </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-white bg-navy px-3 py-1.5 rounded-full shrink-0">
-          <Clock3 className="w-3.5 h-3.5" strokeWidth={2} />
+        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-white bg-navy px-2.5 py-1 rounded-full shrink-0">
+          <Clock3 className="w-3 h-3" strokeWidth={2} />
           {medicine.timeLabel}
         </span>
       </div>
 
-      <div key={medicine.id} className="flex items-center gap-3.5 animate-[fadeIn_400ms_ease] shrink-0">
-        <div className="w-[56px] h-[56px] rounded-xl overflow-hidden shrink-0 border border-gray-100 bg-white shadow-sm flex items-center justify-center">
+      <div key={medicine.id} className="flex items-center gap-2.5 animate-[fadeIn_400ms_ease] shrink-0">
+        <div className="w-11 h-11 rounded-lg overflow-hidden shrink-0 border border-gray-100 bg-white shadow-sm flex items-center justify-center">
           {medicine.image ? (
             <img
               src={medicine.image}
@@ -47,17 +47,17 @@ export default function MedicineReminderCard() {
             />
           ) : (
             <span className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#ECEBFF] to-[#F5F3FF]">
-              <Pill className="w-6 h-6 text-[#7C4DFF]" strokeWidth={iconStroke} />
+              <Pill className="w-5 h-5 text-[#7C4DFF]" strokeWidth={iconStroke} />
             </span>
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-base font-bold text-navy leading-tight">{medicine.medicineName}</p>
-          <p className="text-[13px] text-body-gray mt-1 leading-snug">
+          <p className="text-[15px] font-bold text-navy leading-tight">{medicine.medicineName}</p>
+          <p className="text-[12px] text-body-gray mt-0.5 leading-snug">
             {medicine.dosage}
-            <span className="mx-1.5 text-body-gray/50">•</span>
+            <span className="mx-1 text-body-gray/50">•</span>
             {medicine.timing}
-            <span className="mx-1.5 text-body-gray/50">•</span>
+            <span className="mx-1 text-body-gray/50">•</span>
             <span className="font-semibold text-[#7C4DFF]">{remainingCount} left</span>
           </p>
         </div>
@@ -65,39 +65,39 @@ export default function MedicineReminderCard() {
 
       <div className="h-px bg-border-gray/80 shrink-0" />
 
-      <div className="flex flex-col gap-2.5 flex-1 min-h-0">
+      <div className="flex flex-col gap-1.5 flex-1 min-h-0">
         <div className="flex items-center justify-between gap-2">
-          <p className="text-xs font-medium text-body-gray">Refill status</p>
-          <p className="text-xs font-bold text-[#7C4DFF] tabular-nums">
+          <p className="text-[11px] font-medium text-body-gray">Refill status</p>
+          <p className="text-[11px] font-bold text-[#7C4DFF] tabular-nums">
             {remainingCount}/{medicine.remainingTotal}
           </p>
         </div>
-        <div className="h-2 rounded-full bg-[#F0EFFF] overflow-hidden">
+        <div className="h-1.5 rounded-full bg-[#F0EFFF] overflow-hidden">
           <div className="h-full rounded-full bg-[#7C4DFF] transition-all" style={{ width: `${refillPct}%` }} />
         </div>
-        <p className="inline-flex items-center gap-1.5 text-xs text-body-gray">
-          <CalendarDays className="w-3.5 h-3.5 text-[#7C4DFF]" strokeWidth={iconStroke} />
+        <p className="inline-flex items-center gap-1 text-[11px] text-body-gray">
+          <CalendarDays className="w-3 h-3 text-[#7C4DFF]" strokeWidth={iconStroke} />
           {medicine.schedule}
         </p>
       </div>
 
-      <div className="mt-auto shrink-0 flex flex-col gap-3">
+      <div className="mt-auto shrink-0 flex flex-col gap-2">
         <button
           type="button"
           onClick={() => markAsTaken(medicine.id)}
           disabled={!canMarkTaken}
-          className={`w-full min-h-[48px] rounded-2xl text-sm font-semibold inline-flex items-center justify-center gap-2.5 shadow-sm transition-colors ${
+          className={`w-full h-9 rounded-xl text-[13px] font-semibold inline-flex items-center justify-center gap-2 shadow-sm transition-colors ${
             canMarkTaken
               ? 'bg-teal text-white cursor-pointer hover:bg-teal-dark'
               : 'bg-teal/15 text-teal cursor-default'
           }`}
         >
           <span
-            className={`w-6 h-6 rounded-full flex items-center justify-center ${
+            className={`w-5 h-5 rounded-full flex items-center justify-center ${
               canMarkTaken ? 'border-2 border-white/90' : 'bg-teal/20'
             }`}
           >
-            <Check className="w-3.5 h-3.5 text-current" strokeWidth={3} />
+            <Check className="w-3 h-3 text-current" strokeWidth={3} />
           </span>
           {takenToday ? 'Taken today' : medicineAlertsOn ? 'Mark as taken' : 'Reminders off'}
         </button>
@@ -106,7 +106,7 @@ export default function MedicineReminderCard() {
           <button
             type="button"
             onClick={() => { setEditingMedicine(null); setModalOpen(true) }}
-            className="flex-1 h-9 rounded-xl border border-dashed border-[#7C4DFF]/40 text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
+            className="flex-1 h-8 rounded-lg border border-dashed border-[#7C4DFF]/40 text-[#7C4DFF] text-[11px] font-semibold inline-flex items-center justify-center gap-1 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" strokeWidth={2.5} />
             Add medicine
@@ -114,7 +114,7 @@ export default function MedicineReminderCard() {
           <button
             type="button"
             onClick={() => { setEditingMedicine(medicine); setModalOpen(true) }}
-            className="h-9 px-3 rounded-xl border border-[#E4E0FF] text-[#7C4DFF] text-xs font-semibold inline-flex items-center justify-center gap-1.5 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
+            className="h-8 px-2.5 rounded-lg border border-[#E4E0FF] text-[#7C4DFF] text-[11px] font-semibold inline-flex items-center justify-center gap-1 hover:bg-[#F0EFFF] transition-colors cursor-pointer"
           >
             <Settings className="w-3.5 h-3.5" strokeWidth={2} />
             Edit
@@ -122,14 +122,14 @@ export default function MedicineReminderCard() {
         </div>
 
         {canPage ? (
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2">
             <button
               type="button"
               onClick={goPrev}
               aria-label="Previous medicine"
-              className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+              className="w-8 h-8 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
             >
-              <ChevronLeft className="w-5 h-5" strokeWidth={2} />
+              <ChevronLeft className="w-4 h-4" strokeWidth={2} />
             </button>
             <p className="text-[11px] font-semibold text-[#7C4DFF] tabular-nums">
               {index + 1} / {count}
@@ -138,9 +138,9 @@ export default function MedicineReminderCard() {
               type="button"
               onClick={goNext}
               aria-label="Next medicine"
-              className="w-9 h-9 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
+              className="w-8 h-8 rounded-full border border-[#E4E0FF] text-[#7C4DFF] flex items-center justify-center cursor-pointer hover:bg-[#F0EFFF] transition-colors"
             >
-              <ChevronRight className="w-5 h-5" strokeWidth={2} />
+              <ChevronRight className="w-4 h-4" strokeWidth={2} />
             </button>
           </div>
         ) : null}

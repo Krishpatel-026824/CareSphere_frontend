@@ -81,9 +81,6 @@ export default function DoctorPatientsScreen({ patients = [], onSelectPatient })
                   <h2 className="font-display text-[22px] sm:text-[26px] font-bold text-navy tracking-tight leading-tight">
                     {panelTitle}
                   </h2>
-                  <span className="shrink-0 text-[13px] font-bold text-teal-dark bg-[#E8F7F6] border border-teal/20 px-3 py-1 rounded-full tabular-nums shadow-sm">
-                    {filtered.length}
-                  </span>
                 </div>
                 <p className="text-[14px] sm:text-[15px] text-body-gray mt-1.5 leading-snug">{panelSubtitle}</p>
               </div>

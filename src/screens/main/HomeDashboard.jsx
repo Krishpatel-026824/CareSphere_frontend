@@ -55,8 +55,8 @@ export default function HomeDashboard({
           </button>
         </header>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-w-0 xl:[grid-auto-rows:1fr]">
-          <div className="min-h-0 h-full">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-3 min-w-0 xl:[grid-auto-rows:1fr]">
+          <div className="min-h-0 h-full min-w-0 [&>*]:h-full">
             <UpcomingAppointmentPanel
               key={
                 appointment
@@ -70,17 +70,17 @@ export default function HomeDashboard({
               onBook={onBookAppointment}
             />
           </div>
-          <div className="min-h-0 h-full">
+          <div className="min-h-0 h-full min-w-0 [&>*]:h-full">
             <MedicineReminderCard />
           </div>
-          <div className="min-h-0 h-full">
+          <div className="min-h-0 h-full min-w-0 [&>*]:h-full">
             <LabBookingPanel
               booking={latestLabBooking}
               onBook={() => onBookLabTest?.() || onActionClick?.('labTests')}
               onOpenPage={() => onViewLabBookings?.() || onActionClick?.('labTests')}
             />
           </div>
-          <div className="min-h-0 h-full">
+          <div className="min-h-0 h-full min-w-0 [&>*]:h-full">
             <HealthTipCard tips={homeData.healthTips} loopMs={homeData.healthTipLoopMs} />
           </div>
         </div>
