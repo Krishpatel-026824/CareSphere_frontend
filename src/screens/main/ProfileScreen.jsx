@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { LogOut } from 'lucide-react'
 import ProfileHeader from '../../components/profile/ProfileHeader'
 import ProfileHero from '../../components/profile/ProfileHero'
 import ProfilePrefsCard from '../../components/profile/ProfilePrefsCard'
+import SignOutConfirm from '../../components/profile/SignOutConfirm'
 
 export default function ProfileScreen({
   details,
@@ -18,11 +20,25 @@ export default function ProfileScreen({
   onTogglePref,
   onLogout,
   onAvatarChange,
+  title,
+  subtitle,
 }) {
+  const [confirmSignOut, setConfirmSignOut] = useState(false)
+
+  function handleConfirmSignOut() {
+    setConfirmSignOut(false)
+    onLogout?.()
+  }
+
   return (
     <div className="w-full min-h-full bg-transparent">
       <div className="w-full min-h-full page-pad py-3 sm:py-4 flex flex-col gap-3 max-w-[1440px] mx-auto">
-        <ProfileHeader onEdit={onStartEdit} isEditing={isEditing} />
+        <ProfileHeader
+          onEdit={onStartEdit}
+          isEditing={isEditing}
+          title={title}
+          subtitle={subtitle}
+        />
 
         <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1.55fr)_minmax(0,0.9fr)] gap-3 sm:gap-4 min-w-0 xl:items-start">
           <ProfileHero
@@ -42,7 +58,7 @@ export default function ProfileScreen({
             <ProfilePrefsCard prefs={prefs} onToggle={onTogglePref} />
             <button
               type="button"
-              onClick={onLogout}
+              onClick={() => setConfirmSignOut(true)}
               className="min-h-11 sm:min-h-12 rounded-xl border border-rose-200 bg-rose-50 text-rose-600 text-sm font-semibold cursor-pointer hover:bg-rose-100/80 hover:border-rose-300 transition-colors inline-flex items-center justify-center gap-2"
             >
               <LogOut className="w-4 h-4" strokeWidth={2} />
@@ -51,6 +67,12 @@ export default function ProfileScreen({
           </div>
         </div>
       </div>
+
+      <SignOutConfirm
+        open={confirmSignOut}
+        onCancel={() => setConfirmSignOut(false)}
+        onConfirm={handleConfirmSignOut}
+      />
     </div>
   )
 }

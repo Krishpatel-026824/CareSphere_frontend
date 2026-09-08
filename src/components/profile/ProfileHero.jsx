@@ -5,6 +5,7 @@ import {
   Building2,
   CalendarDays,
   Cake,
+  Camera,
   Droplet,
   FileText,
   Languages,
@@ -18,31 +19,15 @@ import {
 } from 'lucide-react'
 
 const badges = [
-  { icon: Shield, label: 'Verified', tone: 'bg-emerald-100 text-emerald-800' },
-  { icon: UserRound, label: 'Active member', tone: 'bg-sky-100 text-sky-800' },
+  { icon: Shield, label: 'Verified' },
+  { icon: UserRound, label: 'Active member' },
 ]
 
-const statStyles = {
-  calendar: {
-    card: 'bg-[#F0FDF4] border-[#DCFCE7]',
-    icon: 'bg-emerald-100 text-emerald-600',
-    Icon: CalendarDays,
-  },
-  file: {
-    card: 'bg-[#F5F3FF] border-[#EDE9FE]',
-    icon: 'bg-violet-100 text-violet-600',
-    Icon: FileText,
-  },
-  bell: {
-    card: 'bg-[#F0F9FF] border-[#E0F2FE]',
-    icon: 'bg-sky-100 text-sky-600',
-    Icon: Bell,
-  },
-  message: {
-    card: 'bg-[#FFF7ED] border-[#FFEDD5]',
-    icon: 'bg-orange-100 text-orange-600',
-    Icon: MessageSquare,
-  },
+const statIcons = {
+  calendar: CalendarDays,
+  file: FileText,
+  bell: Bell,
+  message: MessageSquare,
 }
 
 const detailIcons = {
@@ -57,66 +42,20 @@ const detailIcons = {
   languages: Languages,
 }
 
-const detailCardStyles = {
-  mail: {
-    card: 'bg-[#EFF6FF] border-[#BFDBFE]',
-    icon: 'bg-white text-sky-600 shadow-sm ring-1 ring-sky-200/80',
-  },
-  phone: {
-    card: 'bg-[#ECFDF5] border-[#A7F3D0]',
-    icon: 'bg-white text-emerald-600 shadow-sm ring-1 ring-emerald-200/80',
-  },
-  cake: {
-    card: 'bg-[#FFFBEB] border-[#FDE68A]',
-    icon: 'bg-white text-amber-600 shadow-sm ring-1 ring-amber-200/80',
-  },
-  user: {
-    card: 'bg-[#F5F3FF] border-[#DDD6FE]',
-    icon: 'bg-white text-violet-600 shadow-sm ring-1 ring-violet-200/80',
-  },
-  droplet: {
-    card: 'bg-[#FFF1F2] border-[#FECDD3]',
-    icon: 'bg-white text-rose-600 shadow-sm ring-1 ring-rose-200/80',
-  },
-  map: {
-    card: 'bg-[#E8F7F6] border-[#99F6E4]',
-    icon: 'bg-white text-teal shadow-sm ring-1 ring-teal/25',
-  },
-  award: {
-    card: 'bg-[#FFFBEB] border-[#FDE68A]',
-    icon: 'bg-white text-amber-600 shadow-sm ring-1 ring-amber-200/80',
-  },
-  building: {
-    card: 'bg-[#EEF2FF] border-[#C7D2FE]',
-    icon: 'bg-white text-indigo-600 shadow-sm ring-1 ring-indigo-200/80',
-  },
-  languages: {
-    card: 'bg-[#FDF4FF] border-[#F5D0FE]',
-    icon: 'bg-white text-fuchsia-600 shadow-sm ring-1 ring-fuchsia-200/80',
-  },
-}
-
 function ProfileStatCard({ item }) {
-  const style = statStyles[item.icon] || statStyles.calendar
-  const Icon = style.Icon
+  const Icon = statIcons[item.icon] || CalendarDays
 
   return (
-    <div
-      className={`rounded-xl border px-3 py-2.5 min-w-0 flex items-center gap-2.5 ${style.card}`}
-    >
-      <span
-        className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${style.icon}`}
-      >
+    <div className="rounded-xl border border-[#E6EBF1] bg-[#FAFCFD] px-3.5 py-3 min-w-0 flex items-center gap-3 hover:border-teal/25 hover:bg-white transition-colors">
+      <span className="w-10 h-10 rounded-xl bg-teal-light text-teal-dark flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[22px] sm:text-[24px] font-bold text-navy tabular-nums leading-none">
+        <p className="text-[22px] sm:text-[24px] font-bold text-navy tabular-nums leading-none tracking-tight">
           {item.value}
         </p>
-        <p className="text-[13px] font-semibold text-navy mt-0.5 leading-tight break-words">
-          {item.label}
-        </p>
-        <p className="text-[11px] text-body-gray leading-snug break-words">{item.hint}</p>
+        <p className="text-[13px] font-semibold text-navy mt-1 leading-tight">{item.label}</p>
+        <p className="text-[11px] text-body-gray leading-snug mt-0.5">{item.hint}</p>
       </div>
     </div>
   )
@@ -124,20 +63,17 @@ function ProfileStatCard({ item }) {
 
 function ProfileDetailTile({ row, value }) {
   const Icon = detailIcons[row.icon] || Mail
-  const style = detailCardStyles[row.icon] || detailCardStyles.mail
 
   return (
-    <div
-      className={`flex items-center gap-3 min-w-0 rounded-xl border px-3 py-2.5 ${style.card}`}
-    >
-      <span className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${style.icon}`}>
+    <div className="flex items-center gap-3 min-w-0 rounded-xl border border-[#E6EBF1] bg-white px-3.5 py-3 hover:border-teal/20 transition-colors">
+      <span className="w-9 h-9 rounded-lg bg-[#F0FAF9] text-teal flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4" strokeWidth={1.85} />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-[11px] font-semibold text-navy/55 uppercase tracking-[0.04em]">
+        <p className="text-[11px] font-semibold text-body-gray uppercase tracking-[0.06em]">
           {row.label}
         </p>
-        <p className="text-[14px] sm:text-[15px] font-bold text-navy mt-0.5 break-words leading-snug">
+        <p className="text-[14px] sm:text-[15px] font-semibold text-navy mt-0.5 break-words leading-snug">
           {value || '—'}
         </p>
       </div>
@@ -183,10 +119,10 @@ export default function ProfileHero({
 
   return (
     <section className="bg-white rounded-2xl border border-[#E6EBF1] shadow-sm overflow-hidden min-w-0">
-      <div className="h-1 bg-gradient-to-r from-teal via-[#0C948E] to-[#0B6E6A] shrink-0" />
+      <div className="h-1 bg-gradient-to-r from-teal via-[#14B8A6] to-teal-dark shrink-0" />
 
-      <div className="p-4 sm:p-5 flex flex-col gap-3 sm:gap-4">
-        <div className="flex items-center gap-3 sm:gap-4">
+      <div className="relative px-4 sm:px-5 pt-5 pb-4 border-b border-[#E6EBF1] bg-gradient-to-br from-[#F0FDFA] via-white to-[#F8FAFC]">
+        <div className="flex items-start gap-3.5 sm:gap-4">
           <div className="relative shrink-0">
             <input
               ref={fileInputRef}
@@ -200,7 +136,7 @@ export default function ProfileHero({
               onClick={openPhotoPicker}
               disabled={!onAvatarChange}
               aria-label="Change profile photo"
-              className="w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-full overflow-hidden bg-teal-light flex items-center justify-center text-teal text-xl font-bold ring-2 ring-[#E6EBF1] cursor-pointer hover:ring-teal/40 transition-shadow disabled:cursor-default p-0 border-0"
+              className="group relative w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-2xl overflow-hidden bg-teal-light flex items-center justify-center text-teal text-xl font-bold ring-2 ring-white shadow-[0_4px_14px_rgba(7,26,47,0.08)] cursor-pointer p-0 border-0 disabled:cursor-default"
             >
               {details.avatar ? (
                 <img
@@ -211,46 +147,57 @@ export default function ProfileHero({
               ) : (
                 details.initials
               )}
+              {onAvatarChange ? (
+                <span className="absolute inset-0 bg-navy/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-white" strokeWidth={1.85} />
+                </span>
+              ) : null}
             </button>
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h2 className="font-display text-[22px] sm:text-[28px] font-bold text-navy tracking-tight leading-tight truncate">
+          <div className="min-w-0 flex-1 pt-0.5">
+            <h2 className="text-[20px] sm:text-[24px] font-bold text-navy tracking-tight leading-tight">
               {details.name}
             </h2>
-            <p className="text-[14px] sm:text-[15px] text-body-gray mt-1 truncate">
-              {details.role}
-              {details.memberSince ? ` · ${details.memberSince}` : ''}
+            <p className="text-[13px] sm:text-[14px] text-body-gray mt-1 leading-snug">
+              <span className="font-semibold text-navy/80">{details.role}</span>
+              {details.memberSince ? (
+                <span className="text-body-gray"> · {details.memberSince}</span>
+              ) : null}
             </p>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <div className="flex flex-wrap gap-1.5 mt-2.5">
               {badges.map((badge) => (
                 <span
                   key={badge.label}
-                  className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-semibold ${badge.tone}`}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] sm:text-[12px] font-semibold bg-white border border-[#E6EBF1] text-navy shadow-sm"
                 >
-                  <badge.icon className="w-3.5 h-3.5" strokeWidth={2.25} />
+                  <badge.icon className="w-3.5 h-3.5 text-teal" strokeWidth={2.25} />
                   {badge.label}
                 </span>
               ))}
             </div>
           </div>
         </div>
+      </div>
 
+      <div className="p-4 sm:p-5 flex flex-col gap-4">
         <div className={statsGridClass(stats.length)}>
           {stats.map((item) => (
             <ProfileStatCard key={item.id} item={item} />
           ))}
         </div>
 
-        <div className="pt-3 border-t border-[#E6EBF1]">
-          <h3 className="text-[15px] sm:text-base font-bold text-navy flex items-center gap-2">
-            <User className="w-4 h-4 text-teal" strokeWidth={2} />
-            Personal details
-          </h3>
+        <div className="pt-1">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-7 h-7 rounded-lg bg-teal-light text-teal-dark inline-flex items-center justify-center">
+              <User className="w-3.5 h-3.5" strokeWidth={2} />
+            </span>
+            <h3 className="text-[15px] sm:text-base font-bold text-navy">Personal details</h3>
+          </div>
 
           {isEditing ? (
             <form
-              className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5"
+              className="grid grid-cols-1 sm:grid-cols-2 gap-3"
               onSubmit={(event) => {
                 event.preventDefault()
                 onSave()
@@ -258,12 +205,12 @@ export default function ProfileHero({
             >
               {fields.map((field) => (
                 <label key={field.id} className="flex flex-col gap-1.5 min-w-0">
-                  <span className="text-sm font-semibold text-body-gray">{field.label}</span>
+                  <span className="text-[13px] font-semibold text-body-gray">{field.label}</span>
                   <input
                     type={field.type}
                     value={draft[field.id] || ''}
                     onChange={(event) => onChange(field.id, event.target.value)}
-                    className="min-h-11 rounded-xl border border-[#E6EBF1] bg-white px-3.5 text-[15px] text-navy outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                    className="min-h-11 rounded-xl border border-[#E6EBF1] bg-[#FAFCFD] px-3.5 text-[15px] text-navy outline-none focus:border-teal focus:bg-white focus:ring-2 focus:ring-teal/15 transition-all"
                   />
                 </label>
               ))}
@@ -271,20 +218,20 @@ export default function ProfileHero({
                 <button
                   type="button"
                   onClick={onCancel}
-                  className="flex-1 min-h-11 rounded-xl border border-[#E6EBF1] bg-white text-[15px] font-semibold text-navy cursor-pointer hover:bg-bg-gray"
+                  className="flex-1 min-h-11 rounded-xl border border-[#E6EBF1] bg-white text-[15px] font-semibold text-navy cursor-pointer hover:bg-[#F8FAFC]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 min-h-11 rounded-xl bg-teal text-white text-[15px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors"
+                  className="flex-1 min-h-11 rounded-xl bg-teal text-white text-[15px] font-semibold cursor-pointer hover:bg-teal-dark transition-colors shadow-[0_4px_12px_rgba(14,165,160,0.25)]"
                 >
                   Save changes
                 </button>
               </div>
             </form>
           ) : (
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {infoRows.map((row) => (
                 <ProfileDetailTile key={row.id} row={row} value={details[row.id]} />
               ))}

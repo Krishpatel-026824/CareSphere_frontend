@@ -321,6 +321,8 @@ export function DoctorProfilePage() {
       prefs={profile.prefs}
       isEditing={profile.isEditing}
       draft={profile.draft}
+      title="Doctor profile"
+      subtitle="Manage your clinic identity, contact details, and alert preferences"
       onStartEdit={profile.startEdit}
       onChange={profile.updateDraft}
       onSave={profile.saveEdit}
