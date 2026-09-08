@@ -47,8 +47,8 @@ export default function HealthRecordsScreen({ onBack }) {
               {viewed.kind === 'lab'
                 ? 'Lab report'
                 : isPrescriptionHealthRecord(selectedRecord)
-                  ? 'Prescription'
-                  : 'Health record'}
+                  ? 'Prescription report'
+                  : 'Clinical report'}
             </h1>
             <p className="text-sm text-body-gray mt-2">{viewed.data.title || selectedRecord.title}</p>
           </header>
@@ -58,12 +58,23 @@ export default function HealthRecordsScreen({ onBack }) {
           ) : viewed.kind === 'record' ? (
             <HealthRecordDetail record={viewed.data} />
           ) : (
-            <article className="rounded-2xl border border-border-gray bg-white p-5 shadow-sm">
-              <h3 className="text-base font-bold text-navy">{viewed.data.title}</h3>
-              <p className="text-sm text-body-gray mt-2">{viewed.data.doctorName}</p>
-              <p className="text-sm text-body-gray mt-1">
-                {viewed.data.dateLabel} • {viewed.data.type}
-              </p>
+            <article className="rounded-2xl border border-border-gray bg-white shadow-[0_4px_18px_rgba(7,26,47,0.08)] overflow-hidden">
+              <header className="px-4 sm:px-6 pt-4 sm:pt-5 pb-4 bg-navy text-white">
+                <h3 className="font-display text-xl sm:text-2xl font-bold leading-tight">
+                  {viewed.data.title}
+                </h3>
+                <p className="text-[13px] text-teal-light mt-1.5 font-medium">
+                  {[viewed.data.dateLabel, viewed.data.type, viewed.data.doctorName]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </p>
+              </header>
+              <div className="h-1.5 bg-teal" />
+              <div className="p-4 sm:p-6 bg-[#F3F6F9]">
+                <p className="text-sm text-navy font-medium">
+                  Full clinical layout is not available for this record type.
+                </p>
+              </div>
             </article>
           )}
         </div>
